@@ -1,9 +1,9 @@
 import { useState } from "react";
-import "./assets/css/material-dashboard.min.css";
-import Head from "./components/Head";
-import bg from "./assets/img/login.jpg";
-import FooterHome from "./components/FooterHome";
-import NavbarHome from "./components/NavbarHome";
+import "../assets/css/material-dashboard.min.css";
+import Head from "../components/Head";
+import bg from "../assets/img/login.jpg";
+import FooterHome from "../components/FooterHome";
+import NavbarHome from "../components/NavbarHome";
 
 function App() {
   const [count, setCount] = useState(0);
