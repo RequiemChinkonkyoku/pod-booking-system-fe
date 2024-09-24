@@ -1,22 +1,28 @@
 import React from "react";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Outlet } from "react-router-dom";
 import Login from "../pages/Login";
+import NavbarHome from "../components/NavbarHome";
+import FooterHome from "../components/FooterHome";
+import Head from "../components/Head";
 
-export const Routes =
-  createBrowserRouter[
-    [
+const Layout = () => (
+  <>
+    <Head />
+    <NavbarHome />
+    <Outlet />
+    <FooterHome />
+  </>
+);
+
+export const routes = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
       {
-        path: "/",
-        children: [
-          {
-            path: "login",
-            element: Login,
-          },
-        ],
+        path: "login",
+        element: <Login />,
       },
-    ]
-  ];
-
-export default function App() {
-  return <RouterProvider router={router} />;
-}
+    ],
+  },
+]);

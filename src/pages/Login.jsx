@@ -1,21 +1,43 @@
-import { useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import "../assets/css/material-dashboard.min.css";
 import Head from "../components/Head";
 import bg from "../assets/img/login.jpg";
 import FooterHome from "../components/FooterHome";
 import NavbarHome from "../components/NavbarHome";
 
-function App() {
-  const [count, setCount] = useState(0);
+const Login = () => {
+  const formik = useFormik({
+    initialValues: {
+      // firstName: "",
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      firstName: Yup.string()
+        .min(2, "Must be at least 2 characters")
+        .required("First Name is required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
+      password: Yup.string()
+        .min(6, "Password must be at least 6 characters")
+        .required("Password is required"),
+    }),
+    onSubmit: (values) => {
+      console.log("Form submitted", values);
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
 
   return (
     <>
       <Head />
       <NavbarHome />
-      <body class="off-canvas-sidebar">
-        <div class="wrapper wrapper-full-page">
+      <div className="off-canvas-sidebar">
+        <div className="wrapper wrapper-full-page">
           <div
-            class="page-header login-page header-filter"
+            className="page-header login-page header-filter"
             filter-color="black"
             style={{
               backgroundImage: `url(${bg})`,
@@ -25,85 +47,117 @@ function App() {
               height: "100vh",
             }}
           >
-            <div class="container">
-              <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-8 ml-auto mr-auto">
-                  <form class="form" method="" action="">
-                    <div class="card card-login">
-                      <div class="card-header card-header-rose text-center">
-                        <h4 class="card-title">Login</h4>
-                        <div class="social-line">
+            <div className="container">
+              <div className="row">
+                <div className="col-lg-4 col-md-6 col-sm-8 ml-auto mr-auto">
+                  <form className="form" onSubmit={formik.handleSubmit}>
+                    <div className="card card-login">
+                      <div className="card-header card-header-rose text-center">
+                        <h4 className="card-title">Login</h4>
+                        <div className="social-line">
                           <a
                             href="#pablo"
-                            class="btn btn-just-icon btn-link btn-white"
+                            className="btn btn-just-icon btn-link btn-white"
                           >
-                            <i class="fa fa-facebook-square"></i>
+                            <i className="fa fa-facebook-square"></i>
                           </a>
                           <a
                             href="#pablo"
-                            class="btn btn-just-icon btn-link btn-white"
+                            className="btn btn-just-icon btn-link btn-white"
                           >
-                            <i class="fa fa-twitter"></i>
+                            <i className="fa fa-twitter"></i>
                           </a>
                           <a
                             href="#pablo"
-                            class="btn btn-just-icon btn-link btn-white"
+                            className="btn btn-just-icon btn-link btn-white"
                           >
-                            <i class="fa fa-google-plus"></i>
+                            <i className="fa fa-google-plus"></i>
                           </a>
                         </div>
                       </div>
-                      <div class="card-body ">
-                        <p class="card-description text-center">
+                      <div className="card-body ">
+                        <p className="card-description text-center">
                           Or Be Classical
                         </p>
-                        <span class="bmd-form-group">
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text">
-                                <i class="material-icons">face</i>
+                        {/* <div className="bmd-form-group">
+                          <div className="input-group">
+                            <div className="input-group-prepend">
+                              <span className="input-group-text">
+                                <i className="material-icons">face</i>
                               </span>
                             </div>
                             <input
                               type="text"
-                              class="form-control"
+                              className="form-control"
                               placeholder="First Name..."
+                              name="firstName"
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.firstName}
                             />
                           </div>
-                        </span>
-                        <span class="bmd-form-group">
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text">
-                                <i class="material-icons">email</i>
+                          {formik.touched.firstName &&
+                          formik.errors.firstName ? (
+                            <div className="text-danger">
+                              {formik.errors.firstName}
+                            </div>
+                          ) : null}
+                        </div> */}
+                        <div className="bmd-form-group">
+                          <div className="input-group">
+                            <div className="input-group-prepend">
+                              <span className="input-group-text">
+                                <i className="material-icons">email</i>
                               </span>
                             </div>
                             <input
                               type="email"
-                              class="form-control"
+                              className="form-control"
                               placeholder="Email..."
+                              name="email"
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.email}
                             />
                           </div>
-                        </span>
-                        <span class="bmd-form-group">
-                          <div class="input-group">
-                            <div class="input-group-prepend">
-                              <span class="input-group-text">
-                                <i class="material-icons">lock_outline</i>
+                          {formik.touched.email && formik.errors.email ? (
+                            <div className="text-danger">
+                              {formik.errors.email}
+                            </div>
+                          ) : null}
+                        </div>
+                        <div className="bmd-form-group">
+                          <div className="input-group">
+                            <div className="input-group-prepend">
+                              <span className="input-group-text">
+                                <i className="material-icons">lock_outline</i>
                               </span>
                             </div>
                             <input
                               type="password"
-                              class="form-control"
+                              className="form-control"
                               placeholder="Password..."
+                              name="password"
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              value={formik.values.password}
                             />
                           </div>
-                        </span>
+                          {formik.touched.password && formik.errors.password ? (
+                            <div className="text-danger">
+                              {formik.errors.password}
+                            </div>
+                          ) : null}
+                        </div>
                       </div>
-                      <div class="card-footer justify-content-center">
-                        <a href="#pablo" class="btn btn-rose btn-link btn-lg">
-                          Lets Go
-                        </a>
+                      <div className="card-footer justify-content-center">
+                        <button
+                          onClick={console.log("Button clicked")}
+                          type="submit"
+                          className="btn btn-rose btn-lg"
+                        >
+                          Let's Go
+                        </button>
                       </div>
                     </div>
                   </form>
@@ -113,9 +167,9 @@ function App() {
           </div>
         </div>
         <FooterHome />
-      </body>
+      </div>
     </>
   );
-}
+};
 
-export default App;
+export default Login;
