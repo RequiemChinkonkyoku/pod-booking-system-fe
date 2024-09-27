@@ -1,0 +1,113 @@
+.navbarContainer {
+    align-items: center;
+    padding: 0 8px;
+    color: #333;
+    background: rgb(250, 81, 81);
+    /* background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); */
+  
+    /* border-bottom: 1px solid #ddd;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    margin: 10px; */
+  }
+  
+  .navbarLeft {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* .navbarMenu {
+    display: flex;
+  } */
+  
+  .navbarItem {
+    font-size: 17px;
+    padding: 30px;
+    color: black;
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbarItem:hover {
+    color: #ffffff;
+    background-color: rgba(24, 144, 255, 0.1);
+    border-radius: 10px;
+  }
+  
+  .navbarRightContainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .navbarRight {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .searchContainer {
+    width: 360px;
+    /* margin-right: 40px; */
+  }
+  
+  .searchIcon {
+    font-size: 22px;
+  }
+  
+  .signInButton {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 30%;
+  }
+  
+  .profileContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  
+  .profileContainer p {
+    font-size: 14px;
+    margin-left: 10px;
+    margin-top: 15px;
+    font-weight: bold;
+  }
+  
+  /* Media Queries for Responsiveness */
+  @media (max-width: 768px) {
+    .navbarLeft {
+      justify-content: center;
+      margin: 10px 0;
+    }
+  
+    .navbarItem {
+      padding: 10px;
+    }
+  
+    .navbarRightContainer {
+      justify-content: center;
+      margin-top: 10px;
+    }
+  
+    .searchContainer {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    .signInButton {
+      flex-direction: column;
+    }
+  
+    .signInBtn,
+    .signUpBtn {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    .profileContainer p {
+      display: none;
+    }
+  }
