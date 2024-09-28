@@ -6,6 +6,7 @@ import CustomerLayout from "../layouts/CustomerLayout";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import Dashboard from "../pages/Admin/Dashboard";
+import Users from "../pages/Admin/Users";
 
 export const routes = createBrowserRouter([
   {
@@ -32,6 +33,11 @@ export const routes = createBrowserRouter([
   {
     path: "/adminDashboard",
     element: <Dashboard />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/adminUsers",
+    element: <Users />,
     // errorElement: <ErrorPage />,
   },
 ]);
