@@ -39,23 +39,6 @@ const Navbar = () => {
             <span className="navbar-toggler-icon icon-bar" />
           </button>
           <div className="collapse navbar-collapse justify-content-end">
-            <form className="navbar-form">
-              <div className="input-group no-border">
-                <input
-                  className="form-control"
-                  defaultValue=""
-                  placeholder="Search..."
-                  type="text"
-                />
-                <button
-                  className="btn btn-white btn-round btn-just-icon"
-                  type="submit"
-                >
-                  <i className="material-icons">search</i>
-                  <div className="ripple-container" />
-                </button>
-              </div>
-            </form>
             <ul className="navbar-nav">
               <li className="nav-item">
                 <a className="nav-link" href="#pablo">
