@@ -1,28 +1,31 @@
 import React from "react";
-import { createBrowserRouter, Outlet } from "react-router-dom";
-import Login from "../pages/Login";
-import NavbarHome from "../components/NavbarHome";
-import FooterHome from "../components/FooterHome";
-import Head from "../components/Head";
-
-const Layout = () => (
-  <>
-    <Head />
-    <NavbarHome />
-    <Outlet />
-    <FooterHome />
-  </>
-);
+import { createBrowserRouter } from "react-router-dom";
+import HomePage from "../pages/HomePage"
+import RootLayout from "../layouts/RootLayout";
+import CustomerLayout from "../layouts/CustomerLayout";
+import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
 
 export const routes = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: <CustomerLayout />,
+    // errorElement: <ErrorPage />,
     children: [
       {
-        path: "login",
-        element: <Login />,
+        index: true,
+        element: <HomePage />,
       },
     ],
+  },
+  {
+    path: "/login",
+    element: <LoginPage />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/register",
+    element: <RegisterPage />,
+    // errorElement: <ErrorPage />,
   },
 ]);
