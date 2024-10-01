@@ -6,7 +6,7 @@ const Sidebar = () => {
   return (
     <>
       <div
-        className="sidebar"
+        class="sidebar"
         data-background-color="black"
         data-color="rose"
         data-image="../assets/img/sidebar-1.jpg"

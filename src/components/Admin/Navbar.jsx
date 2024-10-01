@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-transparent ">
+      <nav className="navbar navbar-expand-lg navbar-transparent navbar-absolute">
         <div className="container-fluid">
           <div className="navbar-wrapper">
             <div className="navbar-minimize">
