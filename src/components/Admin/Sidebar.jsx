@@ -35,10 +35,10 @@ const Sidebar = () => {
           </div>
           <ul className="nav">
             <li className="nav-item ">
-              <a className="nav-link">
+              <Link className="nav-link" to="/adminUsers">
                 <i className="material-icons">grid_on</i>
                 <p>Users</p>
-              </a>
+              </Link>
             </li>
           </ul>
           <div
