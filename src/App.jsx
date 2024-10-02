@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./assets/css/material-dashboard.min.css";
+import "./App.css";
 import { RouterProvider } from "react-router-dom";
 import { routes } from "./routes/Routes";
 
