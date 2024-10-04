@@ -1,5 +1,5 @@
 import { Button, Form, Input } from "antd";
-import axios from "axios"; // Uncomment axios import since we're using it for API calls
+import axios from "../utils/axiosConfig";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../css/Login.css";
@@ -18,7 +18,7 @@ const LoginPage = () => {
     try {
       // Use query parameters as per your backend requirement
       const response = await axios.post(
-        `https://localhost:44314/Auth/Login?email=${email}&password=${password}`
+        `/Auth/Login?email=${email}&password=${password}`
       );
 
       // Store token if login is successful

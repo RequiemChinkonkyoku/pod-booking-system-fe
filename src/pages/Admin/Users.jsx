@@ -13,7 +13,7 @@ const Users = () => {
 
   const [users, setUsers] = React.useState([]);
   React.useEffect(() => {
-    axios.get("https://localhost:44314/Users").then((response) => {
+    axios.get("/Users").then((response) => {
       setUsers(response.data);
     });
   }, []);
