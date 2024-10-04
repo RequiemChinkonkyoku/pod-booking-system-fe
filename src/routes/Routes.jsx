@@ -1,10 +1,13 @@
 import React from "react";
 import { createBrowserRouter } from "react-router-dom";
-import HomePage from "../pages/HomePage"
+import HomePage from "../pages/HomePage";
 import RootLayout from "../layouts/RootLayout";
 import CustomerLayout from "../layouts/CustomerLayout";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
+import Dashboard from "../pages/Admin/Dashboard";
+import Users from "../pages/Admin/Users";
+import { Products } from "../pages/Admin/Products";
 
 export const routes = createBrowserRouter([
   {
@@ -26,6 +29,21 @@ export const routes = createBrowserRouter([
   {
     path: "/register",
     element: <RegisterPage />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/adminDashboard",
+    element: <Dashboard />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/adminUsers",
+    element: <Users />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/adminProducts",
+    element: <Products />,
     // errorElement: <ErrorPage />,
   },
 ]);
