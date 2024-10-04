@@ -24,10 +24,10 @@ const Sidebar = () => {
               <div className="collapse show">
                 <ul className="nav">
                   <li className="nav-item ">
-                    <a className="nav-link" href="../examples/dashboard.html">
+                    <Link className="nav-link" to="/adminDashboard">
                       <i className="material-icons">dashboard</i>
                       <p> Profile </p>
-                    </a>
+                    </Link>
                   </li>
                 </ul>
               </div>
@@ -38,6 +38,12 @@ const Sidebar = () => {
               <Link className="nav-link" to="/adminUsers">
                 <i className="material-icons">grid_on</i>
                 <p>Users</p>
+              </Link>
+            </li>
+            <li class="nav-item ">
+              <Link class="nav-link" to="/adminProducts">
+                <i class="material-icons">widgets</i>
+                <p>Products</p>
               </Link>
             </li>
           </ul>
