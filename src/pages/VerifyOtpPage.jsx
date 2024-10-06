@@ -4,29 +4,27 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../css/Login.css";
 
-const LoginPage = () => {
+const VerifyOtpPage = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   // const [credentials, setCredentials] = useState({
   //   email: "",
   //   password: "",
   // });
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
   const [form] = Form.useForm();
 
   const handleSubmit = async () => {
     try {
       // Use query parameters as per your backend requirement
-      const response = await axios.post(
-        `/Auth/Login?email=${email}&password=${password}`
-      );
+      const response = await axios.post(`/Auth/Verify/${otp}?email=${email}`);
 
       // Store token if login is successful
       setToken(response.data.token);
       localStorage.setItem("token", response.data.token);
-      console.log("Login successful");
+      console.log("Verification successful");
     } catch (error) {
-      console.error("Login failed: ", error);
+      console.error("Verification failed: ", error);
     }
   };
 
@@ -34,7 +32,7 @@ const LoginPage = () => {
     <div className="login-container">
       <div className="login-bg" />
       <div className="login-form">
-        <h2>Login</h2>
+        <h2>VERIFY ACCOUNT</h2>
         <Form
           form={form}
           name="login"
@@ -59,17 +57,17 @@ const LoginPage = () => {
             <Input placeholder="Email" />
           </Form.Item>
           <Form.Item
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)} // Set password value on change
+            name="otp"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)} // Set password value on change
             rules={[
               {
                 required: true,
-                message: "Please input your password!",
+                message: "Please input your OTP!",
               },
             ]}
           >
-            <Input.Password placeholder="Password" />
+            <Input placeholder="OTP" />
           </Form.Item>
           <Form.Item>
             <Button
@@ -78,18 +76,13 @@ const LoginPage = () => {
               className="login-button"
               block
             >
-              Log in
+              VERIFY
             </Button>
           </Form.Item>
         </Form>
-        <div className="additional-links">
-          <div className="register-link">
-            Don't have an account? <Link to={"/register"}>Sign up</Link>
-          </div>
-        </div>
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default VerifyOtpPage;

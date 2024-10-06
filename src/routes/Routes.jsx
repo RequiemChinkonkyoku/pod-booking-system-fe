@@ -8,6 +8,7 @@ import RegisterPage from "../pages/RegisterPage";
 import Dashboard from "../pages/Admin/Dashboard";
 import Users from "../pages/Admin/Users";
 import { Products } from "../pages/Admin/Products";
+import VerifyOtpPage from "../pages/VerifyOtpPage";
 
 export const routes = createBrowserRouter([
   {
@@ -44,6 +45,11 @@ export const routes = createBrowserRouter([
   {
     path: "/adminProducts",
     element: <Products />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/verifyOtp",
+    element: <VerifyOtpPage />,
     // errorElement: <ErrorPage />,
   },
 ]);

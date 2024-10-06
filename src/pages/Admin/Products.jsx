@@ -12,7 +12,7 @@ export const Products = () => {
 
   const [products, setProducts] = React.useState([]);
   React.useEffect(() => {
-    axios.get("https://localhost:44314/Products").then((response) => {
+    axios.get("/Products").then((response) => {
       setProducts(response.data);
     });
   }, []);
