@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../utils/axiosConfig";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../assets/css/material-dashboard.min.css";
@@ -20,7 +20,7 @@ const Users = () => {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    await axios.post(`https://localhost:44314/Users/Email?email=${email}`);
+    await axios.post(`/Users/Email?email=${email}`);
   };
 
   return (
