@@ -1,22 +1,24 @@
 import axios from "../../utils/axiosConfig";
 import React, { useState, useEffect } from "react";
 import "../../assets/css/material-dashboard.min.css";
-// import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import "bootstrap/dist/js/bootstrap.bundle.min.js"; // Import Bootstrap JS
 
 import Navbar from "../../components/Admin/Navbar";
 import Head from "../../components/Head";
 import Sidebar from "../../components/Admin/Sidebar";
+import { Modal, Button } from "react-bootstrap"; // Import Modal and Button from react-bootstrap
 
 export const Pods = () => {
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  const [pods, setPods] = useState([]); // State to store the list of pods
-  const [podTypes, setPodTypes] = useState([]); // State to store pod types for the dropdown
-  const [areas, setAreas] = useState([]); // State to store areas for the dropdown
+  const [pods, setPods] = useState([]);
+  const [podTypes, setPodTypes] = useState([]);
+  const [areas, setAreas] = useState([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [selectedPodType, setSelectedPodType] = useState(""); // State to track selected pod type
-  const [selectedArea, setSelectedArea] = useState(""); // State to track selected area
+  const [selectedPodType, setSelectedPodType] = useState("");
+  const [selectedArea, setSelectedArea] = useState("");
+  const [editModalVisible, setEditModalVisible] = useState(false); // Edit modal visibility
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false); // Delete modal visibility
+  const [currentPod, setCurrentPod] = useState(null); // Track the currently selected pod
 
   // Fetch data for pods, pod types, and areas when the component mounts
   useEffect(() => {
@@ -24,50 +26,99 @@ export const Pods = () => {
       setPods(response.data);
     });
 
-    // Fetch PodTypes
-    axios
-      .get("/PodType")
-      .then((response) => {
-        setPodTypes(response.data); // Store the pod types data
-      })
-      .catch((error) => {
-        console.error("Failed to fetch pod types:", error);
-      });
+    axios.get("/PodType").then((response) => {
+      setPodTypes(response.data);
+    });
 
-    // Fetch Areas
-    axios
-      .get("/Areas")
-      .then((response) => {
-        setAreas(response.data); // Store the areas data
-      })
-      .catch((error) => {
-        console.error("Failed to fetch areas:", error);
-      });
+    axios.get("/Areas").then((response) => {
+      setAreas(response.data);
+    });
   }, []);
 
   // Handle dropdown changes
-  const handlePodTypeChange = (e) => {
-    setSelectedPodType(e.target.value);
-    console.log("Selected Pod Type:", e.target.value);
+  const handlePodTypeChange = (e) => setSelectedPodType(e.target.value);
+  const handleAreaChange = (e) => setSelectedArea(e.target.value);
+
+  // Show or hide modals
+  const handleOpenEditModal = (pod) => {
+    setCurrentPod(pod);
+    setName(pod.name); // Set the name and description with the current values
+    setDescription(pod.description);
+    setSelectedPodType(pod.podTypeId);
+    setSelectedArea(pod.areaId);
+    setEditModalVisible(true);
   };
 
-  const handleAreaChange = (e) => {
-    setSelectedArea(e.target.value);
-    console.log("Selected Area:", e.target.value);
+  const handleCloseEditModal = () => {
+    setCurrentPod(null);
+    setName("");
+    setDescription("");
+    setSelectedPodType("");
+    setSelectedArea("");
+    setEditModalVisible(false);
   };
 
+  const handleOpenDeleteModal = (pod) => {
+    setCurrentPod(pod);
+    setDeleteModalVisible(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setCurrentPod(null);
+    setDeleteModalVisible(false);
+  };
+
+  // Handle create new pod
   const handleCreate = async (e) => {
     e.preventDefault();
     try {
-      // Use params to send the data as query parameters instead of the request body
-      const response = await axios.post("/Pods", {
+      await axios.post("/Pods", {
         name,
         description,
         podTypeId: selectedPodType,
         areaId: selectedArea,
       });
+      setName(""); // Clear form fields on success
+      setDescription("");
+      setSelectedPodType("");
+      setSelectedArea("");
+      axios.get("/Pods").then((response) => {
+        setPods(response.data); // Refresh the pod list
+      });
     } catch (error) {
-      console.error("Error: ", error);
+      console.error("Failed to create pod:", error);
+    }
+  };
+
+  // Handle edit pod
+  const handleEditPod = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.put(`/Pods/${currentPod.id}`, {
+        name: name || currentPod.name,
+        description: description || currentPod.description,
+        podTypeId: selectedPodType || currentPod.podTypeId,
+        areaId: selectedArea || currentPod.areaId,
+      });
+      handleCloseEditModal(); // Close the modal on success
+      axios.get("/Pods").then((response) => {
+        setPods(response.data); // Refresh the pod list
+      });
+    } catch (error) {
+      console.error("Failed to update pod:", error);
+    }
+  };
+
+  // Handle delete pod
+  const handleDeletePod = async () => {
+    try {
+      await axios.delete(`/Pods?id=${currentPod.id}`);
+      handleCloseDeleteModal(); // Close the modal on success
+      axios.get("/Pods").then((response) => {
+        setPods(response.data); // Refresh the pod list
+      });
+    } catch (error) {
+      console.error("Failed to delete pod:", error);
     }
   };
 
@@ -80,6 +131,7 @@ export const Pods = () => {
           <Navbar />
           <div className="content">
             <div className="container-fluid">
+              {/* Pod List Table */}
               <div className="row">
                 <div className="col-md-12">
                   <div className="card">
@@ -114,14 +166,27 @@ export const Pods = () => {
                                 <td>{pod.podTypeId}</td>
                                 <td>{pod.areaId}</td>
                                 <td className="td-actions text-right">
+                                  {/* Edit Button */}
                                   <button
                                     type="button"
                                     rel="tooltip"
                                     className="btn btn-success"
                                     data-original-title=""
-                                    title=""
+                                    title="Edit"
+                                    onClick={() => handleOpenEditModal(pod)}
                                   >
                                     <i className="material-icons">edit</i>
+                                  </button>
+                                  {/* Delete Button */}
+                                  <button
+                                    type="button"
+                                    rel="tooltip"
+                                    className="btn btn-danger"
+                                    data-original-title=""
+                                    title="Delete"
+                                    onClick={() => handleOpenDeleteModal(pod)}
+                                  >
+                                    <i className="material-icons">close</i>
                                   </button>
                                 </td>
                               </tr>
@@ -133,6 +198,7 @@ export const Pods = () => {
                   </div>
                 </div>
               </div>
+
               {/* New Pod Creation Form */}
               <div className="row">
                 <div className="col-md-12">
@@ -229,8 +295,7 @@ export const Pods = () => {
                       </div>
                       <div className="card-footer">
                         <button type="submit" className="btn btn-fill btn-rose">
-                          Submit
-                          <div className="ripple-container"></div>
+                          Create
                         </button>
                       </div>
                     </form>
@@ -241,6 +306,60 @@ export const Pods = () => {
           </div>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      <Modal show={editModalVisible} onHide={handleCloseEditModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit Pod</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form onSubmit={handleEditPod}>
+            <div className="form-group">
+              <label>Name</label>
+              <input
+                type="text"
+                className="form-control"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label>Description</label>
+              <input
+                type="text"
+                className="form-control"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </div>
+            <Button variant="secondary" onClick={handleCloseEditModal}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="primary">
+              Save Changes
+            </Button>
+          </form>
+        </Modal.Body>
+      </Modal>
+
+      {/* Delete Modal */}
+      <Modal show={deleteModalVisible} onHide={handleCloseDeleteModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete Pod</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            Are you sure you want to delete the pod{" "}
+            {currentPod ? currentPod.name : ""}?
+          </p>
+          <Button variant="secondary" onClick={handleCloseDeleteModal}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDeletePod}>
+            Delete
+          </Button>
+        </Modal.Body>
+      </Modal>
     </>
   );
 };
