@@ -56,7 +56,31 @@ export const Products = () => {
     setDeleteModalVisible(false);
   };
 
-  const handleCreate = async (e) => {};
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("/Products", {
+        name,
+        price,
+        description,
+        status: "1",
+        quantity,
+        unit,
+        categoryId: selectedCategory,
+      });
+      setName("");
+      setPrice("");
+      setDescription("");
+      setQuantity("");
+      setUnit("");
+      setSelectedCategory("");
+      axios.get("/Products").then((response) => {
+        setProducts(response.data); // Refresh the pod list
+      });
+    } catch (error) {
+      console.error("Failed to create product:", error);
+    }
+  };
 
   // Handle editing a product
   const handleEditProduct = async (e) => {
@@ -84,6 +108,8 @@ export const Products = () => {
       console.error("Failed to delete product:", error);
     }
   };
+
+  const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
 
   return (
     <>
@@ -165,7 +191,7 @@ export const Products = () => {
                   <div className="card">
                     <div className="card-header card-header-rose card-header-text">
                       <div className="card-text">
-                        <h4 className="card-title">CREATE NEW POD</h4>
+                        <h4 className="card-title">CREATE NEW PRODUCT</h4>
                       </div>
                     </div>
                     <form
@@ -191,6 +217,21 @@ export const Products = () => {
                         </div>
                         <div className="row">
                           <label className="col-sm-2 col-form-label">
+                            Price
+                          </label>
+                          <div className="col-sm-10">
+                            <div className="form-group bmd-form-group">
+                              <input
+                                type="text"
+                                className="form-control"
+                                value={price}
+                                onChange={(e) => setPrice(e.target.value)}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <label className="col-sm-2 col-form-label">
                             Description
                           </label>
                           <div className="col-sm-10">
@@ -204,48 +245,53 @@ export const Products = () => {
                             </div>
                           </div>
                         </div>
-                        {/* Dropdown for Pod Type */}
                         <div className="row">
                           <label className="col-sm-2 col-form-label">
-                            Pod Type
+                            Quantity
                           </label>
                           <div className="col-sm-10">
                             <div className="form-group bmd-form-group">
-                              <select
+                              <input
+                                type="text"
                                 className="form-control"
-                                value={selectedPodType}
-                                onChange={handlePodTypeChange}
-                              >
-                                <option value="" disabled>
-                                  Select Pod Type
-                                </option>
-                                {podTypes.map((type) => (
-                                  <option key={type.id} value={type.id}>
-                                    {type.name}
-                                  </option>
-                                ))}
-                              </select>
+                                value={quantity}
+                                onChange={(e) => setQuantity(e.target.value)}
+                              />
                             </div>
                           </div>
                         </div>
-                        {/* Dropdown for Area */}
                         <div className="row">
                           <label className="col-sm-2 col-form-label">
-                            Area
+                            Unit
+                          </label>
+                          <div className="col-sm-10">
+                            <div className="form-group bmd-form-group">
+                              <input
+                                type="text"
+                                className="form-control"
+                                value={unit}
+                                onChange={(e) => setUnit(e.target.value)}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row">
+                          <label className="col-sm-2 col-form-label">
+                            Category
                           </label>
                           <div className="col-sm-10">
                             <div className="form-group bmd-form-group">
                               <select
                                 className="form-control"
-                                value={selectedArea}
-                                onChange={handleAreaChange}
+                                value={selectedCategory}
+                                onChange={handleCategoryChange}
                               >
                                 <option value="" disabled>
-                                  Select Area
+                                  Select Category
                                 </option>
-                                {areas.map((area) => (
-                                  <option key={area.id} value={area.id}>
-                                    {area.name}
+                                {categories.map((category) => (
+                                  <option key={category.id} value={category.id}>
+                                    {category.name}
                                   </option>
                                 ))}
                               </select>
