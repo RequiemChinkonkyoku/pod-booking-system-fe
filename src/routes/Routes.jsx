@@ -10,6 +10,8 @@ import Users from "../pages/Admin/Users";
 import { Products } from "../pages/Admin/Products";
 import VerifyOtpPage from "../pages/VerifyOtpPage";
 import { Pods } from "../pages/Admin/PODs";
+import CustomerDashboard from "../pages/Customer/Dashboard";
+import BookAPod from "../pages/Customer/BookAPod";
 
 export const routes = createBrowserRouter([
   {
@@ -56,6 +58,16 @@ export const routes = createBrowserRouter([
   {
     path: "/adminPods",
     element: <Pods />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customerDashboard",
+    element: <CustomerDashboard />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customerBookAPod",
+    element: <BookAPod />,
     // errorElement: <ErrorPage />,
   },
 ]);
