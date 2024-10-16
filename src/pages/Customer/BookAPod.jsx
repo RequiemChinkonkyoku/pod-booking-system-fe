@@ -257,12 +257,30 @@ const BookAPod = () => {
                           <div className="mt-4">
                             <h5>Selected Time Slots:</h5>
                             <ul>
-                              {selectedSlots.map((slot, index) => (
-                                <li key={index}>
-                                  {formatTime(slot.startTime)} -{" "}
-                                  {formatTime(slot.endTime)}
-                                </li>
-                              ))}
+                              {selectedSlots.map((slot, index) => {
+                                // Getting the full slot information based on the id
+                                const fullSlotInfo = timeSlots.find(
+                                  (s) => s.id === slot.id
+                                ); // Ensure you have access to timeSlots here
+
+                                // Assuming activeDay is always the day selected for the slots
+                                const dateOfSlot = activeDay
+                                  ? format(activeDay, "dd/MM/yyyy")
+                                  : "N/A";
+
+                                return (
+                                  <li key={index}>
+                                    Date: {dateOfSlot}, Time:{" "}
+                                    {fullSlotInfo
+                                      ? formatTime(fullSlotInfo.startTime)
+                                      : "N/A"}{" "}
+                                    -{" "}
+                                    {fullSlotInfo
+                                      ? formatTime(fullSlotInfo.endTime)
+                                      : "N/A"}
+                                  </li>
+                                );
+                              })}
                             </ul>
                           </div>
                         )}
