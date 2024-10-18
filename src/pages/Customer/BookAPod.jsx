@@ -9,6 +9,7 @@ import Sidebar from "../../components/Customer/Sidebar";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { addDays, startOfWeek, format, isBefore, isSameDay } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const BookAPod = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -82,7 +83,8 @@ const BookAPod = () => {
         setActiveDay(day);
       }
     }
-    console.log(availablePodsBySlot);
+    // console.log(selectedSlots);
+    // console.log(availablePodsBySlot);
   };
 
   const fetchAvailablePods = async (selectedSlots) => {
@@ -198,6 +200,22 @@ const BookAPod = () => {
     // Redirect to another page or perform an action with the selectedPodId
     console.log("Pod selected:", selectedPodId);
     // Navigate or store the selectedPodId for later
+    handleConfirm();
+  };
+
+  const navigate = useNavigate();
+  const handleConfirm = () => {
+    const scheduleId = selectedSlots.map((slot) => slot.id);
+    const arrivalDate = format(activeDay, "yyyy-MM-dd");
+    const bookingData = {
+      arrivalDate: arrivalDate,
+      podId: selectedPodId,
+      scheduleId: scheduleId, // This can be a list of more than 1 ID
+    };
+    console.log(bookingData);
+
+    // Navigate to the next page, passing bookingData as state
+    navigate("/customerConfirmBooking", { state: bookingData });
   };
 
   return (

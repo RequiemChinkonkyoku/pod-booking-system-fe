@@ -12,6 +12,7 @@ import VerifyOtpPage from "../pages/VerifyOtpPage";
 import { Pods } from "../pages/Admin/PODs";
 import CustomerDashboard from "../pages/Customer/Dashboard";
 import BookAPod from "../pages/Customer/BookAPod";
+import ConfirmBooking from "../pages/Customer/ConfirmBooking";
 
 export const routes = createBrowserRouter([
   {
@@ -68,6 +69,11 @@ export const routes = createBrowserRouter([
   {
     path: "/customerBookAPod",
     element: <BookAPod />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customerConfirmBooking",
+    element: <ConfirmBooking />,
     // errorElement: <ErrorPage />,
   },
 ]);
