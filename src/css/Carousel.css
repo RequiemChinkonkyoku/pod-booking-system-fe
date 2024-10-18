@@ -9,7 +9,7 @@
   padding: 0 20px 60px;
 }
 
-.home-title {
+.home-title1 {
   color: #333;
   font-size: 36px;
   font-weight: 700;
@@ -28,7 +28,7 @@
   width: 100%;
 }
 
-.carousel-item {
+.carousel-item1 {
   width: 100%;
   height: 650px;
   border-radius: 15px;
@@ -39,7 +39,7 @@
   overflow: hidden;
 }
 
-.carousel-item-inner {
+.carousel-item-inner1 {
   height: 100%;
   border-radius: 10px;
   overflow: hidden;
@@ -49,26 +49,26 @@
   flex-direction: column;
 }
 
-.carousel-item:hover .carousel-item-inner {
+.carousel-item1:hover .carousel-item-inner1 {
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
 }
 
-.carousel-item:hover {
+.carousel-item1:hover {
   transform: translateY(-5px);
 }
 
-.carousel-header {
+.carousel-header1 {
   padding: 20px;
   background-color: #f0f0f0;
 }
 
-.carousel-header h3 {
+.carousel-header1 h3 {
   font-size: 24px;
   color: #333;
   margin-bottom: 10px;
 }
 
-.carousel-header p {
+.carousel-header1 p {
   font-size: 16px;
   color: #666;
 }
@@ -128,18 +128,18 @@
 }
 
 @media (max-width: 900px) {
-  .carousel-item {
+  .carousel-item1 {
     height: auto;
     max-width: 450px;
     margin: 5px auto 0;
     padding-top: 5px;
   }
 
-  .carousel-header h3 {
+  .carousel-header1 h3 {
     font-size: 20px;
   }
 
-  .carousel-header p {
+  .carousel-header1 p {
     font-size: 14px;
   }
 
@@ -163,7 +163,7 @@
     font-size: 28px;
   }
 
-  .carousel-item {
+  .carousel-item1 {
     max-width: 100%;
   }
 

@@ -24,7 +24,7 @@ const Sidebar = () => {
               <div className="collapse show">
                 <ul className="nav">
                   <li className="nav-item ">
-                    <Link className="nav-link" to="/adminDashboard">
+                    <Link className="nav-link" to="/admin/dashboard">
                       <i className="material-icons">dashboard</i>
                       <p> Profile </p>
                     </Link>
@@ -35,19 +35,19 @@ const Sidebar = () => {
           </div>
           <ul className="nav">
             <li className="nav-item ">
-              <Link className="nav-link" to="/adminUsers">
+              <Link className="nav-link" to="/admin/users">
                 <i className="material-icons">grid_on</i>
                 <p>Users</p>
               </Link>
             </li>
             <li class="nav-item ">
-              <Link class="nav-link" to="/adminProducts">
+              <Link class="nav-link" to="/admin/products">
                 <i class="material-icons">widgets</i>
                 <p>Products</p>
               </Link>
             </li>
             <li class="nav-item ">
-              <Link class="nav-link" to="/adminPods">
+              <Link class="nav-link" to="/admin/pods">
                 <i class="material-icons">place</i>
                 <p>PODs</p>
               </Link>

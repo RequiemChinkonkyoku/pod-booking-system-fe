@@ -1,32 +1,30 @@
-import { Button, Form, Input } from "antd";
-import axios from "../utils/axiosConfig";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "../css/Login.css";
+import { Button, Form, Input, message, Spin } from "antd";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext";
 
 const LoginPage = () => {
-  const [token, setToken] = useState(localStorage.getItem("token"));
-  // const [credentials, setCredentials] = useState({
-  //   email: "",
-  //   password: "",
-  // });
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [form] = Form.useForm();
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (values) => {
+    const { email, password } = values;
+    setLoading(true);
     try {
-      // Use query parameters as per your backend requirement
-      const response = await axios.post(
-        `/Auth/Login?email=${email}&password=${password}`
-      );
-
-      // Store token if login is successful
-      setToken(response.data.token);
-      localStorage.setItem("token", response.data.token);
-      console.log("Login successful");
+      const success = await login(email, password);
+      if (success) {
+        message.success("Login successful");
+        navigate("/admin/users");
+      } else {
+        message.error("Login failed. Please check your credentials.");
+      }
     } catch (error) {
-      console.error("Login failed: ", error);
+      console.error("Login error:", error);
+      message.error("An error occurred during login. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -35,58 +33,57 @@ const LoginPage = () => {
       <div className="login-bg" />
       <div className="login-form">
         <h2>Login</h2>
-        <Form
-          form={form}
-          name="login"
-          onFinish={handleSubmit} // Keep onFinish for form submission
-          layout="vertical"
-        >
-          <Form.Item
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)} // Set email value on change
-            rules={[
-              {
-                required: true,
-                message: "Please input your email!",
-              },
-              {
-                type: "email", // Ensure the value is a valid email format
-                message: "Please enter a valid email!",
-              },
-            ]}
+        <Spin spinning={loading}>
+          <Form
+            form={form}
+            name="login"
+            onFinish={handleSubmit}
+            layout="vertical"
           >
-            <Input placeholder="Email" />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)} // Set password value on change
-            rules={[
-              {
-                required: true,
-                message: "Please input your password!",
-              },
-            ]}
-          >
-            <Input.Password placeholder="Password" />
-          </Form.Item>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className="login-button"
-              block
+            <Form.Item
+              name="email"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your email!",
+                },
+                {
+                  type: "email",
+                  message: "Please enter a valid email!",
+                },
+              ]}
             >
-              Log in
-            </Button>
-          </Form.Item>
-        </Form>
-        <div className="additional-links">
-          <div className="register-link">
-            Don't have an account? <Link to={"/register"}>Sign up</Link>
+              <Input placeholder="Email" />
+            </Form.Item>
+            <Form.Item
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input your password!",
+                },
+              ]}
+            >
+              <Input.Password placeholder="Password" />
+            </Form.Item>
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="login-button"
+                block
+                loading={loading}
+              >
+                Log in
+              </Button>
+            </Form.Item>
+          </Form>
+          <div className="additional-links">
+            <div className="register-link">
+              Don't have an account? <Link to={"/register"}>Sign up</Link>
+            </div>
           </div>
-        </div>
+        </Spin>
       </div>
     </div>
   );

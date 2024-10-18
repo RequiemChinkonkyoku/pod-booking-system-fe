@@ -54,7 +54,7 @@ const carouselItems = [
 export default function CarouselPod() {
   return (
     <div className="carousel-container">
-      <h1 className="home-title">Modern POD for Working</h1>
+      <h1 className="home-title1">Modern POD for Working</h1>
       <div className="carousel-row">
         <Swiper
           slidesPerView={1}
@@ -75,9 +75,9 @@ export default function CarouselPod() {
         >
           {carouselItems.map((item, index) => (
             <SwiperSlide key={index}>
-              <div className="carousel-item">
-                <div className="carousel-item-inner">
-                  <div className="carousel-header">
+              <div className="carousel-item1">
+                <div className="carousel-item-inner1">
+                  <div className="carousel-header1">
                     <h3>{item.title}</h3>
                     <p>{item.description}</p>
                   </div>
