@@ -15,11 +15,11 @@ const BookAPod = () => {
   const [weekDays, setWeekDays] = useState([]);
   const [timeSlots, setTimeSlots] = useState([]);
   const [selectedSlots, setSelectedSlots] = useState([]);
-  const [activeDay, setActiveDay] = useState(null); // Track the day with selected slots
+  const [activeDay, setActiveDay] = useState(null);
   const [podTypes, setPodTypes] = useState([]);
   const [selectedPodTypeId, setSelectedPodTypeId] = useState(null);
+  const [availablePodsBySlot, setAvailablePodsBySlot] = useState({}); // Pods mapped by slot ID
 
-  // Fetch time slots from the /Schedules API
   useEffect(() => {
     const fetchSchedules = async () => {
       try {
@@ -36,7 +36,7 @@ const BookAPod = () => {
     const fetchPodTypes = async () => {
       try {
         const response = await axios.get("/PodType");
-        setPodTypes(response.data); // Assuming the response is an array of pod types
+        setPodTypes(response.data);
       } catch (error) {
         console.error("Error fetching pod types:", error);
       }
@@ -44,7 +44,6 @@ const BookAPod = () => {
     fetchPodTypes();
   }, []);
 
-  // Calculate and set the week days based on the selected date
   useEffect(() => {
     const startOfSelectedWeek = startOfWeek(selectedDate, { weekStartsOn: 1 });
     const daysOfWeek = Array.from({ length: 7 }).map((_, index) =>
@@ -53,37 +52,57 @@ const BookAPod = () => {
     setWeekDays(daysOfWeek);
   }, [selectedDate]);
 
-  // Function to format time (removes seconds)
   const formatTime = (time) => {
     return time.slice(0, 5);
   };
 
-  // Handle slot selection logic
   const handleSlotSelect = (slot, day) => {
-    // If the slot is already selected, unselect it
     if (selectedSlots.includes(slot)) {
-      setSelectedSlots(selectedSlots.filter((s) => s !== slot));
+      // If slot is deselected, remove it from the selectedSlots and clear its pods
+      const updatedSlots = selectedSlots.filter((s) => s !== slot);
+      setSelectedSlots(updatedSlots);
 
-      // Clear activeDay if no more slots are selected
-      if (selectedSlots.length === 1) setActiveDay(null);
+      const updatedAvailablePods = { ...availablePodsBySlot };
+      delete updatedAvailablePods[slot.id]; // Remove pods for the deselected slot
+      setAvailablePodsBySlot(updatedAvailablePods);
+
+      if (updatedSlots.length === 0) setActiveDay(null);
     } else {
-      // Enforce consecutive selection
       if (
         selectedSlots.length === 0 ||
         (selectedSlots.length === 1 &&
           Math.abs(slot.id - selectedSlots[0].id) === 1)
       ) {
         setSelectedSlots([...selectedSlots, slot]);
+        fetchAvailablePods([...selectedSlots, slot]); // Fetch pods for selected slots
         setActiveDay(day);
       }
     }
   };
 
-  // Check if a slot should be disabled for selection based on adjacency
-  const isSlotDisabled = (slot) => {
-    if (selectedSlots.length === 0) return false; // No selection, all slots are enabled
+  const fetchAvailablePods = async (selectedSlots) => {
+    const slotIds = selectedSlots.map((slot) => slot.id);
 
-    // Slot should be adjacent to the current selected slot(s)
+    const availablePodData = [
+      { id: 1, name: "Pod 1", slotId: 1 },
+      { id: 2, name: "Pod 2", slotId: 1 },
+      { id: 3, name: "Pod 3", slotId: 2 },
+    ]; // Placeholder data
+
+    // Group available pods by slotId
+    const podsBySlot = {};
+    slotIds.forEach((slotId) => {
+      podsBySlot[slotId] = availablePodData.filter(
+        (pod) => pod.slotId === slotId
+      );
+    });
+
+    setAvailablePodsBySlot(podsBySlot);
+  };
+
+  const isSlotDisabled = (slot) => {
+    if (selectedSlots.length === 0) return false;
+
     const firstSelected = selectedSlots[0].id;
     const lastSelected = selectedSlots[selectedSlots.length - 1].id;
 
@@ -93,12 +112,10 @@ const BookAPod = () => {
     );
   };
 
-  // Handle pod type selection and fetch available slots
   const handlePodTypeChange = async (event) => {
     const podTypeId = event.target.value;
     setSelectedPodTypeId(podTypeId);
 
-    // Fetch available slots for the selected pod type
     if (podTypeId) {
       try {
         const response = await axios.get(`/Slot/PodType/${podTypeId}`);
@@ -119,23 +136,22 @@ const BookAPod = () => {
     <>
       <Head />
       <body>
-        <div class="wrapper">
+        <div className="wrapper">
           <Sidebar />
-          <div class="main-panel ps-container ps-theme-default">
+          <div className="main-panel ps-container ps-theme-default">
             <Navbar />
-            <div class="content">
-              <div class="container-fluid">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="card">
-                      <div class="card-header card-header-icon card-header-rose">
-                        <div class="card-icon">
-                          <i class="material-icons">assignment</i>
+            <div className="content">
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col-md-12">
+                    <div className="card">
+                      <div className="card-header card-header-icon card-header-rose">
+                        <div className="card-icon">
+                          <i className="material-icons">assignment</i>
                         </div>
-                        <h4 class="card-title">Schedule</h4>
+                        <h4 className="card-title">Schedule</h4>
                       </div>
-                      <div class="card-body">
-                        {/* Pod Type Selection */}
+                      <div className="card-body">
                         <div className="mb-4">
                           <label>Select Pod Type: </label>
                           <select
@@ -153,24 +169,23 @@ const BookAPod = () => {
                             ))}
                           </select>
                         </div>
-                        {/* DatePicker */}
                         <div className="mb-4">
-                          <label>Select a date: </label> <t />
+                          <label>Select a date: </label>
                           <DatePicker
                             selected={selectedDate}
                             onChange={(date) => {
                               setSelectedDate(date);
-                              setSelectedSlots([]); // Reset selection when date changes
-                              setActiveDay(null); // Reset active day
+                              setSelectedSlots([]);
+                              setActiveDay(null);
+                              setAvailablePodsBySlot({}); // Clear pods when changing date
                             }}
                             dateFormat="dd MMMM, yyyy"
                             className="form-control"
                           />
                         </div>
-                        {/* Timetable */}
-                        <div class="table-responsive">
-                          <table class="table">
-                            <thead class="text-primary">
+                        <div className="table-responsive">
+                          <table className="table">
+                            <thead className="text-primary">
                               <tr>
                                 <th>Time Slot</th>
                                 {weekDays.map((day) => (
@@ -192,7 +207,6 @@ const BookAPod = () => {
                                     {formatTime(slot.endTime)}
                                   </td>
                                   {weekDays.map((day) => {
-                                    // Check if the current day and timeslot match any of the booked slots in the array
                                     const isBooked = bookedSlots.some(
                                       (booked) =>
                                         format(day, "dd/MM/yyyy") ===
@@ -205,7 +219,7 @@ const BookAPod = () => {
                                         <button
                                           className={`btn-sm ${
                                             isBooked
-                                              ? "btn btn-danger" // Change class to "btn-danger" for booked slots
+                                              ? "btn btn-danger"
                                               : isBefore(day, new Date()) ||
                                                 isSameDay(day, new Date())
                                               ? "btn"
@@ -220,29 +234,19 @@ const BookAPod = () => {
                                               : "btn"
                                           }`}
                                           disabled={
-                                            isBooked || // Disable the booked slot here
+                                            isBooked ||
                                             isBefore(day, new Date()) ||
                                             (activeDay &&
                                               !isSameDay(activeDay, day)) ||
                                             (selectedSlots.length === 2 &&
                                               !selectedSlots.includes(slot)) ||
-                                            isSlotDisabled(slot) // Disable non-adjacent slots
+                                            isSlotDisabled(slot)
                                           }
                                           onClick={() =>
                                             handleSlotSelect(slot, day)
                                           }
                                         >
-                                          {isBooked
-                                            ? "Fully Booked"
-                                            : isBefore(day, new Date()) ||
-                                              isSameDay(day, new Date())
-                                            ? "Unavailable"
-                                            : selectedSlots.includes(slot)
-                                            ? "Selected"
-                                            : slot.status === 1
-                                            ? "Available"
-                                            : "Booked"}
-                                          <div class="ripple-container"></div>
+                                          {isBooked ? "Booked" : "Available"}
                                         </button>
                                       </td>
                                     );
@@ -258,16 +262,12 @@ const BookAPod = () => {
                             <h5>Selected Time Slots:</h5>
                             <ul>
                               {selectedSlots.map((slot, index) => {
-                                // Getting the full slot information based on the id
                                 const fullSlotInfo = timeSlots.find(
                                   (s) => s.id === slot.id
-                                ); // Ensure you have access to timeSlots here
-
-                                // Assuming activeDay is always the day selected for the slots
+                                );
                                 const dateOfSlot = activeDay
                                   ? format(activeDay, "dd/MM/yyyy")
                                   : "N/A";
-
                                 return (
                                   <li key={index}>
                                     Date: {dateOfSlot}, Time:{" "}
@@ -284,6 +284,26 @@ const BookAPod = () => {
                             </ul>
                           </div>
                         )}
+                        {/* Display available pods for each selected slot */}
+                        <div className="mt-4">
+                          <h5>Available Pods by Slot:</h5>
+                          {Object.keys(availablePodsBySlot).length > 0 ? (
+                            Object.entries(availablePodsBySlot).map(
+                              ([slotId, pods]) => (
+                                <div key={slotId}>
+                                  <h6>Slot {slotId}:</h6>
+                                  <ul>
+                                    {pods.map((pod) => (
+                                      <li key={pod.id}>{pod.name}</li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              )
+                            )
+                          ) : (
+                            <p>No available pods for the selected slots.</p>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
