@@ -21,6 +21,7 @@ const BookAPod = () => {
   const [availablePodsBySlot, setAvailablePodsBySlot] = useState({}); // Pods mapped by slot ID
   const [fullyBookedSlots, setFullyBookedSlots] = useState([]);
   const [commonPods, setCommonPods] = useState([]);
+  const [selectedPodId, setSelectedPodId] = useState(null);
 
   useEffect(() => {
     const fetchSchedules = async () => {
@@ -59,6 +60,7 @@ const BookAPod = () => {
   };
 
   const handleSlotSelect = (slot, day) => {
+    setSelectedPodId(null); // Clear pod selection
     if (selectedSlots.includes(slot)) {
       // If slot is deselected, remove it from the selectedSlots and clear its pods
       const updatedSlots = selectedSlots.filter((s) => s !== slot);
@@ -84,6 +86,7 @@ const BookAPod = () => {
   };
 
   const fetchAvailablePods = async (selectedSlots) => {
+    setSelectedPodId(null); // Clear pod selection
     const slotIds = selectedSlots.map((slot) => slot.id);
     const formattedDate = format(selectedDate, "yyyy-MM-dd"); // Format the selected date
 
@@ -135,11 +138,6 @@ const BookAPod = () => {
     return [];
   };
 
-  const test = () => {
-    const commonPods = findCommonPods(availablePodsBySlot, selectedSlots);
-    console.log("Common Available Pods:", commonPods);
-  };
-
   const isSlotDisabled = (slot) => {
     if (selectedSlots.length === 0) return false;
 
@@ -174,6 +172,7 @@ const BookAPod = () => {
     setSelectedSlots([]);
     setCommonPods([]);
     setAvailablePodsBySlot({}); // Clear the available pods display
+    setSelectedPodId(null); // Clear pod selection
 
     if (podTypeId) {
       try {
@@ -183,11 +182,22 @@ const BookAPod = () => {
         if (error.response && error.response.status === 404) {
           // No booked slots, all are available
           setFullyBookedSlots([]); // Clear fully booked slots
+          setSelectedPodId(null); // Clear pod selection
         } else {
           console.error("Error fetching slots for pod type:", error);
         }
       }
     }
+  };
+
+  const handlePodSelect = (podId) => {
+    setSelectedPodId(podId);
+  };
+
+  const confirmPodSelection = () => {
+    // Redirect to another page or perform an action with the selectedPodId
+    console.log("Pod selected:", selectedPodId);
+    // Navigate or store the selectedPodId for later
   };
 
   return (
@@ -211,14 +221,14 @@ const BookAPod = () => {
                       </div>
                       <div className="card-body">
                         <div className="mb-4">
-                          <label>Select Pod Type: </label>
+                          <label>Select POD: </label>
                           <select
                             className="form-control"
                             onChange={handlePodTypeChange}
                             value={selectedPodTypeId || ""}
                           >
                             <option value="" disabled>
-                              Select a pod type
+                              Select a pod
                             </option>
                             {podTypes.map((podType) => (
                               <option key={podType.id} value={podType.id}>
@@ -232,7 +242,7 @@ const BookAPod = () => {
                         {selectedPodTypeId && (
                           <>
                             <div className="mb-4">
-                              <label>Select a date: </label>
+                              <label>Select a date: </label> <t />
                               <DatePicker
                                 selected={selectedDate}
                                 onChange={(date) => {
@@ -240,6 +250,7 @@ const BookAPod = () => {
                                   setSelectedSlots([]);
                                   setActiveDay(null);
                                   setAvailablePodsBySlot({}); // Clear pods when changing date
+                                  setSelectedPodId(null); // Clear pod selection
                                 }}
                                 dateFormat="dd MMMM, yyyy"
                                 className="form-control"
@@ -251,7 +262,7 @@ const BookAPod = () => {
                                 <table className="table">
                                   <thead className="text-primary">
                                     <tr>
-                                      <th>Time Slot</th>
+                                      <th>Time</th>
                                       {weekDays.map((day) => (
                                         <th
                                           key={day}
@@ -291,15 +302,18 @@ const BookAPod = () => {
                                                 className={`btn-sm ${
                                                   isBooked
                                                     ? "btn btn-danger"
-                                                    : isBefore(
+                                                    : isBefore(day, new Date()) // Check if the day is before today
+                                                    ? "btn" // Use a different class for unavailable slots
+                                                    : isSameDay(
                                                         day,
                                                         new Date()
                                                       ) ||
-                                                      isSameDay(day, new Date())
-                                                    ? "btn"
-                                                    : isSelected &&
-                                                      isSameDay(activeDay, day)
-                                                    ? "btn btn-success" // This will reset if `selectedSlots` is empty
+                                                      (isSelected &&
+                                                        isSameDay(
+                                                          activeDay,
+                                                          day
+                                                        ))
+                                                    ? "btn btn-success" // Highlight selected or same-day slots
                                                     : activeDay &&
                                                       !isSameDay(day, activeDay)
                                                     ? "btn"
@@ -307,7 +321,7 @@ const BookAPod = () => {
                                                 }`}
                                                 disabled={
                                                   isBooked ||
-                                                  isBefore(day, new Date()) ||
+                                                  isBefore(day, new Date()) || // Disable the button for past days
                                                   (activeDay &&
                                                     !isSameDay(
                                                       activeDay,
@@ -324,7 +338,9 @@ const BookAPod = () => {
                                                 }
                                               >
                                                 {isBooked
-                                                  ? "Booked"
+                                                  ? "Fully Booked"
+                                                  : isBefore(day, new Date()) // Check if the day is before today
+                                                  ? "Unavailable" // Display "Unavailable" for past slots
                                                   : "Available"}
                                               </button>
                                             </td>
@@ -367,34 +383,72 @@ const BookAPod = () => {
                           </div>
                         )}
                         <div className="mt-4">
-                          <h5>Available Pods:</h5>
-                          {Object.keys(availablePodsBySlot).length > 0 ? (
-                            Object.entries(availablePodsBySlot).map(
-                              ([slotId, pods]) => (
-                                <div key={slotId}>
-                                  <h6>Slot {slotId}:</h6>
-                                  <ul>
-                                    {pods.map((pod) => (
-                                      <li key={pod.id}>{pod.name}</li>
-                                    ))}
-                                  </ul>
+                          {/* Case 1: Only one slot selected, display available pods for that slot */}
+                          {selectedSlots.length === 1 && (
+                            <div>
+                              {availablePodsBySlot[selectedSlots[0].id] &&
+                              availablePodsBySlot[selectedSlots[0].id].length >
+                                0 ? (
+                                <div>
+                                  <h5>
+                                    Booking can be made with one of these PODs:
+                                  </h5>
+                                  <button
+                                    className={`btn ${
+                                      selectedPodId === 0
+                                        ? "btn-warning"
+                                        : "btn-primary"
+                                    }`}
+                                    onClick={() => handlePodSelect(0)}
+                                  >
+                                    RANDOM
+                                  </button>
+                                  {availablePodsBySlot[selectedSlots[0].id].map(
+                                    (pod) => (
+                                      <button
+                                        className={`btn ${
+                                          selectedPodId === pod.id
+                                            ? "btn-warning"
+                                            : "btn-info"
+                                        }`}
+                                        key={pod.id}
+                                        onClick={() => handlePodSelect(pod.id)}
+                                      >
+                                        {pod.name}
+                                      </button>
+                                    )
+                                  )}
                                 </div>
-                              )
-                            )
-                          ) : (
-                            <p>No available pods for the selected slots.</p>
+                              ) : (
+                                <p>No available pods for the selected slot.</p>
+                              )}
+                            </div>
                           )}
+
+                          {/* Case 2: Two slots selected, display common pods */}
                           {selectedSlots.length > 1 && (
-                            <div className="mt-4">
-                              <h5>
-                                Booking can be made with one of these PODs:
-                              </h5>
+                            <div>
                               {commonPods && commonPods.length > 0 ? (
                                 <div>
+                                  <button
+                                    className={`btn ${
+                                      selectedPodId === 0
+                                        ? "btn-warning"
+                                        : "btn-primary"
+                                    }`}
+                                    onClick={() => handlePodSelect(0)}
+                                  >
+                                    RANDOM
+                                  </button>
                                   {commonPods.map((pod) => (
                                     <button
-                                      className="btn btn-info"
+                                      className={`btn ${
+                                        selectedPodId === pod.id
+                                          ? "btn-warning"
+                                          : "btn-info"
+                                      }`}
                                       key={pod.id}
+                                      onClick={() => handlePodSelect(pod.id)}
                                     >
                                       {pod.name}
                                     </button>
@@ -403,6 +457,18 @@ const BookAPod = () => {
                               ) : (
                                 <p>No common pods between selected slots.</p>
                               )}
+                            </div>
+                          )}
+
+                          {/* Show confirmation button if a pod is selected */}
+                          {selectedPodId !== null && (
+                            <div className="mt-3">
+                              <button
+                                className="btn btn-success"
+                                onClick={() => confirmPodSelection()}
+                              >
+                                Confirm Selection
+                              </button>
                             </div>
                           )}
                         </div>
