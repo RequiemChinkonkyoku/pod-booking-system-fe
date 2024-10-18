@@ -152,27 +152,43 @@ const BookAPod = () => {
     );
   };
 
+  // const handlePodTypeChange = async (event) => {
+  //   const podTypeId = event.target.value;
+  //   setSelectedPodTypeId(podTypeId);
+
+  //   if (podTypeId) {
+  //     try {
+  //       const response = await axios.get(`/Slot/Full/${podTypeId}`);
+  //       setFullyBookedSlots(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching slots for pod type:", error);
+  //     }
+  //   }
+  // };
+
   const handlePodTypeChange = async (event) => {
     const podTypeId = event.target.value;
     setSelectedPodTypeId(podTypeId);
+
+    // Clear the slot selection, common pods, and fully booked slots
+    setSelectedSlots([]);
+    setCommonPods([]);
+    setAvailablePodsBySlot({}); // Clear the available pods display
 
     if (podTypeId) {
       try {
         const response = await axios.get(`/Slot/Full/${podTypeId}`);
         setFullyBookedSlots(response.data);
       } catch (error) {
-        console.error("Error fetching slots for pod type:", error);
+        if (error.response && error.response.status === 404) {
+          // No booked slots, all are available
+          setFullyBookedSlots([]); // Clear fully booked slots
+        } else {
+          console.error("Error fetching slots for pod type:", error);
+        }
       }
     }
   };
-
-  // const bookedSlots = [
-  //   { date: "18/10/2024", timeslotId: 2 },
-  //   { date: "19/10/2024", timeslotId: 3 },
-  //   { date: "20/10/2024", timeslotId: 1 },
-  //   { date: "17/10/2024", timeslotId: 1 },
-  //   { date: "23/10/2024", timeslotId: 1 },
-  // ];
 
   return (
     <>
@@ -211,97 +227,121 @@ const BookAPod = () => {
                             ))}
                           </select>
                         </div>
-                        <div className="mb-4">
-                          <label>Select a date: </label>
-                          <DatePicker
-                            selected={selectedDate}
-                            onChange={(date) => {
-                              setSelectedDate(date);
-                              setSelectedSlots([]);
-                              setActiveDay(null);
-                              setAvailablePodsBySlot({}); // Clear pods when changing date
-                            }}
-                            dateFormat="dd MMMM, yyyy"
-                            className="form-control"
-                          />
-                        </div>
-                        <div className="table-responsive">
-                          <table className="table">
-                            <thead className="text-primary">
-                              <tr>
-                                <th>Time Slot</th>
-                                {weekDays.map((day) => (
-                                  <th
-                                    key={day}
-                                    className="text-center"
-                                    style={{ width: "14.28%" }}
-                                  >
-                                    {format(day, "EE, MMM d")}
-                                  </th>
-                                ))}
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {timeSlots.map((slot) => (
-                                <tr key={slot.id}>
-                                  <td>
-                                    {formatTime(slot.startTime)} -{" "}
-                                    {formatTime(slot.endTime)}
-                                  </td>
-                                  {weekDays.map((day) => {
-                                    const isBooked = fullyBookedSlots.some(
-                                      (booked) =>
-                                        format(day, "yyyy-MM-dd") ===
-                                          booked.arrivalDate &&
-                                        slot.id === booked.scheduleId
-                                    );
 
-                                    return (
-                                      <td key={day} className="text-center">
-                                        <button
-                                          className={`btn-sm ${
-                                            isBooked
-                                              ? "btn btn-danger"
-                                              : isBefore(day, new Date()) ||
-                                                isSameDay(day, new Date())
-                                              ? "btn"
-                                              : selectedSlots.includes(slot) &&
-                                                isSameDay(activeDay, day)
-                                              ? "btn btn-success"
-                                              : activeDay &&
-                                                !isSameDay(day, activeDay)
-                                              ? "btn"
-                                              : slot.status === 1
-                                              ? "btn btn-info"
-                                              : "btn"
-                                          }`}
-                                          disabled={
-                                            isBooked ||
-                                            isBefore(day, new Date()) ||
-                                            (activeDay &&
-                                              !isSameDay(activeDay, day)) ||
-                                            (selectedSlots.length === 2 &&
-                                              !selectedSlots.includes(slot)) ||
-                                            isSlotDisabled(slot)
-                                          }
-                                          onClick={() =>
-                                            handleSlotSelect(slot, day)
-                                          }
+                        {/* Only show the date picker and timetable if a pod type is selected */}
+                        {selectedPodTypeId && (
+                          <>
+                            <div className="mb-4">
+                              <label>Select a date: </label>
+                              <DatePicker
+                                selected={selectedDate}
+                                onChange={(date) => {
+                                  setSelectedDate(date);
+                                  setSelectedSlots([]);
+                                  setActiveDay(null);
+                                  setAvailablePodsBySlot({}); // Clear pods when changing date
+                                }}
+                                dateFormat="dd MMMM, yyyy"
+                                className="form-control"
+                              />
+                            </div>
+
+                            {selectedDate && (
+                              <div className="table-responsive">
+                                <table className="table">
+                                  <thead className="text-primary">
+                                    <tr>
+                                      <th>Time Slot</th>
+                                      {weekDays.map((day) => (
+                                        <th
+                                          key={day}
+                                          className="text-center"
+                                          style={{ width: "14.28%" }}
                                         >
-                                          {isBooked ? "Booked" : "Available"}
-                                        </button>
-                                      </td>
-                                    );
-                                  })}
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                        {/* Display selected slots */}
+                                          {format(day, "EE, MMM d")}
+                                        </th>
+                                      ))}
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {timeSlots.map((slot) => (
+                                      <tr key={slot.id}>
+                                        <td>
+                                          {formatTime(slot.startTime)} -{" "}
+                                          {formatTime(slot.endTime)}
+                                        </td>
+                                        {weekDays.map((day) => {
+                                          const isBooked =
+                                            fullyBookedSlots.some(
+                                              (booked) =>
+                                                format(day, "yyyy-MM-dd") ===
+                                                  booked.arrivalDate &&
+                                                slot.id === booked.scheduleId
+                                            );
+
+                                          const isSelected =
+                                            selectedSlots.includes(slot); // Check if this slot is selected
+
+                                          return (
+                                            <td
+                                              key={day}
+                                              className="text-center"
+                                            >
+                                              <button
+                                                className={`btn-sm ${
+                                                  isBooked
+                                                    ? "btn btn-danger"
+                                                    : isBefore(
+                                                        day,
+                                                        new Date()
+                                                      ) ||
+                                                      isSameDay(day, new Date())
+                                                    ? "btn"
+                                                    : isSelected &&
+                                                      isSameDay(activeDay, day)
+                                                    ? "btn btn-success" // This will reset if `selectedSlots` is empty
+                                                    : activeDay &&
+                                                      !isSameDay(day, activeDay)
+                                                    ? "btn"
+                                                    : "btn btn-info"
+                                                }`}
+                                                disabled={
+                                                  isBooked ||
+                                                  isBefore(day, new Date()) ||
+                                                  (activeDay &&
+                                                    !isSameDay(
+                                                      activeDay,
+                                                      day
+                                                    )) ||
+                                                  (selectedSlots.length === 2 &&
+                                                    !selectedSlots.includes(
+                                                      slot
+                                                    )) ||
+                                                  isSlotDisabled(slot)
+                                                }
+                                                onClick={() =>
+                                                  handleSlotSelect(slot, day)
+                                                }
+                                              >
+                                                {isBooked
+                                                  ? "Booked"
+                                                  : "Available"}
+                                              </button>
+                                            </td>
+                                          );
+                                        })}
+                                      </tr>
+                                    ))}
+                                  </tbody>
+                                </table>
+                              </div>
+                            )}
+                          </>
+                        )}
+                        {/* Display selected slots and available pods */}
                         {selectedSlots.length > 0 && (
                           <div className="mt-4">
-                            <h5>Selected Time Slots:</h5>
+                            <h5>Selected Time:</h5>
                             <ul>
                               {selectedSlots.map((slot, index) => {
                                 const fullSlotInfo = timeSlots.find(
@@ -326,9 +366,8 @@ const BookAPod = () => {
                             </ul>
                           </div>
                         )}
-                        {/* Display available pods for each selected slot */}
                         <div className="mt-4">
-                          <h5>Available Pods by Slot:</h5>
+                          <h5>Available Pods:</h5>
                           {Object.keys(availablePodsBySlot).length > 0 ? (
                             Object.entries(availablePodsBySlot).map(
                               ([slotId, pods]) => (
@@ -345,23 +384,28 @@ const BookAPod = () => {
                           ) : (
                             <p>No available pods for the selected slots.</p>
                           )}
-                          {/* Display Common Pods */}
                           {selectedSlots.length > 1 && (
                             <div className="mt-4">
-                              <h5>Common Pods:</h5>
+                              <h5>
+                                Booking can be made with one of these PODs:
+                              </h5>
                               {commonPods && commonPods.length > 0 ? (
-                                <ul>
+                                <div>
                                   {commonPods.map((pod) => (
-                                    <li key={pod.id}>{pod.name}</li>
+                                    <button
+                                      className="btn btn-info"
+                                      key={pod.id}
+                                    >
+                                      {pod.name}
+                                    </button>
                                   ))}
-                                </ul>
+                                </div>
                               ) : (
                                 <p>No common pods between selected slots.</p>
                               )}
                             </div>
                           )}
                         </div>
-                        <button onClick={test}>test</button>
                       </div>
                     </div>
                   </div>
