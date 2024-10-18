@@ -1,4 +1,4 @@
-.footer {
+.footer1 {
   background-color: #222;
   color: #fff;
   padding: 40px 0 20px;
@@ -7,7 +7,7 @@
   overflow: hidden;
 }
 
-.footer::before {
+.footer1::before {
   content: "";
   position: absolute;
   top: 0;
@@ -17,7 +17,7 @@
   background: linear-gradient(to right, #d48b33, #f3a847, #d48b33);
 }
 
-.footer::after {
+.footer1::after {
   content: none;
 }
 
@@ -118,7 +118,7 @@
 }
 
 @media (max-width: 768px) {
-  .footer {
+  .footer1 {
     padding: 30px 0 20px;
   }
 
@@ -148,7 +148,7 @@
 }
 
 @media (max-width: 576px) {
-  .footer {
+  .footer1 {
     padding: 25px 0 15px;
   }
 

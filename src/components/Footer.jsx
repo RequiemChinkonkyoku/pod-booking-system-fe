@@ -11,7 +11,7 @@ import "../css/Footer.css";
 
 const Footer = () => {
   return (
-    <footer className="footer">
+    <footer className="footer1">
       <div className="footer-content">
         <div className="footer-section">
           <h3>About Pod Rooms</h3>
