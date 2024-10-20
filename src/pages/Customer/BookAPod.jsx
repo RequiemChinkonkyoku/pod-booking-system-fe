@@ -19,7 +19,7 @@ const BookAPod = () => {
   const [activeDay, setActiveDay] = useState(null);
   const [podTypes, setPodTypes] = useState([]);
   const [selectedPodTypeId, setSelectedPodTypeId] = useState(null);
-  const [availablePodsBySlot, setAvailablePodsBySlot] = useState({}); // Pods mapped by slot ID
+  const [availablePodsBySlot, setAvailablePodsBySlot] = useState({});
   const [fullyBookedSlots, setFullyBookedSlots] = useState([]);
   const [commonPods, setCommonPods] = useState([]);
   const [selectedPodId, setSelectedPodId] = useState(null);
@@ -61,14 +61,13 @@ const BookAPod = () => {
   };
 
   const handleSlotSelect = (slot, day) => {
-    setSelectedPodId(null); // Clear pod selection
+    setSelectedPodId(null);
     if (selectedSlots.includes(slot)) {
-      // If slot is deselected, remove it from the selectedSlots and clear its pods
       const updatedSlots = selectedSlots.filter((s) => s !== slot);
       setSelectedSlots(updatedSlots);
 
       const updatedAvailablePods = { ...availablePodsBySlot };
-      delete updatedAvailablePods[slot.id]; // Remove pods for the deselected slot
+      delete updatedAvailablePods[slot.id];
       setAvailablePodsBySlot(updatedAvailablePods);
 
       if (updatedSlots.length === 0) setActiveDay(null);
@@ -79,20 +78,17 @@ const BookAPod = () => {
           Math.abs(slot.id - selectedSlots[0].id) === 1)
       ) {
         setSelectedSlots([...selectedSlots, slot]);
-        fetchAvailablePods([...selectedSlots, slot]); // Fetch pods for selected slots
+        fetchAvailablePods([...selectedSlots, slot]);
         setActiveDay(day);
       }
     }
-    // console.log(selectedSlots);
-    // console.log(availablePodsBySlot);
   };
 
   const fetchAvailablePods = async (selectedSlots) => {
-    setSelectedPodId(null); // Clear pod selection
+    setSelectedPodId(null);
     const slotIds = selectedSlots.map((slot) => slot.id);
-    const formattedDate = format(selectedDate, "yyyy-MM-dd"); // Format the selected date
+    const formattedDate = format(selectedDate, "yyyy-MM-dd");
 
-    // Map slot IDs to their respective available pods
     const podsBySlot = {};
 
     for (const slotId of slotIds) {
@@ -102,17 +98,14 @@ const BookAPod = () => {
         );
         const availablePodData = response.data;
 
-        // Add pods for this slot to the mapping
         podsBySlot[slotId] = availablePodData;
       } catch (error) {
         console.error("Error fetching available pods for slot:", slotId, error);
       }
     }
 
-    // Set the fetched available pods to state
     setAvailablePodsBySlot(podsBySlot);
 
-    // Find common pods between the selected slots and display them
     setCommonPods(findCommonPods(podsBySlot, selectedSlots));
     console.log("Common Available Pods:", commonPods);
   };
@@ -120,7 +113,7 @@ const BookAPod = () => {
   const findCommonPods = (availablePodsBySlot, selectedSlots) => {
     // Case 1: If only one slot is selected, show pods of that slot
     if (selectedSlots.length === 1) {
-      return availablePodsBySlot[selectedSlots[0].id] || []; // Return the pods of the single slot
+      return availablePodsBySlot[selectedSlots[0].id] || [];
     }
 
     // Case 2: If two slots are selected, find common pods
@@ -136,7 +129,7 @@ const BookAPod = () => {
       return commonPods.length > 0 ? commonPods : []; // Return common pods if any, otherwise return an empty array
     }
 
-    // Case 3: No slots selected or more than 2 slots (not allowed by your logic)
+    // Case 3: No slots selected or more than 2 slots (not allowed by current customer logic)
     return [];
   };
 
@@ -152,29 +145,14 @@ const BookAPod = () => {
     );
   };
 
-  // const handlePodTypeChange = async (event) => {
-  //   const podTypeId = event.target.value;
-  //   setSelectedPodTypeId(podTypeId);
-
-  //   if (podTypeId) {
-  //     try {
-  //       const response = await axios.get(`/Slot/Full/${podTypeId}`);
-  //       setFullyBookedSlots(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching slots for pod type:", error);
-  //     }
-  //   }
-  // };
-
   const handlePodTypeChange = async (event) => {
     const podTypeId = event.target.value;
     setSelectedPodTypeId(podTypeId);
 
-    // Clear the slot selection, common pods, and fully booked slots
     setSelectedSlots([]);
     setCommonPods([]);
-    setAvailablePodsBySlot({}); // Clear the available pods display
-    setSelectedPodId(null); // Clear pod selection
+    setAvailablePodsBySlot({});
+    setSelectedPodId(null);
 
     if (podTypeId) {
       try {
@@ -182,9 +160,8 @@ const BookAPod = () => {
         setFullyBookedSlots(response.data);
       } catch (error) {
         if (error.response && error.response.status === 404) {
-          // No booked slots, all are available
-          setFullyBookedSlots([]); // Clear fully booked slots
-          setSelectedPodId(null); // Clear pod selection
+          setFullyBookedSlots([]);
+          setSelectedPodId(null);
         } else {
           console.error("Error fetching slots for pod type:", error);
         }
@@ -197,9 +174,7 @@ const BookAPod = () => {
   };
 
   const confirmPodSelection = () => {
-    // Redirect to another page or perform an action with the selectedPodId
     console.log("Pod selected:", selectedPodId);
-    // Navigate or store the selectedPodId for later
     handleConfirm();
   };
 
@@ -210,11 +185,10 @@ const BookAPod = () => {
     const bookingData = {
       arrivalDate: arrivalDate,
       podId: selectedPodId,
-      scheduleId: scheduleId, // This can be a list of more than 1 ID
+      scheduleId: scheduleId,
     };
     console.log(bookingData);
 
-    // Navigate to the next page, passing bookingData as state
     navigate("/customerConfirmBooking", { state: bookingData });
   };
 
@@ -267,8 +241,8 @@ const BookAPod = () => {
                                   setSelectedDate(date);
                                   setSelectedSlots([]);
                                   setActiveDay(null);
-                                  setAvailablePodsBySlot({}); // Clear pods when changing date
-                                  setSelectedPodId(null); // Clear pod selection
+                                  setAvailablePodsBySlot({});
+                                  setSelectedPodId(null);
                                 }}
                                 dateFormat="dd MMMM, yyyy"
                                 className="form-control"
@@ -309,7 +283,7 @@ const BookAPod = () => {
                                             );
 
                                           const isSelected =
-                                            selectedSlots.includes(slot); // Check if this slot is selected
+                                            selectedSlots.includes(slot);
 
                                           return (
                                             <td
@@ -320,8 +294,8 @@ const BookAPod = () => {
                                                 className={`btn-sm ${
                                                   isBooked
                                                     ? "btn btn-danger"
-                                                    : isBefore(day, new Date()) // Check if the day is before today
-                                                    ? "btn" // Use a different class for unavailable slots
+                                                    : isBefore(day, new Date())
+                                                    ? "btn"
                                                     : isSameDay(
                                                         day,
                                                         new Date()
@@ -331,7 +305,7 @@ const BookAPod = () => {
                                                           activeDay,
                                                           day
                                                         ))
-                                                    ? "btn btn-success" // Highlight selected or same-day slots
+                                                    ? "btn btn-success"
                                                     : activeDay &&
                                                       !isSameDay(day, activeDay)
                                                     ? "btn"
@@ -339,7 +313,7 @@ const BookAPod = () => {
                                                 }`}
                                                 disabled={
                                                   isBooked ||
-                                                  isBefore(day, new Date()) || // Disable the button for past days
+                                                  isBefore(day, new Date()) ||
                                                   (activeDay &&
                                                     !isSameDay(
                                                       activeDay,
@@ -357,8 +331,8 @@ const BookAPod = () => {
                                               >
                                                 {isBooked
                                                   ? "Fully Booked"
-                                                  : isBefore(day, new Date()) // Check if the day is before today
-                                                  ? "Unavailable" // Display "Unavailable" for past slots
+                                                  : isBefore(day, new Date())
+                                                  ? "Unavailable"
                                                   : "Available"}
                                               </button>
                                             </td>

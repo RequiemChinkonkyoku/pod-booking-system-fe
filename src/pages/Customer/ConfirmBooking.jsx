@@ -13,12 +13,12 @@ import { format, differenceInHours, parse } from "date-fns";
 const ConfirmBooking = () => {
   const location = useLocation();
   const bookingData = location.state;
-  const navigate = useNavigate(); // For navigation after booking
+  const navigate = useNavigate();
 
   const [pod, setPod] = useState([]);
   const [podType, setPodType] = useState([]);
   const [time, setTime] = useState([]);
-  const [isConfirmed, setIsConfirmed] = useState(false); // State for checkbox
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   useEffect(() => {
     const getPod = async () => {
@@ -45,26 +45,22 @@ const ConfirmBooking = () => {
     getPod();
   }, [bookingData.podId]);
 
-  // Function to handle booking submission
   const handleBooking = async () => {
     try {
-      // Construct the request body
       const bookingPayload = {
         arrivalDate: bookingData.arrivalDate,
         podId: bookingData.podId,
         scheduleIds: bookingData.scheduleId,
       };
 
-      // Send POST request to /Booking/create-booking
       const response = await axios.post(
         "/Booking/create-booking",
         bookingPayload
       );
 
-      // Handle the success response (e.g., navigate to confirmation page)
       if (response.status === 200) {
-        alert("Booking successful!"); // You can replace this with better UX
-        navigate("/booking-confirmation"); // Navigate to a confirmation page (adjust path as needed)
+        alert("Booking successful!");
+        navigate("/booking-confirmation");
       }
     } catch (error) {
       console.error("Error creating booking:", error);
@@ -266,7 +262,7 @@ const ConfirmBooking = () => {
                                 type="checkbox"
                                 onChange={(e) =>
                                   setIsConfirmed(e.target.checked)
-                                } // Store checkbox value
+                                }
                               />
                               <span className="form-check-sign">
                                 <span className="check"></span>
@@ -277,8 +273,8 @@ const ConfirmBooking = () => {
                         <button
                           type="button"
                           className="btn btn-rose"
-                          disabled={!isConfirmed} // Disable button if not confirmed
-                          onClick={handleBooking} // Call handleBooking when clicked
+                          disabled={!isConfirmed}
+                          onClick={handleBooking}
                         >
                           BOOK
                         </button>
