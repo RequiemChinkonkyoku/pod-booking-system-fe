@@ -11,6 +11,9 @@ import VerifyOtpPage from "../pages/VerifyOtpPage";
 import { Pods } from "../pages/Admin/PODs";
 import PrivateRoute from "../routes/PrivateRoute";
 import { AuthProvider } from "../contexts/AuthContext";
+import CustomerDashboard from "../pages/Customer/Dashboard";
+import BookAPod from "../pages/Customer/BookAPod";
+import ConfirmBooking from "../pages/Customer/ConfirmBooking";
 
 export const routes = createBrowserRouter([
   {
@@ -68,5 +71,40 @@ export const routes = createBrowserRouter([
   {
     path: "/verifyOtp",
     element: <VerifyOtpPage />,
+  },
+  {
+    path: "/customerDashboard",
+    element: <CustomerDashboard />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customerBookAPod",
+    element: <BookAPod />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customerConfirmBooking",
+    element: <ConfirmBooking />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/adminPods",
+    element: <Pods />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customerDashboard",
+    element: <CustomerDashboard />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customerBookAPod",
+    element: <BookAPod />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customerConfirmBooking",
+    element: <ConfirmBooking />,
+    // errorElement: <ErrorPage />,
   },
 ]);
