@@ -1,3 +1,4 @@
+/* Existing styles */
 .form-control-modern {
   border-radius: 0.25rem;
   border: 1px solid #ced4da;
@@ -37,3 +38,109 @@
   color: #212529 !important;
 }
 
+/* New styles for filter card */
+.filter-card {
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px 0px rgba(0, 0, 0, 0.14),
+    0 7px 10px -5px rgba(156, 39, 176, 0.4);
+}
+
+.filter-card .card-header {
+  background: linear-gradient(60deg, #ab47bc, #8e24aa);
+  box-shadow: 0 5px 20px 0px rgba(0, 0, 0, 0.2),
+    0 13px 24px -11px rgba(156, 39, 176, 0.6);
+  margin: -20px 15px 0;
+  border-radius: 3px;
+  padding: 15px;
+  position: relative;
+}
+
+.filter-card .card-header .card-title {
+  color: #fff;
+  margin-bottom: 0;
+  font-size: 1.25rem;
+}
+
+.filter-card .card-body {
+  padding: 20px 15px;
+}
+
+.reset-filter-btn {
+  transition: all 0.3s ease;
+}
+
+.reset-filter-btn:hover {
+  background-color: #9c27b0;
+  color: #fff;
+  border-color: #9c27b0;
+}
+
+/* Improved table styles */
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.075);
+}
+
+/* Improved pagination styles */
+.pagination {
+  justify-content: center;
+}
+
+.page-item:first-child .page-link,
+.page-item:last-child .page-link {
+  border-radius: 30px;
+}
+
+.page-link {
+  border: none;
+  color: #9c27b0;
+  padding: 0.5rem 0.75rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.page-item.active .page-link {
+  background-color: #9c27b0;
+  border-color: #9c27b0;
+}
+
+.page-link:hover {
+  background-color: #f3e5f5;
+  color: #9c27b0;
+}
+
+.page-item.disabled .page-link {
+  color: #6c757d;
+}
+
+/* Improved modal styles */
+.modal-content {
+  border-radius: 0.3rem;
+}
+
+.modal-header {
+  background-color: #9c27b0;
+  color: #fff;
+  border-top-left-radius: 0.3rem;
+  border-top-right-radius: 0.3rem;
+}
+
+.modal-title {
+  font-weight: 500;
+}
+
+.modal-header .close {
+  color: #fff;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .filter-card .card-body .row {
+    flex-direction: column;
+  }
+
+  .filter-card .card-body .col-md-5,
+  .filter-card .card-body .col-md-2 {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+}
