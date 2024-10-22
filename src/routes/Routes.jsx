@@ -16,6 +16,7 @@ import BookAPod from "../pages/Customer/BookAPod";
 import ConfirmBooking from "../pages/Customer/ConfirmBooking";
 import CustomerBookings from "../pages/Customer/Bookings";
 import CustomerBookingDetails from "../pages/Customer/BookingDetails";
+import AdminBookings from "../pages/Admin/Bookings";
 
 export const routes = createBrowserRouter([
   {
@@ -67,6 +68,10 @@ export const routes = createBrowserRouter([
       {
         path: "pods",
         element: <Pods />,
+      },
+      {
+        path: "bookings",
+        element: <AdminBookings />,
       },
     ],
   },
