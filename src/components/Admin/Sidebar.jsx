@@ -52,6 +52,12 @@ const Sidebar = () => {
                 <p>PODs</p>
               </Link>
             </li>
+            <li class="nav-item ">
+              <Link class="nav-link" to="/admin/bookings">
+                <i class="material-icons">place</i>
+                <p>Bookings</p>
+              </Link>
+            </li>
           </ul>
           <div
             className="ps-scrollbar-x-rail"

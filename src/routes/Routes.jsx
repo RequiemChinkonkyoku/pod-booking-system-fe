@@ -14,6 +14,9 @@ import { AuthProvider } from "../contexts/AuthContext";
 import CustomerDashboard from "../pages/Customer/Dashboard";
 import BookAPod from "../pages/Customer/BookAPod";
 import ConfirmBooking from "../pages/Customer/ConfirmBooking";
+import CustomerBookings from "../pages/Customer/Bookings";
+import CustomerBookingDetails from "../pages/Customer/BookingDetails";
+import AdminBookings from "../pages/Admin/Bookings";
 import SelectPayment from "../pages/Customer/SelectPayment";
 
 export const routes = createBrowserRouter([
@@ -67,6 +70,10 @@ export const routes = createBrowserRouter([
         path: "pods",
         element: <Pods />,
       },
+      {
+        path: "bookings",
+        element: <AdminBookings />,
+      },
     ],
   },
   {
@@ -109,8 +116,18 @@ export const routes = createBrowserRouter([
     // errorElement: <ErrorPage />,
   },
   {
+    path: "/customerBookings",
+    element: <CustomerBookings />,
+    // errorElement: <ErrorPage />,
+  },
+  {
     path: "/customerSelectPayment",
     element: <SelectPayment />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customerBookingDetails",
+    element: <CustomerBookingDetails />,
     // errorElement: <ErrorPage />,
   },
 ]);
