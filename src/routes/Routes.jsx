@@ -14,6 +14,8 @@ import { AuthProvider } from "../contexts/AuthContext";
 import CustomerDashboard from "../pages/Customer/Dashboard";
 import BookAPod from "../pages/Customer/BookAPod";
 import ConfirmBooking from "../pages/Customer/ConfirmBooking";
+import CustomerBookings from "../pages/Customer/Bookings";
+import CustomerBookingDetails from "../pages/Customer/BookingDetails";
 
 export const routes = createBrowserRouter([
   {
@@ -105,6 +107,16 @@ export const routes = createBrowserRouter([
   {
     path: "/customerConfirmBooking",
     element: <ConfirmBooking />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customerBookings",
+    element: <CustomerBookings />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customerBookingDetails",
+    element: <CustomerBookingDetails />,
     // errorElement: <ErrorPage />,
   },
 ]);

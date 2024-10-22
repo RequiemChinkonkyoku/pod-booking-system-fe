@@ -41,6 +41,14 @@ const Sidebar = () => {
               </Link>
             </li>
           </ul>
+          <ul className="nav">
+            <li className="nav-item ">
+              <Link className="nav-link" to="/customerBookings">
+                <i className="material-icons">date_range</i>
+                <p>Your Bookings</p>
+              </Link>
+            </li>
+          </ul>
           <div
             className="ps-scrollbar-x-rail"
             style={{
