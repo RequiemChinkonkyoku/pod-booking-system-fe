@@ -81,53 +81,67 @@ export const routes = createBrowserRouter([
     element: <VerifyOtpPage />,
   },
   {
-    path: "/customerDashboard",
-    element: <CustomerDashboard />,
-    // errorElement: <ErrorPage />,
+    path: "/customer",
+    element: (
+      <AuthProvider>
+        <PrivateRoute />
+      </AuthProvider>
+    ),
+    children: [
+      {
+        path: "dashboard",
+        element: <CustomerDashboard />,
+      },
+      {
+        path: "BookAPod",
+        element: <BookAPod />,
+      },
+      {
+       path: "ConfirmBooking",
+       element: <ConfirmBooking />,
+      },
+      {
+        path: "Bookings",
+        element: <CustomerBookings />,
+      },
+      {
+        path: "SelectPayment",
+        element: <SelectPayment />,
+      },
+      {
+        path: "BookingDetails",
+        element: <CustomerBookingDetails />,  
+      }
+    ],
   },
-  {
-    path: "/customerBookAPod",
-    element: <BookAPod />,
-    // errorElement: <ErrorPage />,
-  },
-  {
-    path: "/customerConfirmBooking",
-    element: <ConfirmBooking />,
-    // errorElement: <ErrorPage />,
-  },
-  {
-    path: "/adminPods",
-    element: <Pods />,
-    // errorElement: <ErrorPage />,
-  },
-  {
-    path: "/customerDashboard",
-    element: <CustomerDashboard />,
-    // errorElement: <ErrorPage />,
-  },
-  {
-    path: "/customerBookAPod",
-    element: <BookAPod />,
-    // errorElement: <ErrorPage />,
-  },
-  {
-    path: "/customerConfirmBooking",
-    element: <ConfirmBooking />,
-    // errorElement: <ErrorPage />,
-  },
-  {
-    path: "/customerBookings",
-    element: <CustomerBookings />,
-    // errorElement: <ErrorPage />,
-  },
-  {
-    path: "/customerSelectPayment",
-    element: <SelectPayment />,
-    // errorElement: <ErrorPage />,
-  },
-  {
-    path: "/customerBookingDetails",
-    element: <CustomerBookingDetails />,
-    // errorElement: <ErrorPage />,
-  },
+  // {
+  //   path: "/customerDashboard",
+  //   element: <CustomerDashboard />,
+  //   // errorElement: <ErrorPage />,
+  // },
+  // {
+  //   path: "/customerBookAPod",
+  //   element: <BookAPod />,
+  //   // errorElement: <ErrorPage />,
+  // },
+  // {
+  //   path: "/customerConfirmBooking",
+  //   element: <ConfirmBooking />,
+  //   // errorElement: <ErrorPage />,
+  // },
+  // {
+  //   path: "/customerBookings",
+  //   element: <CustomerBookings />,
+  //   // errorElement: <ErrorPage />,
+  // },
+  // {
+  //   path: "/customerSelectPayment",
+  //   element: <SelectPayment />,
+  //   // errorElement: <ErrorPage />,
+  // },
+  // {
+  //   path: "/customerBookingDetails",
+  //   element: <CustomerBookingDetails />,
+  //   // errorElement: <ErrorPage />,
+  // },
 ]);

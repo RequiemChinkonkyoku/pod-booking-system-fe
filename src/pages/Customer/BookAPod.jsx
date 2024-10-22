@@ -189,7 +189,7 @@ const BookAPod = () => {
     };
     console.log(bookingData);
 
-    navigate("/customerConfirmBooking", { state: bookingData });
+    navigate("/customer/ConfirmBooking", { state: bookingData });
   };
 
   return (

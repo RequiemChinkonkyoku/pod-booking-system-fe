@@ -68,7 +68,7 @@ const ConfirmBooking = () => {
           userId: response.data.userId
         };
 
-        navigate("/customerSelectPayment", { state: paymentData });
+        navigate("/customer/SelectPayment", { state: paymentData });
       }
     } catch (error) {
       console.error("Error creating booking:", error);

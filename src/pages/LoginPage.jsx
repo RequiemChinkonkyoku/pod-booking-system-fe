@@ -1,13 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Form, Input, message, Spin } from "antd";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
+import "../css/Login.css";
 
 const LoginPage = () => {
   const [form] = Form.useForm();
-  const { login } = useAuth();
+  const { user, login } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    if (isLoggedIn && user) {
+      if (mounted) {
+        if (user.role === "4") {
+          message.success("Login successful");
+          navigate("/admin/users");
+        } else if (user.role === "1") {
+          message.success("Login successful");
+          navigate("/customer/dashboard");
+        }
+        setIsLoggedIn(false);
+      }
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, [isLoggedIn, user, navigate]);
 
   const handleSubmit = async (values) => {
     const { email, password } = values;
@@ -15,8 +38,7 @@ const LoginPage = () => {
     try {
       const success = await login(email, password);
       if (success) {
-        message.success("Login successful");
-        navigate("/admin/users");
+        setIsLoggedIn(true);
       } else {
         message.error("Login failed. Please check your credentials.");
       }

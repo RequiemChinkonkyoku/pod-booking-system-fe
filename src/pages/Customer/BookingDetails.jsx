@@ -69,7 +69,7 @@ const CustomerBookingDetails = () => {
       // Handle success: e.g., redirect to another page or show success message
       setShowModal(false);
       alert("Booking has been canceled successfully!");
-      navigate("/customerBookings");
+      navigate("/customer/Bookings");
     } catch (error) {
       console.error("Error cancelling booking:", error);
       alert("Error cancelling the booking. Please try again.");

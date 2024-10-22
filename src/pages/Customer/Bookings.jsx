@@ -27,7 +27,7 @@ const CustomerBookings = () => {
 
   // handleSubmit now accepts bookingId and transfers it via navigate
   const handleSubmit = (bookingId) => {
-    navigate("/customerBookingDetails", { state: { bookingId } });
+    navigate("/customer/BookingDetails", { state: { bookingId } });
   };
 
   return (
