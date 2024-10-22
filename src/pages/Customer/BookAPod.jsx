@@ -278,7 +278,7 @@ const BookAPod = () => {
                                             fullyBookedSlots.some(
                                               (booked) =>
                                                 format(day, "yyyy-MM-dd") ===
-                                                  booked.arrivalDate &&
+                                                booked.arrivalDate &&
                                                 slot.id === booked.scheduleId
                                             );
 
@@ -291,26 +291,25 @@ const BookAPod = () => {
                                               className="text-center"
                                             >
                                               <button
-                                                className={`btn-sm ${
-                                                  isBooked
-                                                    ? "btn btn-danger"
-                                                    : isBefore(day, new Date())
+                                                className={`btn-sm ${isBooked
+                                                  ? "btn btn-danger"
+                                                  : isBefore(day, new Date())
                                                     ? "btn"
                                                     : isSameDay(
-                                                        day,
-                                                        new Date()
-                                                      ) ||
+                                                      day,
+                                                      new Date()
+                                                    ) ||
                                                       (isSelected &&
                                                         isSameDay(
                                                           activeDay,
                                                           day
                                                         ))
-                                                    ? "btn btn-success"
-                                                    : activeDay &&
-                                                      !isSameDay(day, activeDay)
-                                                    ? "btn"
-                                                    : "btn btn-info"
-                                                }`}
+                                                      ? "btn btn-success"
+                                                      : activeDay &&
+                                                        !isSameDay(day, activeDay)
+                                                        ? "btn"
+                                                        : "btn btn-info"
+                                                  }`}
                                                 disabled={
                                                   isBooked ||
                                                   isBefore(day, new Date()) ||
@@ -332,8 +331,8 @@ const BookAPod = () => {
                                                 {isBooked
                                                   ? "Fully Booked"
                                                   : isBefore(day, new Date())
-                                                  ? "Unavailable"
-                                                  : "Available"}
+                                                    ? "Unavailable"
+                                                    : "Available"}
                                               </button>
                                             </td>
                                           );
@@ -379,18 +378,17 @@ const BookAPod = () => {
                           {selectedSlots.length === 1 && (
                             <div>
                               {availablePodsBySlot[selectedSlots[0].id] &&
-                              availablePodsBySlot[selectedSlots[0].id].length >
+                                availablePodsBySlot[selectedSlots[0].id].length >
                                 0 ? (
                                 <div>
                                   <h5>
                                     Booking can be made with one of these PODs:
                                   </h5>
                                   <button
-                                    className={`btn ${
-                                      selectedPodId === 0
-                                        ? "btn-warning"
-                                        : "btn-primary"
-                                    }`}
+                                    className={`btn ${selectedPodId === 0
+                                      ? "btn-warning"
+                                      : "btn-primary"
+                                      }`}
                                     onClick={() => handlePodSelect(0)}
                                   >
                                     RANDOM
@@ -398,11 +396,10 @@ const BookAPod = () => {
                                   {availablePodsBySlot[selectedSlots[0].id].map(
                                     (pod) => (
                                       <button
-                                        className={`btn ${
-                                          selectedPodId === pod.id
-                                            ? "btn-warning"
-                                            : "btn-info"
-                                        }`}
+                                        className={`btn ${selectedPodId === pod.id
+                                          ? "btn-warning"
+                                          : "btn-info"
+                                          }`}
                                         key={pod.id}
                                         onClick={() => handlePodSelect(pod.id)}
                                       >
@@ -423,22 +420,20 @@ const BookAPod = () => {
                               {commonPods && commonPods.length > 0 ? (
                                 <div>
                                   <button
-                                    className={`btn ${
-                                      selectedPodId === 0
-                                        ? "btn-warning"
-                                        : "btn-primary"
-                                    }`}
+                                    className={`btn ${selectedPodId === 0
+                                      ? "btn-warning"
+                                      : "btn-primary"
+                                      }`}
                                     onClick={() => handlePodSelect(0)}
                                   >
                                     RANDOM
                                   </button>
                                   {commonPods.map((pod) => (
                                     <button
-                                      className={`btn ${
-                                        selectedPodId === pod.id
-                                          ? "btn-warning"
-                                          : "btn-info"
-                                      }`}
+                                      className={`btn ${selectedPodId === pod.id
+                                        ? "btn-warning"
+                                        : "btn-info"
+                                        }`}
                                       key={pod.id}
                                       onClick={() => handlePodSelect(pod.id)}
                                     >

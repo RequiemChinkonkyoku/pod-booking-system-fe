@@ -14,6 +14,7 @@ import { AuthProvider } from "../contexts/AuthContext";
 import CustomerDashboard from "../pages/Customer/Dashboard";
 import BookAPod from "../pages/Customer/BookAPod";
 import ConfirmBooking from "../pages/Customer/ConfirmBooking";
+import SelectPayment from "../pages/Customer/SelectPayment";
 
 export const routes = createBrowserRouter([
   {
@@ -105,6 +106,11 @@ export const routes = createBrowserRouter([
   {
     path: "/customerConfirmBooking",
     element: <ConfirmBooking />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customerSelectPayment",
+    element: <SelectPayment />,
     // errorElement: <ErrorPage />,
   },
 ]);
