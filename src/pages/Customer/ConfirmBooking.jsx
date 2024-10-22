@@ -60,7 +60,15 @@ const ConfirmBooking = () => {
 
       if (response.status === 200) {
         alert("Booking successful!");
-        navigate("/booking-confirmation");
+
+        const paymentData = {
+          orderType: 'Payment',
+          bookingId: response.data.id,
+          amount: response.data.bookingPrice,
+          userId: response.data.userId
+        };
+
+        navigate("/customerSelectPayment", { state: paymentData });
       }
     } catch (error) {
       console.error("Error creating booking:", error);
@@ -154,13 +162,13 @@ const ConfirmBooking = () => {
                                 >
                                   {time.startTime
                                     ? format(
-                                        parse(
-                                          time.startTime,
-                                          "HH:mm:ss",
-                                          new Date()
-                                        ),
-                                        "hh:mm a"
-                                      )
+                                      parse(
+                                        time.startTime,
+                                        "HH:mm:ss",
+                                        new Date()
+                                      ),
+                                      "hh:mm a"
+                                    )
                                     : "Loading..."}
                                 </label>
                               </div>
@@ -175,13 +183,13 @@ const ConfirmBooking = () => {
                                 <label className="bmd-label-floating text-muted">
                                   {time.startTime
                                     ? format(
-                                        parse(
-                                          time.endTime,
-                                          "HH:mm:ss",
-                                          new Date()
-                                        ),
-                                        "hh:mm a"
-                                      )
+                                      parse(
+                                        time.endTime,
+                                        "HH:mm:ss",
+                                        new Date()
+                                      ),
+                                      "hh:mm a"
+                                    )
                                     : "Loading..."}
                                 </label>
                               </div>

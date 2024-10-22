@@ -17,6 +17,7 @@ import ConfirmBooking from "../pages/Customer/ConfirmBooking";
 import CustomerBookings from "../pages/Customer/Bookings";
 import CustomerBookingDetails from "../pages/Customer/BookingDetails";
 import AdminBookings from "../pages/Admin/Bookings";
+import SelectPayment from "../pages/Customer/SelectPayment";
 
 export const routes = createBrowserRouter([
   {
@@ -117,6 +118,11 @@ export const routes = createBrowserRouter([
   {
     path: "/customerBookings",
     element: <CustomerBookings />,
+    // errorElement: <ErrorPage />,
+  },
+  {
+    path: "/customerSelectPayment",
+    element: <SelectPayment />,
     // errorElement: <ErrorPage />,
   },
   {
