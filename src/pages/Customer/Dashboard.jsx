@@ -105,7 +105,10 @@ const CustomerDashboard = () => {
                         <div className="row">
                           <div className="col-md-12">
                             <div className="form-group bmd-form-group">
-                              <label>Email (cannot be changed)</label>
+                              <label>
+                                Email (cannot be changed, contact admin if
+                                needed)
+                              </label>
                               <input
                                 type="text"
                                 className="form-control"
