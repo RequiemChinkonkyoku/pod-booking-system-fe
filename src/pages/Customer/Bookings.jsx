@@ -133,7 +133,9 @@ const CustomerBookings = () => {
                                         handleSubmit(booking.bookingId)
                                       } // Pass bookingId to handleSubmit
                                     >
-                                      <i className="material-icons">edit</i>
+                                      <i className="material-icons">
+                                        visibility
+                                      </i>
                                     </button>
                                   </td>
                                 </tr>
