@@ -18,6 +18,8 @@ import CustomerBookings from "../pages/Customer/Bookings";
 import CustomerBookingDetails from "../pages/Customer/BookingDetails";
 import AdminBookings from "../pages/Admin/Bookings";
 import SelectPayment from "../pages/Customer/SelectPayment";
+import ManagerDashboard from "../pages/Manager/Dashboard";
+import StaffDashboard from "../pages/Staff/Dashboard";
 
 export const routes = createBrowserRouter([
   {
@@ -97,8 +99,8 @@ export const routes = createBrowserRouter([
         element: <BookAPod />,
       },
       {
-       path: "ConfirmBooking",
-       element: <ConfirmBooking />,
+        path: "ConfirmBooking",
+        element: <ConfirmBooking />,
       },
       {
         path: "Bookings",
@@ -110,9 +112,17 @@ export const routes = createBrowserRouter([
       },
       {
         path: "BookingDetails",
-        element: <CustomerBookingDetails />,  
-      }
+        element: <CustomerBookingDetails />,
+      },
     ],
+  },
+  {
+    path: "/managerDashboard",
+    element: <ManagerDashboard />,
+  },
+  {
+    path: "/staffDashboard",
+    element: <StaffDashboard />,
   },
   // {
   //   path: "/customerDashboard",

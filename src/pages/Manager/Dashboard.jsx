@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../assets/css/material-dashboard.min.css";
 
-import Navbar from "../../components/Admin/Navbar";
+import Navbar from "../../components/Manager/Navbar";
 import Head from "../../components/Head";
-import Sidebar from "../../components/Admin/Sidebar";
+import Sidebar from "../../components/Manager/Sidebar";
 
-const Dashboard = () => {
+const ManagerDashboard = () => {
   const [user, setUser] = useState({});
   const [name, setName] = useState("");
   const [currentPassword, setCurrentPassword] = useState("");
@@ -105,7 +105,10 @@ const Dashboard = () => {
                         <div className="row">
                           <div className="col-md-12">
                             <div className="form-group bmd-form-group">
-                              <label>Email (cannot be changed currently)</label>
+                              <label>
+                                Email (cannot be changed, contact admin if
+                                needed)
+                              </label>
                               <input
                                 type="text"
                                 className="form-control"
@@ -253,4 +256,4 @@ const modalStyle = {
   alignItems: "center",
 };
 
-export default Dashboard;
+export default ManagerDashboard;
