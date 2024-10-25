@@ -54,7 +54,7 @@ const Sidebar = () => {
             </li>
             <li class="nav-item ">
               <Link class="nav-link" to="/admin/bookings">
-                <i class="material-icons">place</i>
+                <i class="material-icons">date_range</i>
                 <p>Bookings</p>
               </Link>
             </li>
