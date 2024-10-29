@@ -67,16 +67,25 @@ const CustomerBookingDetails = () => {
       console.error("Error fetching selected products:", error);
     }
   };
-  const handleAddProduct = async (quantity, productId) => {
+  // Function to handle adding a selected product
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
     try {
       await axios.post("/SelectedProduct", {
-        quantity,
-        bookingId: booking.id,
-        productId,
+        quantity: newProduct.quantity,
+        bookingId: bookingId.bookingId,
+        productId: newProduct.productId,
       });
-      fetchSelectedProducts();
+      alert("Product added successfully!");
+      setNewProduct({ quantity: 1, productId: "" }); // Clear input fields after adding
+      // Refresh selected products after adding
+      const updatedProducts = await axios.get(
+        `/SelectedProduct/Booking/${bookingId.bookingId}`
+      );
+      setSelectedProducts(updatedProducts.data || []);
     } catch (error) {
       console.error("Error adding selected product:", error);
+      alert("Failed to add product. Please try again.");
     }
   };
 
@@ -331,7 +340,7 @@ const CustomerBookingDetails = () => {
                             <tbody>
                               {selectedProducts.map((product) => (
                                 <tr key={product.id}>
-                                  <td>{product.productId}</td>
+                                  <td>{product.id}</td>
                                   <td>{product.quantity}</td>
                                   <td>
                                     <button
@@ -520,8 +529,10 @@ const CustomerBookingDetails = () => {
                         </div>
                         <div className="card-footer">
                           <button
-                            type="submit"
-                            className="btn btn-fill btn-rose"
+                            className="btn btn-success"
+                            onClick={(event) =>
+                              handleAddProduct(event, quantity, productId)
+                            }
                           >
                             Add Product
                           </button>
