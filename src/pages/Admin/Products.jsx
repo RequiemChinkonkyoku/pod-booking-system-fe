@@ -21,6 +21,7 @@ export const Products = () => {
   const [quantity, setQuantity] = useState("");
   const [unit, setUnit] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [categoryName, setCategoryName] = useState("");
 
   // Fetch all products on component mount
   useEffect(() => {
@@ -110,6 +111,22 @@ export const Products = () => {
   };
 
   const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
+
+  // Function to handle category creation
+  const handleCreateCategory = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("/Categories", {
+        name: categoryName,
+      });
+      setCategoryName(""); // Clear the input after creation
+      axios.get("/Categories").then((response) => {
+        setCategories(response.data); // Refresh category list
+      });
+    } catch (error) {
+      console.error("Failed to create category:", error);
+    }
+  };
 
   return (
     <>
@@ -302,6 +319,48 @@ export const Products = () => {
                       <div className="card-footer">
                         <button type="submit" className="btn btn-fill btn-rose">
                           Create
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="card">
+                    <div className="card-header card-header-rose card-header-text">
+                      <div className="card-text">
+                        <h4 className="card-title">CREATE NEW CATEGORY</h4>
+                      </div>
+                    </div>
+                    <form
+                      role="form"
+                      onSubmit={handleCreateCategory}
+                      className="form-horizontal"
+                    >
+                      <div className="card-body">
+                        <div className="row">
+                          <label className="col-sm-2 col-form-label">
+                            Category Name
+                          </label>
+                          <div className="col-sm-10">
+                            <div className="form-group bmd-form-group">
+                              <input
+                                type="text"
+                                className="form-control"
+                                value={categoryName}
+                                onChange={(e) =>
+                                  setCategoryName(e.target.value)
+                                }
+                                required
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="card-footer">
+                        <button type="submit" className="btn btn-fill btn-rose">
+                          Create Category
                         </button>
                       </div>
                     </form>
