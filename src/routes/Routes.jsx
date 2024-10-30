@@ -20,6 +20,7 @@ import AdminBookings from "../pages/Admin/Bookings";
 import SelectPayment from "../pages/Customer/SelectPayment";
 import ManagerDashboard from "../pages/Manager/Dashboard";
 import StaffDashboard from "../pages/Staff/Dashboard";
+import MomoPaymentCallback from "../pages/Customer/MomoPaymentCallback";
 
 export const routes = createBrowserRouter([
   {
@@ -113,6 +114,10 @@ export const routes = createBrowserRouter([
       {
         path: "BookingDetails",
         element: <CustomerBookingDetails />,
+      },
+      {
+        path: "MomoPaymentCallback",
+        element: <MomoPaymentCallback />,
       },
     ],
   },

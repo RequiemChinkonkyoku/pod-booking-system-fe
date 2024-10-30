@@ -38,7 +38,7 @@ const SelectPayment = () => {
         switch (methodId) {
             case 1: {
                 try {
-                    const response = await axios.post("/Momo/create-payment", { bookingId: bookingId });
+                    const response = await axios.post("/Momo/create-payment", { bookingId: bookingId, amount: amount });
                     const paymentUrl = response.data.momoPaymentResponse.payUrl;
                     console.log(paymentUrl);
                     window.location.href = paymentUrl;
@@ -76,8 +76,16 @@ const SelectPayment = () => {
                     break;
                 }
             default: {
-                alert("Choosing cash have the chance of getting your booking taken.");
-                navigate("/");
+                const userChoice = confirm("Choosing cash have the chance of getting your booking taken. Do you want to proceed?");
+
+                if (userChoice) {
+                    alert("Payment method selected.");
+                    navigate("/customer/Bookings");
+                }
+                else {
+                    alert("Payment method not selected");
+                }
+
                 break;
             }
         }
