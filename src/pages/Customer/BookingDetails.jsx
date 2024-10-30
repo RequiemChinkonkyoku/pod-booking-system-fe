@@ -9,6 +9,7 @@ import Sidebar from "../../components/Customer/Sidebar";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { parseISO, format } from "date-fns";
+import { MehOutlined } from "@ant-design/icons";
 
 const CustomerBookingDetails = () => {
   const location = useLocation();
@@ -19,6 +20,8 @@ const CustomerBookingDetails = () => {
   const [timeSlots, setTimeSlots] = useState([]);
   const [showModal, setShowModal] = useState(false); // for modal visibility
   const [cancelLoading, setCancelLoading] = useState(false); // loading state for cancellation
+  const [transaction, setTransaction] = useState([]);
+  const [method, setMethod] = useState({});
 
   useEffect(() => {
     const getBooking = async () => {
@@ -78,6 +81,43 @@ const CustomerBookingDetails = () => {
     }
   };
 
+  const navigateToPayment = () => {
+    const paymentData = {
+      orderType: 'Payment',
+      bookingId: booking.id,
+      amount: booking.actualPrice,
+      userId: booking.userId
+    };
+
+    navigate("/customer/SelectPayment", { state: paymentData });
+  };
+
+  useEffect(() => {
+    const getTransaction = async () => {
+      try {
+        const response = await axios.get(`/Transaction/booking/${booking.id}`);
+        const transactionData = response.data;
+
+        if (transactionData.success && !transactionData.transactionExists) {
+          console.log(transactionData.message);
+        } else if (transactionData.success && transactionData.transactionExists) {
+          console.log(transactionData.transaction);
+
+
+          setMethod(transactionData.transaction.method);
+          console.log(transactionData.transaction.method);
+        } else {
+          console.error(transactionData.message);
+        }
+      }
+      catch (error) {
+        console.error(error);
+      };
+    };
+
+    getTransaction();
+  }, [booking]);
+
   return (
     <>
       <Head />
@@ -89,7 +129,7 @@ const CustomerBookingDetails = () => {
             <div className="content">
               <div className="container-fluid">
                 <div className="row">
-                  <div className="col-md-12">
+                  <div className="col-sm-6">
                     {/* Booking Details */}
                     <div className="card">
                       <div className="card-header card-header-rose card-header-text">
@@ -129,36 +169,59 @@ const CustomerBookingDetails = () => {
                           </div>
                           <div className="row">
                             <label className="col-sm-2 col-form-label">
+                              DISCOUNT
+                            </label>
+                            <div className="col-sm-10">
+                              <div className="form-group bmd-form-group disabled readonly">
+                                <label className="bmd-label-floating text-muted">
+                                  {booking.discount} %
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <label className="col-sm-2 col-form-label">
+                              ACTUAL PRICE
+                            </label>
+                            <div className="col-sm-10">
+                              <div className="form-group bmd-form-group disabled readonly">
+                                <label className="bmd-label-floating text-muted">
+                                  {booking.actualPrice} VND
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <label className="col-sm-2 col-form-label">
                               BOOKING STATUS
                             </label>
                             <div className="col-sm-10">
                               <div className="form-group bmd-form-group disabled readonly">
                                 <label
-                                  className={`bmd-label-floating ${
-                                    booking.bookingStatusId === 1
-                                      ? "text-danger"
-                                      : booking.bookingStatusId === 2
+                                  className={`bmd-label-floating ${booking.bookingStatusId === 1
+                                    ? "text-danger"
+                                    : booking.bookingStatusId === 2
                                       ? "text-warning"
                                       : booking.bookingStatusId === 3
-                                      ? "text-primary"
-                                      : booking.bookingStatusId === 4
-                                      ? "text-success"
-                                      : booking.bookingStatusId === 5
-                                      ? "text-info"
-                                      : "text-muted"
-                                  }`}
+                                        ? "text-primary"
+                                        : booking.bookingStatusId === 4
+                                          ? "text-success"
+                                          : booking.bookingStatusId === 5
+                                            ? "text-info"
+                                            : "text-muted"
+                                    }`}
                                 >
                                   {booking.bookingStatusId === 1
                                     ? "Cancelled"
                                     : booking.bookingStatusId === 2
-                                    ? "Pending"
-                                    : booking.bookingStatusId === 3
-                                    ? "Reserved"
-                                    : booking.bookingStatusId === 4
-                                    ? "On-going"
-                                    : booking.bookingStatusId === 5
-                                    ? "Completed"
-                                    : "Unknown Status"}
+                                      ? "Pending"
+                                      : booking.bookingStatusId === 3
+                                        ? "Reserved"
+                                        : booking.bookingStatusId === 4
+                                          ? "On-going"
+                                          : booking.bookingStatusId === 5
+                                            ? "Completed"
+                                            : "Unknown Status"}
                                 </label>
                               </div>
                             </div>
@@ -172,9 +235,9 @@ const CustomerBookingDetails = () => {
                                 <label className="bmd-label-floating text-muted">
                                   {booking.createdTime
                                     ? format(
-                                        parseISO(booking.createdTime),
-                                        "hh:mm:ss a, MMMM dd, yyyy"
-                                      )
+                                      parseISO(booking.createdTime),
+                                      "hh:mm:ss a, MMMM dd, yyyy"
+                                    )
                                     : "Loading..."}
                                 </label>
                               </div>
@@ -256,7 +319,7 @@ const CustomerBookingDetails = () => {
 
                     {/* Cancel Booking Button */}
                     {booking.bookingStatusId === 2 ||
-                    booking.bookingStatusId === 3 ? (
+                      booking.bookingStatusId === 3 ? (
                       <button
                         className="btn btn-danger"
                         onClick={() => setShowModal(true)}
@@ -316,6 +379,42 @@ const CustomerBookingDetails = () => {
                         </div>
                       </div>
                     )}
+                  </div>
+
+                  <div className="col-sm-6">
+                    <div className="card">
+                      <div className="card-header card-header-rose card-header-text">
+                        <div className="card-text">
+                          <h4 className="card-title">Payment Info</h4>
+                        </div>
+                      </div>
+                      <div className="card-body">
+                        <div className="row">
+                          <label className="col-sm-2 col-form-label">
+                            Payment Method
+                          </label>
+                          <div className="col-sm-10">
+                            <div className="form-group bmd-form-group disabled readonly">
+                              <label className="bmd-label-floating text-muted">
+
+                                {method && Object.keys(method).length > 0 ? (
+                                  console.log(method),
+                                  method.name
+                                ) : "No successful payment"}
+
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        {booking.bookingStatusId === 2 ||
+                          booking.bookingStatusId === 3 ? (
+                          <button class="btn btn-dribbble"
+                            onClick={navigateToPayment}>
+                            Select Payment
+                          </button>
+                        ) : null}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
