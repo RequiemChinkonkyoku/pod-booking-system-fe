@@ -285,22 +285,22 @@ const BookAPod = () => {
                           <i className="material-icons">info</i>
                           Status Guide
                         </h6>
-                        <div className="info-item">
+                        <div className="info-item1">
                           <i className="material-icons">schedule</i>
                           <span className="info-dot info-available"></span>
                           Available for Booking
                         </div>
-                        <div className="info-item">
+                        <div className="info-item1">
                           <i className="material-icons">check_circle</i>
                           <span className="info-dot info-selected"></span>
                           Selected Time Slot
                         </div>
-                        <div className="info-item">
+                        <div className="info-item1">
                           <i className="material-icons">block</i>
                           <span className="info-dot info-booked"></span>
                           Fully Booked
                         </div>
-                        <div className="info-item">
+                        <div className="info-item1">
                           <i className="material-icons">event_busy</i>
                           <span className="info-dot info-unavailable"></span>
                           Not Available
