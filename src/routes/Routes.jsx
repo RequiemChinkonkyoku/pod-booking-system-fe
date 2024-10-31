@@ -22,6 +22,7 @@ import ManagerDashboard from "../pages/Manager/Dashboard";
 import StaffDashboard from "../pages/Staff/Dashboard";
 import DashboardChart from "../pages/Admin/DashboardChart";
 import { StaffManagement } from "../pages/Admin/StaffManagement";
+import BookingDetails from "../pages/Admin/BookingDetails";
 
 export const routes = createBrowserRouter([
   {
@@ -85,6 +86,10 @@ export const routes = createBrowserRouter([
       {
         path: "staffManagement",
         element: <StaffManagement />,
+      },
+      {
+        path: "details",
+        element: <BookingDetails />,
       },
     ],
   },

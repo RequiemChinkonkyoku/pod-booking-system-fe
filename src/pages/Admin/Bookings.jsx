@@ -22,13 +22,16 @@ import {
 import "react-datepicker/dist/react-datepicker.css";
 import "react-toastify/dist/ReactToastify.css";
 import "../../css/AdminBookings.css";
+import { useNavigate } from "react-router-dom";
 
 const Bookings = () => {
   // State management
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [startDate, setStartDate] = useState(startOfDay(new Date()));
   const [endDate, setEndDate] = useState(endOfDay(new Date()));
   const [bookings, setBookings] = useState([]);
+  const [detailedBookings, setDetailedBookings] = useState({});
   const [timeSlots, setTimeSlots] = useState([]);
   const [podTypes, setPodTypes] = useState([]);
   const [selectedPodType, setSelectedPodType] = useState("all");
@@ -98,7 +101,6 @@ const Bookings = () => {
         const dateB = new Date(b.arrivalDate);
 
         if (dateA.getTime() === dateB.getTime()) {
-          // If dates are equal, sort by time
           return a.startTime.localeCompare(b.startTime);
         }
 
@@ -116,6 +118,7 @@ const Bookings = () => {
 
     return sortedBookings;
   };
+
   // Data fetching
   useEffect(() => {
     const fetchData = async () => {
@@ -130,7 +133,28 @@ const Bookings = () => {
 
         setTimeSlots(schedulesResponse.data);
         setPodTypes(podTypesResponse.data);
-        setBookings(bookingsResponse.data);
+
+        // Store basic booking data
+        const bookingsData = bookingsResponse.data;
+        setBookings(bookingsData);
+
+        // Fetch detailed information for each booking
+        const detailedData = {};
+        await Promise.all(
+          bookingsData.map(async (booking) => {
+            try {
+              const response = await axios.get(`/Booking/${booking.bookingId}`);
+              detailedData[booking.bookingId] = response.data;
+            } catch (error) {
+              console.error(
+                `Error fetching details for booking ${booking.bookingId}:`,
+                error
+              );
+              detailedData[booking.bookingId] = booking;
+            }
+          })
+        );
+        setDetailedBookings(detailedData);
       } catch (error) {
         console.error("Error fetching data:", error);
         toast.error(error.response?.data?.message || "Failed to fetch data");
@@ -140,6 +164,37 @@ const Bookings = () => {
     };
 
     fetchData();
+
+    // Set up periodic refresh every 30 seconds
+    const refreshInterval = setInterval(async () => {
+      try {
+        const bookingsResponse = await axios.get("/Booking");
+        const bookingsData = bookingsResponse.data;
+        setBookings(bookingsData);
+
+        // Refresh detailed information
+        const detailedData = {};
+        await Promise.all(
+          bookingsData.map(async (booking) => {
+            try {
+              const response = await axios.get(`/Booking/${booking.bookingId}`);
+              detailedData[booking.bookingId] = response.data;
+            } catch (error) {
+              console.error(
+                `Error fetching details for booking ${booking.bookingId}:`,
+                error
+              );
+              detailedData[booking.bookingId] = booking;
+            }
+          })
+        );
+        setDetailedBookings(detailedData);
+      } catch (error) {
+        console.error("Error refreshing bookings:", error);
+      }
+    }, 30000);
+
+    return () => clearInterval(refreshInterval);
   }, []);
 
   // Filtering logic
@@ -153,7 +208,6 @@ const Bookings = () => {
         weekDatesStr.includes(booking.arrivalDate)
       );
     } else {
-      // Date range filter for list view
       filtered = filtered.filter((booking) => {
         const bookingDate = startOfDay(new Date(booking.arrivalDate));
         return isWithinInterval(bookingDate, {
@@ -170,9 +224,10 @@ const Bookings = () => {
     }
 
     if (selectedStatus !== "all") {
-      filtered = filtered.filter(
-        (booking) => booking.statusId === parseInt(selectedStatus)
-      );
+      filtered = filtered.filter((booking) => {
+        const detailedStatus = detailedBookings[booking.bookingId]?.statusId;
+        return detailedStatus === parseInt(selectedStatus);
+      });
     }
 
     if (searchQuery) {
@@ -186,14 +241,19 @@ const Bookings = () => {
     return filtered;
   };
 
-  // Status handling
-  const getBookingStatus = (statusId) => {
+  // Get detailed booking status
+  const getDetailedBookingStatus = (bookingId) => {
+    const detailedBooking = detailedBookings[bookingId];
+    const statusId =
+      detailedBooking?.statusId ||
+      bookings.find((b) => b.bookingId === bookingId)?.statusId;
+
     const statusMap = {
-      1: { label: "Pending", color: "status-pending" },
-      2: { label: "Confirmed", color: "status-confirmed" },
-      3: { label: "Cancelled", color: "status-cancelled" },
-      4: { label: "Completed", color: "status-completed" },
-      5: { label: "Active", color: "status-active" },
+      1: { label: "Cancelled", color: "status-cancelled" },
+      2: { label: "Pending", color: "status-pending" },
+      3: { label: "Reserved", color: "status-confirmed" },
+      4: { label: "On-going", color: "status-active" },
+      5: { label: "Completed", color: "status-completed" },
     };
     return statusMap[statusId] || { label: "Unknown", color: "status-unknown" };
   };
@@ -202,7 +262,17 @@ const Bookings = () => {
   const handleCancelBooking = async (bookingId) => {
     try {
       await axios.put(`/Booking/${bookingId}/cancel`);
+
+      // Update the local detailed bookings state
+      const updatedBooking = await axios.get(`/Booking/${bookingId}`);
+      setDetailedBookings((prev) => ({
+        ...prev,
+        [bookingId]: updatedBooking.data,
+      }));
+
       toast.success("Booking cancelled successfully");
+
+      // Refresh all bookings
       const bookingsResponse = await axios.get("/Booking");
       setBookings(bookingsResponse.data);
     } catch (error) {
@@ -211,8 +281,18 @@ const Bookings = () => {
     }
   };
 
-  const handleViewBooking = (bookingId) => {
-    
+  const handleViewBooking = async (bookingId) => {
+    try {
+      const response = await axios.get(`/Booking/${bookingId}`);
+      setDetailedBookings((prev) => ({
+        ...prev,
+        [bookingId]: response.data,
+      }));
+      navigate("/admin/details", { state: { bookingId: bookingId } });
+    } catch (error) {
+      console.error("Error fetching booking details:", error);
+      navigate("/admin/details", { state: { bookingId: bookingId } });
+    }
   };
 
   const handleViewAllBookings = (date, time, bookings) => {
@@ -229,16 +309,6 @@ const Bookings = () => {
     setSelectedDate(new Date());
   };
 
-  // Pagination setup
-  const filteredBookings = sortBookings(filterBookings());
-  const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
-  const paginatedBookings =
-    viewMode === "list"
-      ? filteredBookings.slice(
-          (currentPage - 1) * itemsPerPage,
-          currentPage * itemsPerPage
-        )
-      : filteredBookings;
   // Components
   const DateRangeFilter = () => (
     <div className="date-range-section">
@@ -336,10 +406,10 @@ const Bookings = () => {
                   <td>
                     <span
                       className={`status-badge ${
-                        getBookingStatus(booking.statusId).color
+                        getDetailedBookingStatus(booking.bookingId).color
                       }`}
                     >
-                      {getBookingStatus(booking.statusId).label}
+                      {getDetailedBookingStatus(booking.bookingId).label}
                     </span>
                   </td>
                   <td className="action-buttons">
@@ -350,7 +420,8 @@ const Bookings = () => {
                       <i className="material-icons">visibility</i>
                       View
                     </button>
-                    {booking.statusId !== 3 && (
+                    {getDetailedBookingStatus(booking.bookingId).label !==
+                      "Cancelled" && (
                       <button
                         className="btn-cancel"
                         onClick={() => handleCancelBooking(booking.bookingId)}
@@ -368,11 +439,10 @@ const Bookings = () => {
       </div>
     </div>
   );
+
   // Schedule View Component
   const renderScheduleView = () => {
     const weekDays = getWeekDays(selectedDate);
-
-    // Group bookings by date and time
     const bookingsByDateAndTime = {};
     filteredBookings.forEach((booking) => {
       const date = booking.arrivalDate;
@@ -456,10 +526,14 @@ const Bookings = () => {
                                 </span>
                                 <span
                                   className={`status-badge ${
-                                    getBookingStatus(booking.statusId).color
+                                    getDetailedBookingStatus(booking.bookingId)
+                                      .color
                                   }`}
                                 >
-                                  {getBookingStatus(booking.statusId).label}
+                                  {
+                                    getDetailedBookingStatus(booking.bookingId)
+                                      .label
+                                  }
                                 </span>
                               </div>
                               <div className="booking-actions">
@@ -471,7 +545,8 @@ const Bookings = () => {
                                 >
                                   <i className="material-icons">visibility</i>
                                 </button>
-                                {booking.statusId !== 3 && (
+                                {getDetailedBookingStatus(booking.bookingId)
+                                  .label !== "Cancelled" && (
                                   <button
                                     className="btn-cancel-mini"
                                     onClick={() =>
@@ -588,10 +663,10 @@ const Bookings = () => {
               <td>
                 <span
                   className={`status-badge ${
-                    getBookingStatus(booking.statusId).color
+                    getDetailedBookingStatus(booking.bookingId).color
                   }`}
                 >
-                  {getBookingStatus(booking.statusId).label}
+                  {getDetailedBookingStatus(booking.bookingId).label}
                 </span>
               </td>
               <td className="action-buttons">
@@ -602,7 +677,8 @@ const Bookings = () => {
                   <i className="material-icons">visibility</i>
                   View
                 </button>
-                {booking.statusId !== 3 && (
+                {getDetailedBookingStatus(booking.bookingId).label !==
+                  "Cancelled" && (
                   <button
                     className="btn-cancel"
                     onClick={() => handleCancelBooking(booking.bookingId)}
@@ -641,6 +717,17 @@ const Bookings = () => {
     </div>
   );
 
+  // Pagination setup
+  const filteredBookings = sortBookings(filterBookings());
+  const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
+  const paginatedBookings =
+    viewMode === "list"
+      ? filteredBookings.slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+        )
+      : filteredBookings;
+
   // Main render
   return (
     <>
@@ -648,7 +735,6 @@ const Bookings = () => {
       <div className="wrapper">
         <Sidebar />
         <div className="main-panel">
-          <Navbar />
           <div className="admin-booking-card">
             <div className="card-header">
               <h2 className="card-title">
@@ -724,11 +810,11 @@ const Bookings = () => {
                     className="filter-select"
                   >
                     <option value="all">All Statuses</option>
-                    <option value="1">Pending</option>
-                    <option value="2">Confirmed</option>
-                    <option value="3">Cancelled</option>
-                    <option value="4">Completed</option>
-                    <option value="5">Active</option>
+                    <option value="1">Cancelled</option>
+                    <option value="2">Pending</option>
+                    <option value="3">Reserved</option>
+                    <option value="4">On-going</option>
+                    <option value="5">Completed</option>
                   </select>
                 </div>
               </div>
@@ -753,7 +839,7 @@ const Bookings = () => {
                   </div>
                   <div className="legend-item">
                     <span className="legend-dot status-confirmed"></span>
-                    <span>Confirmed</span>
+                    <span>Reserved</span>
                   </div>
                   <div className="legend-item">
                     <span className="legend-dot status-cancelled"></span>
@@ -765,7 +851,7 @@ const Bookings = () => {
                   </div>
                   <div className="legend-item">
                     <span className="legend-dot status-active"></span>
-                    <span>Active</span>
+                    <span>On-going</span>
                   </div>
                 </div>
               </div>
