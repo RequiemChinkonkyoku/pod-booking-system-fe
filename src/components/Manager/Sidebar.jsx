@@ -33,6 +33,14 @@ const Sidebar = () => {
               </div>
             </div>
           </div>
+          <ul className="nav">
+            <li class="nav-item ">
+              <Link class="nav-link" to="/managerStaffManagement">
+                <i class="material-icons">accessibility</i>
+                <p>Staff Management</p>
+              </Link>
+            </li>
+          </ul>
           <div
             className="ps-scrollbar-x-rail"
             style={{
