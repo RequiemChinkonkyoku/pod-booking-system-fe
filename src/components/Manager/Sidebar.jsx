@@ -24,7 +24,7 @@ const Sidebar = () => {
               <div className="collapse show">
                 <ul className="nav">
                   <li className="nav-item ">
-                    <Link className="nav-link" to="/customer/dashboard">
+                    <Link className="nav-link" to="/managerDashboard">
                       <i className="material-icons">dashboard</i>
                       <p> Profile </p>
                     </Link>
