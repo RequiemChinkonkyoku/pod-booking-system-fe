@@ -2,12 +2,12 @@ import axios from "../../utils/axiosConfig";
 import React, { useState, useEffect } from "react";
 import "../../assets/css/material-dashboard.min.css";
 
-import Navbar from "../../components/Admin/Navbar";
+import Navbar from "../../components/Manager/Navbar";
 import Head from "../../components/Head";
-import Sidebar from "../../components/Admin/Sidebar";
+import Sidebar from "../../components/Manager/Sidebar";
 import { Modal, Button, Form } from "react-bootstrap";
 
-export const StaffManagement = () => {
+export const ManagerStaffManagement = () => {
   const [users, setUsers] = useState([]);
   const [areas, setAreas] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);

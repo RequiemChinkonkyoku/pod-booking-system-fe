@@ -24,7 +24,7 @@ const Sidebar = () => {
               <div className="collapse show">
                 <ul className="nav">
                   <li className="nav-item ">
-                    <Link className="nav-link" to="/customer/dashboard">
+                    <Link className="nav-link" to="/managerDashboard">
                       <i className="material-icons">dashboard</i>
                       <p> Profile </p>
                     </Link>
@@ -33,6 +33,14 @@ const Sidebar = () => {
               </div>
             </div>
           </div>
+          <ul className="nav">
+            <li class="nav-item ">
+              <Link class="nav-link" to="/managerStaffManagement">
+                <i class="material-icons">accessibility</i>
+                <p>Staff Management</p>
+              </Link>
+            </li>
+          </ul>
           <div
             className="ps-scrollbar-x-rail"
             style={{
