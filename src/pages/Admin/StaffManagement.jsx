@@ -5,18 +5,53 @@ import "../../assets/css/material-dashboard.min.css";
 import Navbar from "../../components/Admin/Navbar";
 import Head from "../../components/Head";
 import Sidebar from "../../components/Admin/Sidebar";
-import { Modal, Button } from "react-bootstrap"; // Import Modal and Button from react-bootstrap
+import { Modal, Button, Form } from "react-bootstrap";
 
 export const StaffManagement = () => {
   const [users, setUsers] = useState([]);
   const [areas, setAreas] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedAreaId, setSelectedAreaId] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
-    // Fetch users
-    axios.get("/Users").then((response) => {
-      setUsers(response.data);
-    });
+    const fetchStaffAndAreaData = async () => {
+      try {
+        const userResponse = await axios.get("/Users");
+        const usersWithAreas = await Promise.all(
+          userResponse.data.map(async (user) => {
+            if (user.roleId === 2) {
+              // Only staff members
+              try {
+                const staffAreaResponse = await axios.get(
+                  `/StaffArea/Staff/${user.id}`
+                );
+                const areaResponse = await axios.get(
+                  `/Areas/${staffAreaResponse.data.areaId}`
+                );
+                return {
+                  ...user,
+                  areaId: staffAreaResponse.data.areaId,
+                  areaName: areaResponse.data.name,
+                };
+              } catch (error) {
+                console.error(
+                  `Error fetching area for staff ID ${user.id}:`,
+                  error
+                );
+                return { ...user, areaId: null, areaName: "N/A" }; // Default if no area assigned
+              }
+            }
+            return user;
+          })
+        );
+        setUsers(usersWithAreas);
+      } catch (error) {
+        console.error("Error fetching users or areas:", error);
+      }
+    };
 
+    fetchStaffAndAreaData();
     // Fetch areas
     axios.get("/Areas").then((response) => {
       setAreas(response.data);
@@ -25,9 +60,61 @@ export const StaffManagement = () => {
 
   const getAreaName = (areaId) => {
     const area = areas.find((a) => a.id === areaId);
-    return area ? area.name : "N/A"; // Returns area name or "N/A" if not found
+    return area ? area.name : "N/A";
   };
 
+  // Open Modal and set initial data
+  const handleOpenEditModal = (user) => {
+    setSelectedUser(user);
+    setSelectedAreaId(user.areaId || ""); // Set current area ID if available, else empty
+    setShowModal(true);
+  };
+
+  // Close Modal
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedUser(null);
+    setSelectedAreaId("");
+  };
+
+  // Handle area selection
+  const handleAreaChange = (e) => {
+    setSelectedAreaId(e.target.value);
+  };
+
+  // Submit area assignment
+  const handleSaveArea = async () => {
+    const requestBody = {
+      staffId: selectedUser.id,
+      areaId: parseInt(selectedAreaId, 10),
+    }; // Ensure areaId is an integer
+
+    try {
+      if (selectedUser.areaId) {
+        // If the areaId exists, perform PUT to update the record
+        await axios.put("/StaffArea", requestBody);
+      } else {
+        // If no areaId, perform POST to create the record
+        await axios.post("/StaffArea", requestBody);
+      }
+
+      // Update the user list with the new area assignment
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user.id === selectedUser.id
+            ? {
+                ...user,
+                areaId: requestBody.areaId,
+                areaName: getAreaName(requestBody.areaId),
+              }
+            : user
+        )
+      );
+      handleCloseModal();
+    } catch (error) {
+      console.error("Error saving area:", error);
+    }
+  };
   return (
     <>
       <Head />
@@ -57,7 +144,7 @@ export const StaffManagement = () => {
                               <th>Email</th>
                               <th>Role</th>
                               <th>Status</th>
-                              <th>AREA</th>
+                              <th>Area</th>
                               <th className="text-right">Actions</th>
                             </tr>
                           </thead>
@@ -69,9 +156,9 @@ export const StaffManagement = () => {
                                 <tr
                                   className={`table-success ${
                                     user.status == "-1"
-                                      ? "table-danger" // Deactivated
+                                      ? "table-danger"
                                       : user.status == "0"
-                                      ? "table-warning" // Inactive
+                                      ? "table-warning"
                                       : ""
                                   }`}
                                   key={user.id}
@@ -89,7 +176,7 @@ export const StaffManagement = () => {
                                       ? "Active"
                                       : "N/A"}
                                   </td>
-                                  <td>{getAreaName(user.areaId)}</td>{" "}
+                                  <td>{user.areaName || "N/A"}</td>
                                   <td className="td-actions text-right">
                                     {/* Edit Button */}
                                     <button
@@ -98,16 +185,6 @@ export const StaffManagement = () => {
                                       onClick={() => handleOpenEditModal(user)}
                                     >
                                       <i className="material-icons">edit</i>
-                                    </button>
-                                    {/* Delete Button */}
-                                    <button
-                                      type="button"
-                                      className="btn btn-danger"
-                                      onClick={() =>
-                                        handleOpenDeleteModal(user)
-                                      }
-                                    >
-                                      <i className="material-icons">close</i>
                                     </button>
                                   </td>
                                 </tr>
@@ -123,6 +200,40 @@ export const StaffManagement = () => {
           </div>
         </div>
       </div>
+
+      {/* Edit Area Modal */}
+      <Modal show={showModal} onHide={handleCloseModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Assign Area to Staff</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group>
+              <Form.Label>Select Area</Form.Label>
+              <Form.Control
+                as="select"
+                value={selectedAreaId}
+                onChange={handleAreaChange}
+              >
+                <option value="">Select an area</option>
+                {areas.map((area) => (
+                  <option key={area.id} value={area.id}>
+                    {area.name}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleSaveArea}>
+            Save
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
