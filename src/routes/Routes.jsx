@@ -20,6 +20,7 @@ import AdminBookings from "../pages/Admin/Bookings";
 import SelectPayment from "../pages/Customer/SelectPayment";
 import ManagerDashboard from "../pages/Manager/Dashboard";
 import StaffDashboard from "../pages/Staff/Dashboard";
+import DashboardChart from "../pages/Admin/DashboardChart";
 import { StaffManagement } from "../pages/Admin/StaffManagement";
 
 export const routes = createBrowserRouter([
@@ -60,6 +61,10 @@ export const routes = createBrowserRouter([
       {
         path: "dashboard",
         element: <Dashboard />,
+      },
+      {
+        path: "chart",
+        element: <DashboardChart />,
       },
       {
         path: "users",

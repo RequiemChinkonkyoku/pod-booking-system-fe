@@ -35,6 +35,13 @@ const Sidebar = () => {
           </div>
           <ul className="nav">
             <li className="nav-item ">
+              {" "}
+              <Link className="nav-link" to="/admin/chart">
+                <i className="material-icons">dashboard</i>
+                <p>Dashboard</p>
+              </Link>
+            </li>
+            <li className="nav-item ">
               <Link className="nav-link" to="/admin/users">
                 <i className="material-icons">grid_on</i>
                 <p>Users</p>
