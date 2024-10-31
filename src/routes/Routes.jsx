@@ -21,6 +21,7 @@ import SelectPayment from "../pages/Customer/SelectPayment";
 import ManagerDashboard from "../pages/Manager/Dashboard";
 import StaffDashboard from "../pages/Staff/Dashboard";
 import DashboardChart from "../pages/Admin/DashboardChart";
+import { StaffManagement } from "../pages/Admin/StaffManagement";
 
 export const routes = createBrowserRouter([
   {
@@ -63,7 +64,7 @@ export const routes = createBrowserRouter([
       },
       {
         path: "chart",
-        element: <DashboardChart />
+        element: <DashboardChart />,
       },
       {
         path: "users",
@@ -80,6 +81,10 @@ export const routes = createBrowserRouter([
       {
         path: "bookings",
         element: <AdminBookings />,
+      },
+      {
+        path: "staffManagement",
+        element: <StaffManagement />,
       },
     ],
   },

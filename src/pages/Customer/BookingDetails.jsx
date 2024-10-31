@@ -17,9 +17,17 @@ const CustomerBookingDetails = () => {
 
   const [booking, setBooking] = useState({});
   const [timeSlots, setTimeSlots] = useState([]);
-  const [showModal, setShowModal] = useState(false); // for modal visibility
-  const [cancelLoading, setCancelLoading] = useState(false); // loading state for cancellation
+  const [selectedProducts, setSelectedProducts] = useState([]); // state for selected products
+  const [newProduct, setNewProduct] = useState({ quantity: 1, productId: "" }); // state for adding a new product
+  const [showModal, setShowModal] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [deleteProductId, setDeleteProductId] = useState(null);
+  const [updateProductId, setUpdateProductId] = useState(null);
+  const [newQuantity, setNewQuantity] = useState(0);
 
+  // Fetch booking details
   useEffect(() => {
     const getBooking = async () => {
       try {
@@ -32,6 +40,7 @@ const CustomerBookingDetails = () => {
     getBooking();
   }, [bookingId]);
 
+  // Fetch schedules
   useEffect(() => {
     const fetchSchedules = async () => {
       try {
@@ -44,7 +53,66 @@ const CustomerBookingDetails = () => {
     fetchSchedules();
   }, []);
 
-  // Function to get the start and end times of the slots
+  // Fetch selected products
+  useEffect(() => {
+    fetchSelectedProduct();
+  }, [bookingId]);
+  const fetchSelectedProduct = async () => {
+    try {
+      const response = await axios.get(
+        `/SelectedProduct/Booking/${bookingId.bookingId}`
+      );
+      setSelectedProducts(response.data || []);
+    } catch (error) {
+      console.error("Error fetching selected products:", error);
+    }
+  };
+  // Function to handle adding a selected product
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post("/SelectedProduct", {
+        quantity: newProduct.quantity,
+        bookingId: bookingId.bookingId,
+        productId: newProduct.productId,
+      });
+      alert("Product added successfully!");
+      setNewProduct({ quantity: 1, productId: "" }); // Clear input fields after adding
+      // Refresh selected products after adding
+      const updatedProducts = await axios.get(
+        `/SelectedProduct/Booking/${bookingId.bookingId}`
+      );
+      setSelectedProducts(updatedProducts.data || []);
+    } catch (error) {
+      console.error("Error adding selected product:", error);
+      alert("Failed to add product. Please try again.");
+    }
+  };
+
+  const handleDeleteProduct = async () => {
+    try {
+      await axios.delete(`/SelectedProduct/${deleteProductId}`);
+      fetchSelectedProducts();
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
+
+  const handleUpdateProduct = async () => {
+    try {
+      await axios.put(`/SelectedProduct/${updateProductId}`, {
+        quantity: newQuantity,
+        productId: updateProductId,
+      });
+      fetchSelectedProducts();
+      setShowUpdateModal(false);
+    } catch (error) {
+      console.error("Error updating product:", error);
+    }
+  };
+
+  // Helper function to format time slots
   const getSchedule = (scheduleId) => {
     const schedule = timeSlots.find((slot) => slot.id === scheduleId);
     if (schedule) {
@@ -61,12 +129,11 @@ const CustomerBookingDetails = () => {
     return "Loading...";
   };
 
-  // Function to cancel the booking
+  // Cancel booking function
   const handleCancelBooking = async () => {
     setCancelLoading(true);
     try {
       await axios.put(`/Booking/cancel-booking/${bookingId.bookingId}`);
-      // Handle success: e.g., redirect to another page or show success message
       setShowModal(false);
       alert("Booking has been canceled successfully!");
       navigate("/customer/Bookings");
@@ -253,7 +320,225 @@ const CustomerBookingDetails = () => {
                         )}
                       </div>
                     </div>
+                    {/* Selected Products Table */}
+                    <div className="card">
+                      <div className="card-header card-header-info card-header-text">
+                        <div className="card-text">
+                          <h4 className="card-title">Selected Products</h4>
+                        </div>
+                      </div>
+                      <div className="card-body">
+                        {selectedProducts.length > 0 ? (
+                          <table className="table table-hover">
+                            <thead>
+                              <tr>
+                                <th>Product ID</th>
+                                <th>Quantity</th>
+                                <th>Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {selectedProducts.map((product) => (
+                                <tr key={product.id}>
+                                  <td>{product.id}</td>
+                                  <td>{product.quantity}</td>
+                                  <td>
+                                    <button
+                                      className="btn btn-danger btn-sm"
+                                      onClick={() => {
+                                        setDeleteProductId(product.id);
+                                        setShowDeleteModal(true);
+                                      }}
+                                    >
+                                      Delete
+                                    </button>
+                                    <button
+                                      className="btn btn-primary btn-sm"
+                                      onClick={() => {
+                                        setUpdateProductId(product.id);
+                                        setNewQuantity(product.quantity);
+                                        setShowUpdateModal(true);
+                                      }}
+                                    >
+                                      Update
+                                    </button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        ) : (
+                          <p>No selected products available.</p>
+                        )}
+                      </div>
+                    </div>
 
+                    {/* Delete Confirmation Modal */}
+                    {showDeleteModal && (
+                      <div
+                        className="modal fade show"
+                        style={{
+                          display: "block",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        }}
+                      >
+                        <div className="modal-dialog" role="document">
+                          <div className="modal-content">
+                            <div className="modal-header">
+                              <h5 className="modal-title">Delete Product</h5>
+                              <button
+                                type="button"
+                                className="close"
+                                onClick={() => setShowDeleteModal(false)}
+                              >
+                                <span>&times;</span>
+                              </button>
+                            </div>
+                            <div className="modal-body">
+                              <p>
+                                Are you sure you want to delete this product?
+                              </p>
+                            </div>
+                            <div className="modal-footer">
+                              <button
+                                type="button"
+                                className="btn btn-secondary"
+                                onClick={() => setShowDeleteModal(false)}
+                              >
+                                No
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-danger"
+                                onClick={handleDeleteProduct}
+                              >
+                                Yes, Delete
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Update Quantity Modal */}
+                    {showUpdateModal && (
+                      <div
+                        className="modal fade show"
+                        style={{
+                          display: "block",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        }}
+                      >
+                        <div className="modal-dialog" role="document">
+                          <div className="modal-content">
+                            <div className="modal-header">
+                              <h5 className="modal-title">Update Quantity</h5>
+                              <button
+                                type="button"
+                                className="close"
+                                onClick={() => setShowUpdateModal(false)}
+                              >
+                                <span>&times;</span>
+                              </button>
+                            </div>
+                            <div className="modal-body">
+                              <label>New Quantity:</label>
+                              <input
+                                type="number"
+                                className="form-control"
+                                value={newQuantity}
+                                onChange={(e) => setNewQuantity(e.target.value)}
+                              />
+                            </div>
+                            <div className="modal-footer">
+                              <button
+                                type="button"
+                                className="btn btn-secondary"
+                                onClick={() => setShowUpdateModal(false)}
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-primary"
+                                onClick={handleUpdateProduct}
+                              >
+                                Update
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Add Selected Product Form */}
+                    <div className="card">
+                      <div className="card-header card-header-rose card-header-text">
+                        <div className="card-text">
+                          <h4 className="card-title">Add Product to Booking</h4>
+                        </div>
+                      </div>
+                      <form
+                        onSubmit={handleAddProduct}
+                        className="form-horizontal"
+                      >
+                        <div className="card-body">
+                          <div className="row">
+                            <label className="col-sm-2 col-form-label">
+                              Product ID
+                            </label>
+                            <div className="col-sm-10">
+                              <div className="form-group bmd-form-group">
+                                <input
+                                  type="number"
+                                  className="form-control"
+                                  value={newProduct.productId}
+                                  onChange={(e) =>
+                                    setNewProduct({
+                                      ...newProduct,
+                                      productId: e.target.value,
+                                    })
+                                  }
+                                  required
+                                />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <label className="col-sm-2 col-form-label">
+                              Quantity
+                            </label>
+                            <div className="col-sm-10">
+                              <div className="form-group bmd-form-group">
+                                <input
+                                  type="number"
+                                  className="form-control"
+                                  value={newProduct.quantity}
+                                  onChange={(e) =>
+                                    setNewProduct({
+                                      ...newProduct,
+                                      quantity: e.target.value,
+                                    })
+                                  }
+                                  min="1"
+                                  required
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="card-footer">
+                          <button
+                            className="btn btn-success"
+                            onClick={(event) =>
+                              handleAddProduct(event, quantity, productId)
+                            }
+                          >
+                            Add Product
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                     {/* Cancel Booking Button */}
                     {booking.bookingStatusId === 2 ||
                     booking.bookingStatusId === 3 ? (

@@ -76,42 +76,6 @@ const Navbar = () => {
               </li>
               <li className="nav-item dropdown">
                 <a
-                  aria-expanded={isNotificationsOpen}
-                  aria-haspopup="true"
-                  className="nav-link"
-                  onClick={toggleNotificationsDropdown}
-                  href="#"
-                  id="navbarDropdownMenuLink"
-                >
-                  <i className="material-icons">notifications</i>
-                  <span className="notification">5</span>
-                  <p className="d-lg-none d-md-block">Some Actions</p>
-                </a>
-                {isNotificationsOpen && (
-                  <div
-                    aria-labelledby="navbarDropdownMenuLink"
-                    className="dropdown-menu dropdown-menu-right show"
-                  >
-                    <a className="dropdown-item" href="#">
-                      Mike John responded to your email
-                    </a>
-                    <a className="dropdown-item" href="#">
-                      You have 5 new tasks
-                    </a>
-                    <a className="dropdown-item" href="#">
-                      You're now friend with Andrew
-                    </a>
-                    <a className="dropdown-item" href="#">
-                      Another Notification
-                    </a>
-                    <a className="dropdown-item" href="#">
-                      Another One
-                    </a>
-                  </div>
-                )}
-              </li>
-              <li className="nav-item dropdown">
-                <a
                   aria-expanded={isProfileOpen}
                   aria-haspopup="true"
                   className="nav-link"
