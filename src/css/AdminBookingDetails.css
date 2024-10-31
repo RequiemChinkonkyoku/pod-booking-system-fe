@@ -1,0 +1,387 @@
+/* Main Layout */
+.content {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Header Section */
+.header-section {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  color: #475569;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.back-button:hover {
+  background: #f1f5f9;
+  transform: translateX(-2px);
+}
+
+.back-button i {
+  font-size: 20px;
+}
+
+.booking-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 16px;
+}
+
+.cancel-booking-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #fee2e2;
+  border: none;
+  border-radius: 6px;
+  color: #dc2626;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.cancel-booking-btn:hover {
+  background: #fecaca;
+  transform: translateY(-1px);
+}
+
+/* Information Cards */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.info-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-title i {
+  color: #6366f1;
+  font-size: 24px;
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  color: #64748b;
+  font-size: 0.875rem;
+}
+
+.info-value {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+/* Status Badges */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status-cancelled {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.status-pending {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.status-reserved {
+  background: #bbf7d0;
+  color: #166534;
+}
+
+.status-ongoing {
+  background: #e9d5ff;
+  color: #6b21a8;
+}
+
+.status-completed {
+  background: #bfdbfe;
+  color: #1e40af;
+}
+
+/* Slot Details Table */
+.slot-details-card {
+  background: white;
+  border-radius: 8px;
+  padding: 24px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 24px;
+}
+
+.slots-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.slots-table th {
+  background: #f8fafc;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 500;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.slots-table th:first-child {
+  border-top-left-radius: 8px;
+}
+
+.slots-table th:last-child {
+  border-top-right-radius: 8px;
+}
+
+.slots-table td {
+  padding: 12px 16px;
+  color: #1e293b;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.slots-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.slots-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Cancel Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 50;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 450px;
+  animation: slideIn 0.3s ease;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.modal-message {
+  color: #64748b;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.modal-cancel-btn {
+  padding: 8px 16px;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 6px;
+  color: #475569;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.modal-cancel-btn:hover {
+  background: #e2e8f0;
+}
+
+.modal-confirm-btn {
+  padding: 8px 16px;
+  background: #fee2e2;
+  border: none;
+  border-radius: 6px;
+  color: #dc2626;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.modal-confirm-btn:hover {
+  background: #fecaca;
+}
+
+/* Loading States */
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+}
+
+.spinner {
+  border: 3px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 3px solid #6366f1;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+/* Price Format */
+.price-value {
+  font-family: "Roboto Mono", monospace;
+  font-weight: 500;
+}
+
+/* Animations */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .content {
+    padding: 16px;
+  }
+
+  .header-section {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .slots-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .modal-content {
+    margin: 16px;
+    padding: 20px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .modal-actions button {
+    width: 100%;
+  }
+}
+
+/* Focus States for Accessibility */
+button:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Smooth Transitions */
+.info-card,
+.slots-table tbody tr,
+button {
+  transition: all 0.2s ease;
+}
+
+/* Print Styles */
+@media print {
+  .back-button,
+  .cancel-booking-btn,
+  .modal-overlay {
+    display: none;
+  }
+
+  .info-card,
+  .slot-details-card {
+    box-shadow: none;
+    border: 1px solid #e2e8f0;
+  }
+}
