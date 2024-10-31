@@ -20,6 +20,7 @@ import AdminBookings from "../pages/Admin/Bookings";
 import SelectPayment from "../pages/Customer/SelectPayment";
 import ManagerDashboard from "../pages/Manager/Dashboard";
 import StaffDashboard from "../pages/Staff/Dashboard";
+import { StaffManagement } from "../pages/Admin/StaffManagement";
 
 export const routes = createBrowserRouter([
   {
@@ -75,6 +76,10 @@ export const routes = createBrowserRouter([
       {
         path: "bookings",
         element: <AdminBookings />,
+      },
+      {
+        path: "staffManagement",
+        element: <StaffManagement />,
       },
     ],
   },
