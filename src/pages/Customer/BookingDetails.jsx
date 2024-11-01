@@ -1,4 +1,3 @@
-// src/pages/Customer/CustomerBookingDetails.jsx
 import axios from "../../utils/axiosConfig";
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -19,9 +18,11 @@ const CustomerBookingDetails = () => {
   const [booking, setBooking] = useState({});
   const [timeSlots, setTimeSlots] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const [products, setProducts] = useState([]); // Added products state
+  const [products, setProducts] = useState([]);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
 
   // Fetch booking details
   useEffect(() => {
@@ -125,10 +126,49 @@ const CustomerBookingDetails = () => {
         });
       }
       fetchSelectedProduct();
-      alert("Products added successfully!");
     } catch (error) {
       console.error("Error adding products:", error);
-      alert("Failed to add products. Please try again.");
+    }
+  };
+
+  const handleQuantityUpdate = async (productId, newQuantity) => {
+    if (newQuantity < 1) {
+      alert("Quantity must be at least 1");
+      return;
+    }
+
+    setUpdating(true);
+    try {
+      // Find the current product to get its details
+      const currentProduct = selectedProducts.find((p) => p.id === productId);
+
+      if (!currentProduct) {
+        throw new Error("Product not found");
+      }
+
+      // Make the API call with all required fields
+      await axios.put(`/SelectedProduct/${productId}`, {
+        quantity: newQuantity,
+        productId: currentProduct.productId,
+        productPrice: currentProduct.price,
+        bookingId: booking.id,
+      });
+
+      // Update the local state
+      const updatedProducts = selectedProducts.map((product) =>
+        product.id === productId
+          ? { ...product, quantity: newQuantity }
+          : product
+      );
+      setSelectedProducts(updatedProducts);
+      setEditingProduct(null);
+
+      alert("Quantity updated successfully!");
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+      alert("Failed to update quantity. Please try again.");
+    } finally {
+      setUpdating(false);
     }
   };
 
@@ -294,6 +334,9 @@ const CustomerBookingDetails = () => {
                                 <th>Unit Price</th>
                                 <th>Quantity</th>
                                 <th>Total</th>
+                                {booking.bookingStatusId === 4 && (
+                                  <th>Actions</th>
+                                )}
                               </tr>
                             </thead>
                             <tbody>
@@ -312,9 +355,34 @@ const CustomerBookingDetails = () => {
                                   </td>
                                   <td>{product.price?.toLocaleString()} VND</td>
                                   <td>
-                                    <span className="badge badge-info">
-                                      {product.quantity}
-                                    </span>
+                                    {editingProduct === product.id ? (
+                                      <div
+                                        className="input-group input-group-sm"
+                                        style={{ width: "120px" }}
+                                      >
+                                        <input
+                                          type="number"
+                                          className="form-control"
+                                          defaultValue={product.quantity}
+                                          min="1"
+                                          ref={(input) =>
+                                            input && input.focus()
+                                          }
+                                          onKeyPress={(e) => {
+                                            if (e.key === "Enter") {
+                                              handleQuantityUpdate(
+                                                product.id,
+                                                parseInt(e.target.value)
+                                              );
+                                            }
+                                          }}
+                                        />
+                                      </div>
+                                    ) : (
+                                      <span className="badge badge-info">
+                                        {product.quantity}
+                                      </span>
+                                    )}
                                   </td>
                                   <td>
                                     <strong>
@@ -324,6 +392,62 @@ const CustomerBookingDetails = () => {
                                       VND
                                     </strong>
                                   </td>
+                                  {booking.bookingStatusId === 4 && (
+                                    <td>
+                                      {editingProduct === product.id ? (
+                                        <div className="btn-group btn-group-sm">
+                                          <button
+                                            className="btn btn-success btn-sm"
+                                            onClick={(e) => {
+                                              const input = e.target
+                                                .closest("tr")
+                                                .querySelector("input");
+                                              const newQuantity = parseInt(
+                                                input.value
+                                              );
+                                              handleQuantityUpdate(
+                                                product.id,
+                                                newQuantity
+                                              );
+                                            }}
+                                            disabled={updating}
+                                          >
+                                            {updating ? (
+                                              <span
+                                                className="spinner-border spinner-border-sm"
+                                                role="status"
+                                                aria-hidden="true"
+                                              ></span>
+                                            ) : (
+                                              <i className="material-icons">
+                                                check
+                                              </i>
+                                            )}
+                                          </button>
+                                          <button
+                                            className="btn btn-danger btn-sm"
+                                            onClick={() =>
+                                              setEditingProduct(null)
+                                            }
+                                            disabled={updating}
+                                          >
+                                            <i className="material-icons">
+                                              close
+                                            </i>
+                                          </button>
+                                        </div>
+                                      ) : (
+                                        <button
+                                          className="btn btn-info btn-sm"
+                                          onClick={() =>
+                                            setEditingProduct(product.id)
+                                          }
+                                        >
+                                          <i className="material-icons">edit</i>
+                                        </button>
+                                      )}
+                                    </td>
+                                  )}
                                 </tr>
                               ))}
                             </tbody>
@@ -353,6 +477,7 @@ const CustomerBookingDetails = () => {
                                     VND
                                   </strong>
                                 </td>
+                                {booking.bookingStatusId === 4 && <td></td>}
                               </tr>
                             </tfoot>
                           </table>

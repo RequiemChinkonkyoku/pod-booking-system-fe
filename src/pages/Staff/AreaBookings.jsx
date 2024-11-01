@@ -300,10 +300,10 @@ const Bookings = () => {
         ...prev,
         [bookingId]: response.data,
       }));
-      navigate("/staffBookingDetails", { state: { bookingId: bookingId } });
+      navigate("/staff/bookingDetails", { state: { bookingId: bookingId } });
     } catch (error) {
       console.error("Error fetching booking details:", error);
-      navigate("/staffBookingDetails", { state: { bookingId: bookingId } });
+      navigate("/staff/bookingDetails", { state: { bookingId: bookingId } });
     }
   };
 

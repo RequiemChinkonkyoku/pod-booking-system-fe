@@ -55,6 +55,11 @@ export const routes = createBrowserRouter([
     element: <RegisterPage />,
   },
   {
+    path: "/verifyOtp",
+    element: <VerifyOtpPage />,
+  },
+  // Admin routes
+  {
     path: "/admin",
     element: (
       <AuthProvider>
@@ -96,10 +101,7 @@ export const routes = createBrowserRouter([
       },
     ],
   },
-  {
-    path: "/verifyOtp",
-    element: <VerifyOtpPage />,
-  },
+  // Customer routes
   {
     path: "/customer",
     element: (
@@ -134,54 +136,46 @@ export const routes = createBrowserRouter([
       },
     ],
   },
+  // Staff routes
   {
-    path: "/managerDashboard",
-    element: <ManagerDashboard />,
+    path: "/staff",
+    element: (
+      <AuthProvider>
+        <PrivateRoute />
+      </AuthProvider>
+    ),
+    children: [
+      {
+        path: "dashboard",
+        element: <StaffDashboard />,
+      },
+      {
+        path: "areaBookings",
+        element: <AreaBookings />,
+      },
+      {
+        path: "bookingDetails",
+        element: <StaffBookingDetails />,
+      },
+    ],
   },
+  // Manager routes
   {
-    path: "/managerStaffManagement",
-    element: <ManagerStaffManagement />,
+    path: "/manager",
+    element: (
+      <AuthProvider>
+        <PrivateRoute />
+      </AuthProvider>
+    ),
+    children: [
+      {
+        path: "dashboard",
+        element: <ManagerDashboard />,
+      },
+      {
+        path: "staffManagement",
+        element: <ManagerStaffManagement />,
+      },
+    ],
   },
-  {
-    path: "/staffDashboard",
-    element: <StaffDashboard />,
-  },
-  {
-    path: "/staffAreaBookings",
-    element: <AreaBookings />,
-  },
-  {
-    path: "/staffBookingDetails",
-    element: <StaffBookingDetails />,
-  },
-  // {
-  //   path: "/customerDashboard",
-  //   element: <CustomerDashboard />,
-  //   // errorElement: <ErrorPage />,
-  // },
-  // {
-  //   path: "/customerBookAPod",
-  //   element: <BookAPod />,
-  //   // errorElement: <ErrorPage />,
-  // },
-  // {
-  //   path: "/customerConfirmBooking",
-  //   element: <ConfirmBooking />,
-  //   // errorElement: <ErrorPage />,
-  // },
-  // {
-  //   path: "/customerBookings",
-  //   element: <CustomerBookings />,
-  //   // errorElement: <ErrorPage />,
-  // },
-  // {
-  //   path: "/customerSelectPayment",
-  //   element: <SelectPayment />,
-  //   // errorElement: <ErrorPage />,
-  // },
-  // {
-  //   path: "/customerBookingDetails",
-  //   element: <CustomerBookingDetails />,
-  //   // errorElement: <ErrorPage />,
-  // },
 ]);
