@@ -1,5 +1,5 @@
 import axios from "../../utils/axiosConfig";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useInsertionEffect } from "react";
 import "../../assets/css/material-dashboard.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
@@ -19,6 +19,9 @@ const ConfirmBooking = () => {
   const [podType, setPodType] = useState([]);
   const [time, setTime] = useState([]);
   const [isConfirmed, setIsConfirmed] = useState(false);
+
+  const [discount, setDiscount] = useState(null);
+  const [actualPrice, setActualPrice] = useState(null);
 
   useEffect(() => {
     const getPod = async () => {
@@ -45,6 +48,34 @@ const ConfirmBooking = () => {
     getPod();
   }, [bookingData.podId]);
 
+  useEffect(() => {
+    const getMember = async () => {
+      try {
+        const response = await axios.get('/Membership/customer');
+        const discount = response.data.discount;
+        setDiscount(discount);
+      } catch (error) {
+        console.log("Error getting membership");
+      }
+    }
+
+    getMember();
+  }, []);
+
+  useEffect(() => {
+    const getActualPrice = () => {
+      const totalTime = differenceInHours(
+        new Date(`1970-01-01T${time.endTime}`),
+        new Date(`1970-01-01T${time.startTime}`));
+      const totalPrice = podType.price * totalTime;
+
+      const discountedPrice = discount === 0 ? totalPrice : totalPrice * (1 - discount / 100);
+      setActualPrice(discountedPrice);
+    };
+
+    getActualPrice();
+  }, [time, podType, actualPrice]);
+
   const handleBooking = async () => {
     try {
       const bookingPayload = {
@@ -64,7 +95,7 @@ const ConfirmBooking = () => {
         const paymentData = {
           orderType: 'Payment',
           bookingId: response.data.id,
-          amount: response.data.bookingPrice,
+          amount: podType.price * (1 - discount / 100),
           userId: response.data.userId
         };
 
@@ -253,6 +284,30 @@ const ConfirmBooking = () => {
                                       new Date(`1970-01-01T${time.startTime}`)
                                     )}{" "}
                                   VND
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <label className="col-sm-2 col-form-label">
+                              DISCOUNT
+                            </label>
+                            <div className="col-sm-10">
+                              <div className="form-group bmd-form-group disabled readonly">
+                                <label className="bmd-label-floating text-muted">
+                                  {discount} %
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="row">
+                            <label className="col-sm-2 col-form-label">
+                              ACTUAL PRICE
+                            </label>
+                            <div className="col-sm-10">
+                              <div className="form-group bmd-form-group disabled readonly">
+                                <label className="bmd-label-floating text-muted">
+                                  {actualPrice !== null ? `${actualPrice} VND` : "Calculating..."}
                                 </label>
                               </div>
                             </div>
