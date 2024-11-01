@@ -25,6 +25,7 @@ import { StaffManagement } from "../pages/Admin/StaffManagement";
 import { ManagerStaffManagement } from "../pages/Manager/StaffManagement";
 import BookingDetails from "../pages/Admin/BookingDetails";
 import AreaBookings from "../pages/Staff/AreaBookings";
+import StaffBookingDetails from "../pages/Staff/BookingDetails";
 
 export const routes = createBrowserRouter([
   {
@@ -148,6 +149,10 @@ export const routes = createBrowserRouter([
   {
     path: "/staffAreaBookings",
     element: <AreaBookings />,
+  },
+  {
+    path: "/staffBookingDetails",
+    element: <StaffBookingDetails />,
   },
   // {
   //   path: "/customerDashboard",
