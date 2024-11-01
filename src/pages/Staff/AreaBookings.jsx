@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import axios from "../../utils/axiosConfig";
-import Navbar from "../../components/Admin/Navbar";
+import Navbar from "../../components/Staff/Navbar";
 import Head from "../../components/Head";
-import Sidebar from "../../components/Admin/Sidebar";
+import Sidebar from "../../components/Staff/Sidebar";
 import { toast, ToastContainer } from "react-toastify";
 import {
   startOfWeek,
@@ -47,6 +47,8 @@ const Bookings = () => {
     key: "arrivalDate",
     direction: "asc",
   });
+
+  const [areaId, setAreaId] = useState(null);
 
   // Helper functions
   const getWeekDays = (date) => {
@@ -119,16 +121,26 @@ const Bookings = () => {
     return sortedBookings;
   };
 
+  const getAreaId = async () => {
+    const userResponse = await axios.get("/Users/Current");
+    const userId = userResponse.data.id;
+    const staffAreaResponse = await axios.get(`/StaffArea/Staff/${userId}`);
+    const assignedAreaId = staffAreaResponse.data.areaId;
+    setAreaId(assignedAreaId);
+    return assignedAreaId;
+  };
+
   // Data fetching
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        const assignedAreaId = await getAreaId();
         const [schedulesResponse, podTypesResponse, bookingsResponse] =
           await Promise.all([
             axios.get("/Schedules"),
             axios.get("/PodType"),
-            axios.get("/Booking"),
+            axios.get(`/Booking/areaid/${assignedAreaId}`),
           ]);
 
         setTimeSlots(schedulesResponse.data);
@@ -288,10 +300,10 @@ const Bookings = () => {
         ...prev,
         [bookingId]: response.data,
       }));
-      navigate("/admin/details", { state: { bookingId: bookingId } });
+      navigate("/staff/bookingDetails", { state: { bookingId: bookingId } });
     } catch (error) {
       console.error("Error fetching booking details:", error);
-      navigate("/admin/details", { state: { bookingId: bookingId } });
+      navigate("/staff/bookingDetails", { state: { bookingId: bookingId } });
     }
   };
 

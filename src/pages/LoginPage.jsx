@@ -22,6 +22,12 @@ const LoginPage = () => {
         } else if (user.role === "1") {
           message.success("Login successful");
           navigate("/customer/dashboard");
+        } else if (user.role === "2") {
+          message.success("Login successful");
+          navigate("/staff/dashboard");
+        } else if (user.role === "3") {
+          message.success("Login successful");
+          navigate("/manager/dashboard");
         }
         setIsLoggedIn(false);
       }

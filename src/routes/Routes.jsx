@@ -21,6 +21,12 @@ import SelectPayment from "../pages/Customer/SelectPayment";
 import ManagerDashboard from "../pages/Manager/Dashboard";
 import StaffDashboard from "../pages/Staff/Dashboard";
 import MomoPaymentCallback from "../pages/Customer/MomoPaymentCallback";
+import DashboardChart from "../pages/Admin/DashboardChart";
+import { StaffManagement } from "../pages/Admin/StaffManagement";
+import { ManagerStaffManagement } from "../pages/Manager/StaffManagement";
+import BookingDetails from "../pages/Admin/BookingDetails";
+import AreaBookings from "../pages/Staff/AreaBookings";
+import StaffBookingDetails from "../pages/Staff/BookingDetails";
 
 export const routes = createBrowserRouter([
   {
@@ -50,6 +56,11 @@ export const routes = createBrowserRouter([
     element: <RegisterPage />,
   },
   {
+    path: "/verifyOtp",
+    element: <VerifyOtpPage />,
+  },
+  // Admin routes
+  {
     path: "/admin",
     element: (
       <AuthProvider>
@@ -60,6 +71,10 @@ export const routes = createBrowserRouter([
       {
         path: "dashboard",
         element: <Dashboard />,
+      },
+      {
+        path: "chart",
+        element: <DashboardChart />,
       },
       {
         path: "users",
@@ -77,12 +92,17 @@ export const routes = createBrowserRouter([
         path: "bookings",
         element: <AdminBookings />,
       },
+      {
+        path: "staffManagement",
+        element: <StaffManagement />,
+      },
+      {
+        path: "details",
+        element: <BookingDetails />,
+      },
     ],
   },
-  {
-    path: "/verifyOtp",
-    element: <VerifyOtpPage />,
-  },
+  // Customer routes
   {
     path: "/customer",
     element: (
@@ -121,42 +141,46 @@ export const routes = createBrowserRouter([
       },
     ],
   },
+  // Staff routes
   {
-    path: "/managerDashboard",
-    element: <ManagerDashboard />,
+    path: "/staff",
+    element: (
+      <AuthProvider>
+        <PrivateRoute />
+      </AuthProvider>
+    ),
+    children: [
+      {
+        path: "dashboard",
+        element: <StaffDashboard />,
+      },
+      {
+        path: "areaBookings",
+        element: <AreaBookings />,
+      },
+      {
+        path: "bookingDetails",
+        element: <StaffBookingDetails />,
+      },
+    ],
   },
+  // Manager routes
   {
-    path: "/staffDashboard",
-    element: <StaffDashboard />,
+    path: "/manager",
+    element: (
+      <AuthProvider>
+        <PrivateRoute />
+      </AuthProvider>
+    ),
+    children: [
+      {
+        path: "dashboard",
+        element: <ManagerDashboard />,
+      },
+      {
+        path: "staffManagement",
+        element: <ManagerStaffManagement />,
+      },
+    ],
   },
-  // {
-  //   path: "/customerDashboard",
-  //   element: <CustomerDashboard />,
-  //   // errorElement: <ErrorPage />,
-  // },
-  // {
-  //   path: "/customerBookAPod",
-  //   element: <BookAPod />,
-  //   // errorElement: <ErrorPage />,
-  // },
-  // {
-  //   path: "/customerConfirmBooking",
-  //   element: <ConfirmBooking />,
-  //   // errorElement: <ErrorPage />,
-  // },
-  // {
-  //   path: "/customerBookings",
-  //   element: <CustomerBookings />,
-  //   // errorElement: <ErrorPage />,
-  // },
-  // {
-  //   path: "/customerSelectPayment",
-  //   element: <SelectPayment />,
-  //   // errorElement: <ErrorPage />,
-  // },
-  // {
-  //   path: "/customerBookingDetails",
-  //   element: <CustomerBookingDetails />,
-  //   // errorElement: <ErrorPage />,
-  // },
 ]);

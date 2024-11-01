@@ -37,6 +37,10 @@ export const Pods = () => {
   const [filterPodType, setFilterPodType] = useState("");
   const [filterArea, setFilterArea] = useState("");
 
+  const [areaName, setAreaName] = useState("");
+  const [areaDesc, setAreaDesc] = useState("");
+  const [areaLocation, setAreaLocation] = useState("");
+
   useEffect(() => {
     fetchPods();
     fetchPodTypes();
@@ -202,6 +206,21 @@ export const Pods = () => {
           error.response?.data?.message || error.message
         }`
       );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCreateArea = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      const response = await axios.post("/Areas", {
+        name: areaName,
+        description: areaDesc,
+        location: areaLocation,
+      });
+    } catch (error) {
     } finally {
       setIsLoading(false);
     }
@@ -617,6 +636,71 @@ export const Pods = () => {
                           disabled={isLoading}
                         >
                           {isLoading ? "Creating..." : "Create New Pod"}
+                        </Button>
+                      </Form>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+
+              <Row className="mt-4">
+                <Col md={12}>
+                  <div className="card">
+                    <div className="card-header card-header-primary">
+                      <h4 className="card-title">Add New Area</h4>
+                      <p className="card-category">Create a new area</p>
+                    </div>
+                    <div className="card-body">
+                      <Form onSubmit={handleCreateArea}>
+                        <Row>
+                          <Col md={6}>
+                            <Form.Group>
+                              <Form.Label>Area Name</Form.Label>
+                              <Form.Control
+                                type="text"
+                                value={areaName}
+                                onChange={(e) => setAreaName(e.target.value)}
+                                placeholder="Enter area name"
+                                className="form-control-modern"
+                              />
+                            </Form.Group>
+                          </Col>
+                          <Col md={6}>
+                            <Form.Group>
+                              <Form.Label>Description</Form.Label>
+                              <Form.Control
+                                type="text"
+                                value={areaDesc}
+                                onChange={(e) => setAreaDesc(e.target.value)}
+                                placeholder="Enter area description"
+                                className="form-control-modern"
+                              />
+                            </Form.Group>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col md={6}>
+                            <Form.Group>
+                              <Form.Label>Location</Form.Label>
+                              <Form.Control
+                                type="text"
+                                value={areaLocation}
+                                onChange={(e) =>
+                                  setAreaLocation(e.target.value)
+                                }
+                                placeholder="Enter area location"
+                                className="form-control-modern"
+                              />
+                            </Form.Group>
+                          </Col>
+                        </Row>
+                        <Button
+                          type="submit"
+                          variant="primary"
+                          className="mt-3 btn-modern"
+                          disabled={isLoading}
+                        >
+                          {isLoading ? "Creating..." : "Create New Area"}
                         </Button>
                       </Form>
                     </div>
