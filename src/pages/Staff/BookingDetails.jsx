@@ -61,7 +61,7 @@ const StaffBookingDetails = () => {
     try {
       await axios.put(`/Booking/cancel-booking/${bookingId.bookingId}`);
       toast.success("Booking cancelled successfully");
-      navigate("/staffAreaBookings");
+      navigate("/staff/areaBookings");
     } catch (error) {
       console.error("Error cancelling booking:", error);
       toast.error("Failed to cancel booking");
@@ -76,7 +76,7 @@ const StaffBookingDetails = () => {
     try {
       await axios.put(`/Booking/checkin-booking/${bookingId.bookingId}`);
       toast.success("Booking checked in successfully");
-      navigate("/staffAreaBookings");
+      navigate("/staff/areaBookings");
     } catch (error) {
       console.error("Error checking in booking:", error);
       toast.error("Failed to check in booking");
@@ -91,7 +91,7 @@ const StaffBookingDetails = () => {
     try {
       await axios.put(`/Booking/finish-booking/${bookingId.bookingId}`);
       toast.success("Booking checked out successfully");
-      navigate("/staffAreaBookings");
+      navigate("/staff/areaBookings");
     } catch (error) {
       console.error("Error checking out booking:", error);
       toast.error("Failed to checkout booking");
