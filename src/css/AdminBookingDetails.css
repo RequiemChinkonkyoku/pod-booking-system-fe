@@ -296,6 +296,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -305,6 +306,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -315,6 +317,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -373,6 +376,7 @@ button {
 
 /* Print Styles */
 @media print {
+
   .back-button,
   .cancel-booking-btn,
   .modal-overlay {
@@ -384,4 +388,146 @@ button {
     box-shadow: none;
     border: 1px solid #e2e8f0;
   }
+}
+
+/* Checkin Button */
+.checkin-booking-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #bfdbfe;
+  border: none;
+  border-radius: 6px;
+  color: #2563eb;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.checkin-booking-btn:hover {
+  background: #93c5fd;
+  transform: translateY(-1px);
+}
+
+/* Checkout Button */
+.checkout-booking-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #bbf7d0;
+  border: none;
+  border-radius: 6px;
+  color: #16a34a;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.checkout-booking-btn:hover {
+  background: #86efac;
+  transform: translateY(-1px);
+}
+
+/* Checkin Modal */
+.checkin-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 50;
+  animation: fadeIn 0.2s ease;
+}
+
+.checkin-modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 450px;
+  animation: slideIn 0.3s ease;
+}
+
+.checkin-modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.checkin-modal-message {
+  color: #64748b;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.checkin-modal-confirm-btn {
+  padding: 8px 16px;
+  background: #bfdbfe;
+  border: none;
+  border-radius: 6px;
+  color: #2563eb;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.checkin-modal-confirm-btn:hover {
+  background: #93c5fd;
+}
+
+/* Checkout Modal */
+.checkout-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  z-index: 50;
+  animation: fadeIn 0.2s ease;
+}
+
+.checkout-modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  width: 100%;
+  max-width: 450px;
+  animation: slideIn 0.3s ease;
+}
+
+.checkout-modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 12px;
+}
+
+.checkout-modal-message {
+  color: #64748b;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.checkout-modal-confirm-btn {
+  padding: 8px 16px;
+  background: #bbf7d0;
+  border: none;
+  border-radius: 6px;
+  color: #16a34a;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.checkout-modal-confirm-btn:hover {
+  background: #86efac;
 }

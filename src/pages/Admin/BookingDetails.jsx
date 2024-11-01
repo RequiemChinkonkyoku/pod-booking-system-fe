@@ -170,13 +170,13 @@ const BookingDetails = () => {
                 <div className="info-item">
                   <span className="info-label">Name</span>
                   <span className="info-value">
-                    {booking.customerName || "N/A"}
+                    {booking.user.name || "N/A"}
                   </span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Email</span>
                   <span className="info-value">
-                    {booking.customerEmail || "N/A"}
+                    {booking.user.email || "N/A"}
                   </span>
                 </div>
                 {/* <div className="info-item">
