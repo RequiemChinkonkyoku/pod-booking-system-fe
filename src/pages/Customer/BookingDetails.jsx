@@ -10,10 +10,6 @@ import Navbar from "../../components/Customer/Navbar";
 import Head from "../../components/Head";
 import Sidebar from "../../components/Customer/Sidebar";
 
-import { useLocation, useNavigate } from "react-router-dom";
-import { parseISO, format } from "date-fns";
-import { MehOutlined } from "@ant-design/icons";
-
 const CustomerBookingDetails = () => {
   const location = useLocation();
   const bookingId = location.state;
@@ -267,392 +263,418 @@ const CustomerBookingDetails = () => {
   return (
     <>
       <Head />
-      <div className="wrapper">
-        <Sidebar />
-        <div className="main-panel ps-container ps-theme-default">
-          <Navbar />
-          <div className="content">
-            <div className="container-fluid">
-              <div className="row">
-                <div className="col-md-12">
-                  {/* Booking Details Card */}
-                  <div className="card">
-                    <div className="card-header card-header-rose card-header-text">
-                      <div className="card-text">
-                        <h4 className="card-title">Booking Details</h4>
-                      </div>
-                    </div>
-                    <div className="card-body">
-                      <div className="row mb-3">
-                        <label className="col-sm-2 col-form-label">ID</label>
-                        <div className="col-sm-10">
-                          <span className="form-control-plaintext">
-                            {booking.id}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="row mb-3">
-                        <label className="col-sm-2 col-form-label">
-                          BOOKING PRICE
-                        </label>
-                        <div className="col-sm-10">
-                          <span className="form-control-plaintext">
-                            {booking.bookingPrice?.toLocaleString()} VND
-                          </span>
-                        </div>
-                      </div>
-                      <div className="row mb-3">
-                        <label className="col-sm-2 col-form-label">
-                          STATUS
-                        </label>
-                        <div className="col-sm-10">
-                          <span
-                            className={`form-control-plaintext ${getStatusClass(
-                              booking.bookingStatusId
-                            )}`}
-                          >
-                            {getStatusText(booking.bookingStatusId)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Slot Details Card */}
-                  <div className="card mt-4">
-                    <div className="card-header card-header-info card-header-text">
-                      <div className="card-text">
-                        <h4 className="card-title">Slot Details</h4>
-                      </div>
-                    </div>
-                    <div className="card-body">
-                      {booking.bookingDetails?.map((detail, index) => (
-                        <div key={detail.id} className="mb-4">
-                          <h5 className="font-weight-bold">
-                            Slot #{index + 1}
-                          </h5>
-                          <div className="row">
-                            <div className="col-md-4">
-                              <p>
-                                <strong>Arrival Date:</strong>{" "}
-                                {format(
-                                  parseISO(detail.slot.arrivalDate),
-                                  "MMMM dd, yyyy"
-                                )}
-                              </p>
-                            </div>
-                            <div className="col-md-4">
-                              <p>
-                                <strong>Duration:</strong>{" "}
-                                {getSchedule(detail.slot.scheduleId)}
-                              </p>
-                            </div>
-                            <div className="col-md-4">
-                              <p>
-                                <strong>Pod ID:</strong> {detail.slot.podId}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="col-sm-6">
+      <div className="card-body">
+        <div className="wrapper">
+          <Sidebar />
+          <div className="main-panel ps-container ps-theme-default">
+            <Navbar />
+            <div className="content">
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col-md-12">
+                    {/* Booking Details Card */}
                     <div className="card">
                       <div className="card-header card-header-rose card-header-text">
                         <div className="card-text">
-                          <h4 className="card-title">Payment Info</h4>
+                          <h4 className="card-title">Booking Details</h4>
                         </div>
                       </div>
                       <div className="card-body">
+                        <div className="row mb-3">
+                          <label className="col-sm-2 col-form-label">ID</label>
+                          <div className="col-sm-10">
+                            <span className="form-control-plaintext">
+                              {booking.id}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="row mb-3">
+                          <label className="col-sm-2 col-form-label">
+                            BOOKING PRICE
+                          </label>
+                          <div className="col-sm-10">
+                            <span className="form-control-plaintext">
+                              {booking.bookingPrice?.toLocaleString()} VND
+                            </span>
+                          </div>
+                        </div>
                         <div className="row">
                           <label className="col-sm-2 col-form-label">
-                            Payment Method
+                            DISCOUNT
                           </label>
                           <div className="col-sm-10">
                             <div className="form-group bmd-form-group disabled readonly">
                               <label className="bmd-label-floating text-muted">
-
-                                {method && Object.keys(method).length > 0 ? (
-                                  console.log(method),
-                                  method.name
-                                ) : "No successful payment"}
-
+                                {booking.discount} %
                               </label>
                             </div>
                           </div>
                         </div>
-                        {booking.bookingStatusId === 2 ||
-                          booking.bookingStatusId === 3 ? (
-                          <button class="btn btn-dribbble"
-                            onClick={navigateToPayment}>
-                            Select Payment
-                          </button>
-                        ) : null}
+                        <div className="row">
+                          <label className="col-sm-2 col-form-label">
+                            ACTUAL PRICE
+                          </label>
+                          <div className="col-sm-10">
+                            <div className="form-group bmd-form-group disabled readonly">
+                              <label className="bmd-label-floating text-muted">
+                                {booking.actualPrice} VND
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="row mb-3">
+                          <label className="col-sm-2 col-form-label">
+                            STATUS
+                          </label>
+                          <div className="col-sm-10">
+                            <span
+                              className={`form-control-plaintext ${getStatusClass(
+                                booking.bookingStatusId
+                              )}`}
+                            >
+                              {getStatusText(booking.bookingStatusId)}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  {/* Selected Products Table */}
-                  <div className="card mt-4">
-                    <div className="card-header card-header-info card-header-text">
-                      <div className="card-text">
-                        <h4 className="card-title">Selected Products</h4>
+
+                    {/* Slot Details Card */}
+                    <div className="card mt-4">
+                      <div className="card-header card-header-info card-header-text">
+                        <div className="card-text">
+                          <h4 className="card-title">Slot Details</h4>
+                        </div>
+                      </div>
+                      <div className="card-body">
+                        {booking.bookingDetails?.map((detail, index) => (
+                          <div key={detail.id} className="mb-4">
+                            <h5 className="font-weight-bold">
+                              Slot #{index + 1}
+                            </h5>
+                            <div className="row">
+                              <div className="col-md-4">
+                                <p>
+                                  <strong>Arrival Date:</strong>{" "}
+                                  {format(
+                                    parseISO(detail.slot.arrivalDate),
+                                    "MMMM dd, yyyy"
+                                  )}
+                                </p>
+                              </div>
+                              <div className="col-md-4">
+                                <p>
+                                  <strong>Duration:</strong>{" "}
+                                  {getSchedule(detail.slot.scheduleId)}
+                                </p>
+                              </div>
+                              <div className="col-md-4">
+                                <p>
+                                  <strong>Pod ID:</strong> {detail.slot.podId}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                    <div className="card-body">
-                      {selectedProducts.length > 0 ? (
-                        <div className="table-responsive">
-                          <table className="table table-hover">
-                            <thead>
-                              <tr>
-                                <th>Product Name</th>
-                                <th>Description</th>
-                                <th>Unit Price</th>
-                                <th>Quantity</th>
-                                <th>Total</th>
-                                {booking.bookingStatusId === 4 && (
-                                  <th>Actions</th>
-                                )}
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {selectedProducts.map((product) => (
-                                <tr key={product.id}>
-                                  <td>
-                                    <span className="font-weight-medium">
-                                      {product.name}
-                                    </span>
-                                  </td>
-                                  <td>
-                                    <small className="text-muted">
-                                      {product.description ||
-                                        "No description available"}
-                                    </small>
-                                  </td>
-                                  <td>{product.price?.toLocaleString()} VND</td>
-                                  <td>
-                                    {editingProduct === product.id ? (
-                                      <div
-                                        className="input-group input-group-sm"
-                                        style={{ width: "120px" }}
-                                      >
-                                        <input
-                                          type="number"
-                                          className="form-control"
-                                          defaultValue={product.quantity}
-                                          min="1"
-                                          ref={(input) =>
-                                            input && input.focus()
-                                          }
-                                          onKeyPress={(e) => {
-                                            if (e.key === "Enter") {
-                                              handleQuantityUpdate(
-                                                product.id,
-                                                parseInt(e.target.value)
-                                              );
-                                            }
-                                          }}
-                                        />
-                                      </div>
-                                    ) : (
-                                      <span className="badge badge-info">
-                                        {product.quantity}
+
+                    <div className="col-sm-6">
+                      <div className="card">
+                        <div className="card-header card-header-rose card-header-text">
+                          <div className="card-text">
+                            <h4 className="card-title">Payment Info</h4>
+                          </div>
+                        </div>
+                        <div className="card-body">
+                          <div className="row">
+                            <label className="col-sm-2 col-form-label">
+                              Payment Method
+                            </label>
+                            <div className="col-sm-10">
+                              <div className="form-group bmd-form-group disabled readonly">
+                                <label className="bmd-label-floating text-muted">
+
+                                  {method && Object.keys(method).length > 0 ? (
+                                    console.log(method),
+                                    method.name
+                                  ) : "No successful payment"}
+
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          {booking.bookingStatusId === 2 ||
+                            booking.bookingStatusId === 3 ? (
+                            <button class="btn btn-dribbble"
+                              onClick={navigateToPayment}>
+                              z                            Select Payment
+                            </button>
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
+                    {/* Selected Products Table */}
+                    <div className="card mt-4">
+                      <div className="card-header card-header-info card-header-text">
+                        <div className="card-text">
+                          <h4 className="card-title">Selected Products</h4>
+                        </div>
+                      </div>
+                      <div className="card-body">
+                        {selectedProducts.length > 0 ? (
+                          <div className="table-responsive">
+                            <table className="table table-hover">
+                              <thead>
+                                <tr>
+                                  <th>Product Name</th>
+                                  <th>Description</th>
+                                  <th>Unit Price</th>
+                                  <th>Quantity</th>
+                                  <th>Total</th>
+                                  {booking.bookingStatusId === 4 && (
+                                    <th>Actions</th>
+                                  )}
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {selectedProducts.map((product) => (
+                                  <tr key={product.id}>
+                                    <td>
+                                      <span className="font-weight-medium">
+                                        {product.name}
                                       </span>
+                                    </td>
+                                    <td>
+                                      <small className="text-muted">
+                                        {product.description ||
+                                          "No description available"}
+                                      </small>
+                                    </td>
+                                    <td>{product.price?.toLocaleString()} VND</td>
+                                    <td>
+                                      {editingProduct === product.id ? (
+                                        <div
+                                          className="input-group input-group-sm"
+                                          style={{ width: "120px" }}
+                                        >
+                                          <input
+                                            type="number"
+                                            className="form-control"
+                                            defaultValue={product.quantity}
+                                            min="1"
+                                            ref={(input) =>
+                                              input && input.focus()
+                                            }
+                                            onKeyPress={(e) => {
+                                              if (e.key === "Enter") {
+                                                handleQuantityUpdate(
+                                                  product.id,
+                                                  parseInt(e.target.value)
+                                                );
+                                              }
+                                            }}
+                                          />
+                                        </div>
+                                      ) : (
+                                        <span className="badge badge-info">
+                                          {product.quantity}
+                                        </span>
+                                      )}
+                                    </td>
+                                    <td>
+                                      <strong>
+                                        {(
+                                          product.price * product.quantity
+                                        ).toLocaleString()}{" "}
+                                        VND
+                                      </strong>
+                                    </td>
+                                    {booking.bookingStatusId === 4 && (
+                                      <td>
+                                        {editingProduct === product.id ? (
+                                          <div className="btn-group btn-group-sm">
+                                            <button
+                                              className="btn btn-success btn-sm"
+                                              onClick={(e) => {
+                                                const input = e.target
+                                                  .closest("tr")
+                                                  .querySelector("input");
+                                                const newQuantity = parseInt(
+                                                  input.value
+                                                );
+                                                handleQuantityUpdate(
+                                                  product.id,
+                                                  newQuantity
+                                                );
+                                              }}
+                                              disabled={updating}
+                                            >
+                                              {updating ? (
+                                                <span
+                                                  className="spinner-border spinner-border-sm"
+                                                  role="status"
+                                                  aria-hidden="true"
+                                                ></span>
+                                              ) : (
+                                                <i className="material-icons">
+                                                  check
+                                                </i>
+                                              )}
+                                            </button>
+                                            <button
+                                              className="btn btn-danger btn-sm"
+                                              onClick={() =>
+                                                setEditingProduct(null)
+                                              }
+                                              disabled={updating}
+                                            >
+                                              <i className="material-icons">
+                                                close
+                                              </i>
+                                            </button>
+                                          </div>
+                                        ) : (
+                                          <button
+                                            className="btn btn-info btn-sm"
+                                            onClick={() =>
+                                              setEditingProduct(product.id)
+                                            }
+                                          >
+                                            <i className="material-icons">edit</i>
+                                          </button>
+                                        )}
+                                      </td>
                                     )}
+                                  </tr>
+                                ))}
+                              </tbody>
+                              <tfoot>
+                                <tr className="bg-light">
+                                  <td colSpan="3" className="text-right">
+                                    <strong>Total Items:</strong>
                                   </td>
                                   <td>
                                     <strong>
-                                      {(
-                                        product.price * product.quantity
-                                      ).toLocaleString()}{" "}
+                                      {selectedProducts.reduce(
+                                        (sum, product) => sum + product.quantity,
+                                        0
+                                      )}
+                                    </strong>
+                                  </td>
+                                  <td>
+                                    <strong className="text-primary">
+                                      {selectedProducts
+                                        .reduce(
+                                          (total, product) =>
+                                            total +
+                                            product.price * product.quantity,
+                                          0
+                                        )
+                                        .toLocaleString()}{" "}
                                       VND
                                     </strong>
                                   </td>
-                                  {booking.bookingStatusId === 4 && (
-                                    <td>
-                                      {editingProduct === product.id ? (
-                                        <div className="btn-group btn-group-sm">
-                                          <button
-                                            className="btn btn-success btn-sm"
-                                            onClick={(e) => {
-                                              const input = e.target
-                                                .closest("tr")
-                                                .querySelector("input");
-                                              const newQuantity = parseInt(
-                                                input.value
-                                              );
-                                              handleQuantityUpdate(
-                                                product.id,
-                                                newQuantity
-                                              );
-                                            }}
-                                            disabled={updating}
-                                          >
-                                            {updating ? (
-                                              <span
-                                                className="spinner-border spinner-border-sm"
-                                                role="status"
-                                                aria-hidden="true"
-                                              ></span>
-                                            ) : (
-                                              <i className="material-icons">
-                                                check
-                                              </i>
-                                            )}
-                                          </button>
-                                          <button
-                                            className="btn btn-danger btn-sm"
-                                            onClick={() =>
-                                              setEditingProduct(null)
-                                            }
-                                            disabled={updating}
-                                          >
-                                            <i className="material-icons">
-                                              close
-                                            </i>
-                                          </button>
-                                        </div>
-                                      ) : (
-                                        <button
-                                          className="btn btn-info btn-sm"
-                                          onClick={() =>
-                                            setEditingProduct(product.id)
-                                          }
-                                        >
-                                          <i className="material-icons">edit</i>
-                                        </button>
-                                      )}
-                                    </td>
-                                  )}
+                                  {booking.bookingStatusId === 4 && <td></td>}
                                 </tr>
-                              ))}
-                            </tbody>
-                            <tfoot>
-                              <tr className="bg-light">
-                                <td colSpan="3" className="text-right">
-                                  <strong>Total Items:</strong>
-                                </td>
-                                <td>
-                                  <strong>
-                                    {selectedProducts.reduce(
-                                      (sum, product) => sum + product.quantity,
-                                      0
-                                    )}
-                                  </strong>
-                                </td>
-                                <td>
-                                  <strong className="text-primary">
-                                    {selectedProducts
-                                      .reduce(
-                                        (total, product) =>
-                                          total +
-                                          product.price * product.quantity,
-                                        0
-                                      )
-                                      .toLocaleString()}{" "}
-                                    VND
-                                  </strong>
-                                </td>
-                                {booking.bookingStatusId === 4 && <td></td>}
-                              </tr>
-                            </tfoot>
-                          </table>
-                        </div>
-                      ) : (
-                        <div className="text-center py-4">
-                          <p className="text-muted mb-0">
-                            No products selected yet.
-                          </p>
-                          {booking.bookingStatusId === 4 && (
-                            <small className="text-muted">
-                              You can add products from the menu below.
-                            </small>
-                          )}
-                        </div>
-                      )}
+                              </tfoot>
+                            </table>
+                          </div>
+                        ) : (
+                          <div className="text-center py-4">
+                            <p className="text-muted mb-0">
+                              No products selected yet.
+                            </p>
+                            {booking.bookingStatusId === 4 && (
+                              <small className="text-muted">
+                                You can add products from the menu below.
+                              </small>
+                            )}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Product Menu */}
-                  {booking.bookingStatusId === 4 && (
-                    <ProductMenu
-                      booking={booking}
-                      onAddProducts={handleAddProducts}
-                    />
-                  )}
-
-                  {/* Cancel Booking Button */}
-                  {(booking.bookingStatusId === 2 ||
-                    booking.bookingStatusId === 3) && (
-                      <button
-                        className="btn btn-danger mt-3"
-                        onClick={() => setShowCancelModal(true)}
-                      >
-                        Cancel Booking
-                      </button>
+                    {/* Product Menu */}
+                    {booking.bookingStatusId === 4 && (
+                      <ProductMenu
+                        booking={booking}
+                        onAddProducts={handleAddProducts}
+                      />
                     )}
 
-                  {/* Cancel Booking Modal */}
-                  {showCancelModal && (
-                    <div
-                      className="modal fade show"
-                      style={{
-                        display: "block",
-                        backgroundColor: "rgba(0, 0, 0, 0.5)",
-                      }}
-                    >
-                      <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                          <div className="modal-header">
-                            <h5 className="modal-title">Cancel Booking</h5>
-                            <button
-                              type="button"
-                              className="close"
-                              onClick={() => setShowCancelModal(false)}
-                            >
-                              <span>&times;</span>
-                            </button>
-                          </div>
-                          <div className="modal-body">
-                            <p>Are you sure you want to cancel this booking?</p>
-                            <p className="text-muted small">
-                              This action cannot be undone. All selected
-                              products will be removed.
-                            </p>
-                          </div>
-                          <div className="modal-footer">
-                            <button
-                              type="button"
-                              className="btn btn-secondary"
-                              onClick={() => setShowCancelModal(false)}
-                            >
-                              No, Keep Booking
-                            </button>
-                            <button
-                              type="button"
-                              className="btn btn-danger"
-                              onClick={handleCancelBooking}
-                              disabled={cancelLoading}
-                            >
-                              {cancelLoading ? (
-                                <>
-                                  <span
-                                    className="spinner-border spinner-border-sm mr-2"
-                                    role="status"
-                                    aria-hidden="true"
-                                  ></span>
-                                  Cancelling...
-                                </>
-                              ) : (
-                                "Yes, Cancel Booking"
-                              )}
-                            </button>
+                    {/* Cancel Booking Button */}
+                    {(booking.bookingStatusId === 2 ||
+                      booking.bookingStatusId === 3) && (
+                        <button
+                          className="btn btn-danger mt-3"
+                          onClick={() => setShowCancelModal(true)}
+                        >
+                          Cancel Booking
+                        </button>
+                      )}
+
+                    {/* Cancel Booking Modal */}
+                    {showCancelModal && (
+                      <div
+                        className="modal fade show"
+                        style={{
+                          display: "block",
+                          backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        }}
+                      >
+                        <div className="modal-dialog" role="document">
+                          <div className="modal-content">
+                            <div className="modal-header">
+                              <h5 className="modal-title">Cancel Booking</h5>
+                              <button
+                                type="button"
+                                className="close"
+                                onClick={() => setShowCancelModal(false)}
+                              >
+                                <span>&times;</span>
+                              </button>
+                            </div>
+                            <div className="modal-body">
+                              <p>Are you sure you want to cancel this booking?</p>
+                              <p className="text-muted small">
+                                This action cannot be undone. All selected
+                                products will be removed.
+                              </p>
+                            </div>
+                            <div className="modal-footer">
+                              <button
+                                type="button"
+                                className="btn btn-secondary"
+                                onClick={() => setShowCancelModal(false)}
+                              >
+                                No, Keep Booking
+                              </button>
+                              <button
+                                type="button"
+                                className="btn btn-danger"
+                                onClick={handleCancelBooking}
+                                disabled={cancelLoading}
+                              >
+                                {cancelLoading ? (
+                                  <>
+                                    <span
+                                      className="spinner-border spinner-border-sm mr-2"
+                                      role="status"
+                                      aria-hidden="true"
+                                    ></span>
+                                    Cancelling...
+                                  </>
+                                ) : (
+                                  "Yes, Cancel Booking"
+                                )}
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div >
                 </div >
               </div >
             </div >
