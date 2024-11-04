@@ -67,26 +67,51 @@
 /* Information Cards */
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 24px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin: 0 0 24px;
+  align-items: start; /* Add this to align cards at the top */
 }
 
+/* Optional: Add grid row alignment for better control */
+.info-grid > .info-card:nth-child(-n+3) {
+  grid-row: 1; /* Force first 3 cards in first row */
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Card Enhancements */
 .info-card {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  min-height: 160px; /* Set minimum height */
+  height: 100%; /* Take full height of grid cell */
 }
 
+.info-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.info-card > *:last-child {
+  margin-top: auto;
+}
+
+/* Improved Typography */
 .card-title {
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  color: #0f172a;
+  margin-bottom: 16px;
+  letter-spacing: -0.01em;
 }
 
 .card-title i {
@@ -98,14 +123,16 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 6px 0; /* Reduce padding */
+  margin: 2px 0; /* Reduce margin */
+  transition: background-color 0.2s ease;
 }
 
 .info-item:last-child {
   border-bottom: none;
 }
 
+/* Info Values Enhancement */
 .info-label {
   color: #64748b;
   font-size: 0.875rem;
@@ -113,16 +140,18 @@
 
 .info-value {
   font-weight: 500;
-  color: #1e293b;
+  color: #334155;
+  transition: color 0.2s ease;
 }
 
 /* Status Badges */
 .status-badge {
-  padding: 6px 12px;
-  border-radius: 9999px;
-  font-size: 0.875rem;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 0.813rem;
   font-weight: 500;
   text-transform: capitalize;
+  letter-spacing: 0.01em;
 }
 
 .status-cancelled {
@@ -159,19 +188,22 @@
   margin-top: 24px;
 }
 
+/* Table Improvements */
 .slots-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
+  margin: 8px 0;
 }
 
 .slots-table th {
   background: #f8fafc;
-  padding: 12px 16px;
-  text-align: left;
-  font-weight: 500;
-  color: #64748b;
+  padding: 14px 16px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
   border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
 }
 
 .slots-table th:first-child {
@@ -183,9 +215,11 @@
 }
 
 .slots-table td {
-  padding: 12px 16px;
-  color: #1e293b;
+  padding: 14px 16px;
+  font-size: 0.875rem;
+  color: #334155;
   border-bottom: 1px solid #e2e8f0;
+  transition: background-color 0.15s ease;
 }
 
 .slots-table tbody tr:hover {
@@ -209,13 +243,14 @@
   animation: fadeIn 0.2s ease;
 }
 
+/* Modal Refinements */
 .modal-content {
   background: white;
-  border-radius: 12px;
-  padding: 24px;
+  border-radius: 16px;
+  padding: 28px;
   width: 100%;
-  max-width: 450px;
-  animation: slideIn 0.3s ease;
+  max-width: 480px;
+  animation: slideIn 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modal-title {
@@ -276,19 +311,21 @@
   min-height: 400px;
 }
 
+/* Loading State Enhancement */
 .spinner {
-  border: 3px solid #f3f3f3;
+  border: 2px solid #f3f3f3;
   border-radius: 50%;
-  border-top: 3px solid #6366f1;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
+  border-top: 2px solid #6366f1;
+  width: 24px;
+  height: 24px;
+  animation: spin 0.8s linear infinite;
 }
 
 /* Price Format */
 .price-value {
   font-family: "Roboto Mono", monospace;
-  font-weight: 500;
+  font-weight: 600;
+  color: #2563eb;
 }
 
 /* Animations */
@@ -338,6 +375,11 @@
 
   .info-grid {
     grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .full-width {
+    grid-column: auto;
   }
 
   .slots-table {
@@ -358,6 +400,24 @@
 
   .modal-actions button {
     width: 100%;
+  }
+
+  .selected-products-list {
+    max-height: 150px;
+  }
+  
+  .info-card {
+    padding: 20px;
+  }
+  
+  .card-title {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 1200px) {
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -530,4 +590,35 @@ button {
 
 .checkout-modal-confirm-btn:hover {
   background: #86efac;
+}
+
+/* Add to existing CSS */
+.selected-products-list {
+  margin-top: 12px;
+  max-height: 120px; /* Reduce max height */
+  overflow-y: auto;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 8px;
+}
+
+.selected-products-list .info-item {
+  padding: 8px 0;
+}
+
+.selected-products-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.selected-products-list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.selected-products-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.selected-products-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
