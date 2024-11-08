@@ -356,7 +356,10 @@ const ProductMenu = ({ booking, onAddProducts }) => {
     );
   };
 
-  if (!booking || booking.bookingStatusId !== 4) {
+  if (
+    !booking ||
+    (booking.bookingStatusId !== 4 && booking.bookingStatusId !== 3)
+  ) {
     return (
       <div className="alert alert-warning" role="alert">
         Products can only be added when the booking status is "On-going"
