@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Form, Input, message } from "antd";
 import axios from "../utils/axiosConfig";
 import "../css/Register.css";
 
 const RegisterPage = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -27,6 +28,7 @@ const RegisterPage = () => {
       message.success("Registration successful!");
 
       console.log("Registration successful: ", response.data);
+      navigate("/verifyOtp");
     } catch (error) {
       console.error("Registration failed: ", error);
       message.error("Registration failed. Please try again.");

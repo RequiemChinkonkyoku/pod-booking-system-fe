@@ -545,17 +545,6 @@ const Bookings = () => {
                                 >
                                   <i className="material-icons">visibility</i>
                                 </button>
-                                {getDetailedBookingStatus(booking.bookingId)
-                                  .label !== "Cancelled" && (
-                                  <button
-                                    className="btn-cancel-mini"
-                                    onClick={() =>
-                                      handleCancelBooking(booking.bookingId)
-                                    }
-                                  >
-                                    <i className="material-icons">cancel</i>
-                                  </button>
-                                )}
                               </div>
                             </div>
                           ))
@@ -677,16 +666,6 @@ const Bookings = () => {
                   <i className="material-icons">visibility</i>
                   View
                 </button>
-                {getDetailedBookingStatus(booking.bookingId).label !==
-                  "Cancelled" && (
-                  <button
-                    className="btn-cancel"
-                    onClick={() => handleCancelBooking(booking.bookingId)}
-                  >
-                    <i className="material-icons">cancel</i>
-                    Cancel
-                  </button>
-                )}
               </td>
             </tr>
           ))}

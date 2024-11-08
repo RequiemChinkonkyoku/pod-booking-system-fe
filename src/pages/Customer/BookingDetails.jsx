@@ -9,6 +9,7 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Navbar from "../../components/Customer/Navbar";
 import Head from "../../components/Head";
 import Sidebar from "../../components/Customer/Sidebar";
+import { toast } from "react-toastify";
 
 const CustomerBookingDetails = () => {
   const location = useLocation();
@@ -181,6 +182,7 @@ const CustomerBookingDetails = () => {
       await axios.put(`/Booking/cancel-booking/${bookingId.bookingId}`);
       setShowCancelModal(false);
       alert("Booking has been canceled successfully!");
+      toast.success("Booking canceled successfully!");
       navigate("/customer/Bookings");
     } catch (error) {
       console.error("Error cancelling booking:", error);
@@ -192,10 +194,10 @@ const CustomerBookingDetails = () => {
 
   const navigateToPayment = () => {
     const paymentData = {
-      orderType: 'Payment',
+      orderType: "Payment",
       bookingId: booking.id,
       amount: booking.actualPrice,
-      userId: booking.userId
+      userId: booking.userId,
     };
 
     navigate("/customer/SelectPayment", { state: paymentData });
@@ -209,19 +211,20 @@ const CustomerBookingDetails = () => {
 
         if (transactionData.success && !transactionData.transactionExists) {
           console.log(transactionData.message);
-        } else if (transactionData.success && transactionData.transactionExists) {
+        } else if (
+          transactionData.success &&
+          transactionData.transactionExists
+        ) {
           console.log(transactionData.transaction);
-
 
           setMethod(transactionData.transaction.method);
           console.log(transactionData.transaction.method);
         } else {
           console.error(transactionData.message);
         }
-      }
-      catch (error) {
+      } catch (error) {
         console.error(error);
-      };
+      }
     };
 
     getTransaction();
@@ -394,21 +397,19 @@ const CustomerBookingDetails = () => {
                             <div className="col-sm-10">
                               <div className="form-group bmd-form-group disabled readonly">
                                 <label className="bmd-label-floating text-muted">
-
-                                  {method && Object.keys(method).length > 0 ? (
-                                    console.log(method),
-                                    method.name
-                                  ) : "No successful payment"}
-
+                                  {method && Object.keys(method).length > 0
+                                    ? (console.log(method), method.name)
+                                    : "No successful payment"}
                                 </label>
                               </div>
                             </div>
                           </div>
-                          {booking.bookingStatusId === 2 ||
-                            booking.bookingStatusId === 3 ? (
-                            <button class="btn btn-dribbble"
-                              onClick={navigateToPayment}>
-                              z                            Select Payment
+                          {booking.bookingStatusId === 2 ? (
+                            <button
+                              class="btn btn-dribbble"
+                              onClick={navigateToPayment}
+                            >
+                              Select Payment
                             </button>
                           ) : null}
                         </div>
@@ -432,9 +433,10 @@ const CustomerBookingDetails = () => {
                                   <th>Unit Price</th>
                                   <th>Quantity</th>
                                   <th>Total</th>
-                                  {booking.bookingStatusId === 4 && (
-                                    <th>Actions</th>
-                                  )}
+                                  {booking.bookingStatusId === 4 ||
+                                    (booking.bookingStatusId === 3 && (
+                                      <th>Actions</th>
+                                    ))}
                                 </tr>
                               </thead>
                               <tbody>
@@ -451,7 +453,9 @@ const CustomerBookingDetails = () => {
                                           "No description available"}
                                       </small>
                                     </td>
-                                    <td>{product.price?.toLocaleString()} VND</td>
+                                    <td>
+                                      {product.price?.toLocaleString()} VND
+                                    </td>
                                     <td>
                                       {editingProduct === product.id ? (
                                         <div
@@ -490,62 +494,65 @@ const CustomerBookingDetails = () => {
                                         VND
                                       </strong>
                                     </td>
-                                    {booking.bookingStatusId === 4 && (
-                                      <td>
-                                        {editingProduct === product.id ? (
-                                          <div className="btn-group btn-group-sm">
-                                            <button
-                                              className="btn btn-success btn-sm"
-                                              onClick={(e) => {
-                                                const input = e.target
-                                                  .closest("tr")
-                                                  .querySelector("input");
-                                                const newQuantity = parseInt(
-                                                  input.value
-                                                );
-                                                handleQuantityUpdate(
-                                                  product.id,
-                                                  newQuantity
-                                                );
-                                              }}
-                                              disabled={updating}
-                                            >
-                                              {updating ? (
-                                                <span
-                                                  className="spinner-border spinner-border-sm"
-                                                  role="status"
-                                                  aria-hidden="true"
-                                                ></span>
-                                              ) : (
+                                    {booking.bookingStatusId === 4 ||
+                                      (booking.bookingStatusId === 3 && (
+                                        <td>
+                                          {editingProduct === product.id ? (
+                                            <div className="btn-group btn-group-sm">
+                                              <button
+                                                className="btn btn-success btn-sm"
+                                                onClick={(e) => {
+                                                  const input = e.target
+                                                    .closest("tr")
+                                                    .querySelector("input");
+                                                  const newQuantity = parseInt(
+                                                    input.value
+                                                  );
+                                                  handleQuantityUpdate(
+                                                    product.id,
+                                                    newQuantity
+                                                  );
+                                                }}
+                                                disabled={updating}
+                                              >
+                                                {updating ? (
+                                                  <span
+                                                    className="spinner-border spinner-border-sm"
+                                                    role="status"
+                                                    aria-hidden="true"
+                                                  ></span>
+                                                ) : (
+                                                  <i className="material-icons">
+                                                    check
+                                                  </i>
+                                                )}
+                                              </button>
+                                              <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() =>
+                                                  setEditingProduct(null)
+                                                }
+                                                disabled={updating}
+                                              >
                                                 <i className="material-icons">
-                                                  check
+                                                  close
                                                 </i>
-                                              )}
-                                            </button>
+                                              </button>
+                                            </div>
+                                          ) : (
                                             <button
-                                              className="btn btn-danger btn-sm"
+                                              className="btn btn-info btn-sm"
                                               onClick={() =>
-                                                setEditingProduct(null)
+                                                setEditingProduct(product.id)
                                               }
-                                              disabled={updating}
                                             >
                                               <i className="material-icons">
-                                                close
+                                                edit
                                               </i>
                                             </button>
-                                          </div>
-                                        ) : (
-                                          <button
-                                            className="btn btn-info btn-sm"
-                                            onClick={() =>
-                                              setEditingProduct(product.id)
-                                            }
-                                          >
-                                            <i className="material-icons">edit</i>
-                                          </button>
-                                        )}
-                                      </td>
-                                    )}
+                                          )}
+                                        </td>
+                                      ))}
                                   </tr>
                                 ))}
                               </tbody>
@@ -557,7 +564,8 @@ const CustomerBookingDetails = () => {
                                   <td>
                                     <strong>
                                       {selectedProducts.reduce(
-                                        (sum, product) => sum + product.quantity,
+                                        (sum, product) =>
+                                          sum + product.quantity,
                                         0
                                       )}
                                     </strong>
@@ -575,7 +583,10 @@ const CustomerBookingDetails = () => {
                                       VND
                                     </strong>
                                   </td>
-                                  {booking.bookingStatusId === 4 && <td></td>}
+                                  {booking.bookingStatusId === 4 ||
+                                    (booking.bookingStatusId === 3 && (
+                                      <td></td>
+                                    ))}
                                 </tr>
                               </tfoot>
                             </table>
@@ -585,18 +596,20 @@ const CustomerBookingDetails = () => {
                             <p className="text-muted mb-0">
                               No products selected yet.
                             </p>
-                            {booking.bookingStatusId === 4 && (
-                              <small className="text-muted">
-                                You can add products from the menu below.
-                              </small>
-                            )}
+                            {booking.bookingStatusId === 4 ||
+                              (booking.bookingStatusId === 3 && (
+                                <small className="text-muted">
+                                  You can add products from the menu below.
+                                </small>
+                              ))}
                           </div>
                         )}
                       </div>
                     </div>
 
                     {/* Product Menu */}
-                    {booking.bookingStatusId === 4 && (
+                    {(booking.bookingStatusId === 4 ||
+                      booking.bookingStatusId === 3) && (
                       <ProductMenu
                         booking={booking}
                         onAddProducts={handleAddProducts}
@@ -606,13 +619,13 @@ const CustomerBookingDetails = () => {
                     {/* Cancel Booking Button */}
                     {(booking.bookingStatusId === 2 ||
                       booking.bookingStatusId === 3) && (
-                        <button
-                          className="btn btn-danger mt-3"
-                          onClick={() => setShowCancelModal(true)}
-                        >
-                          Cancel Booking
-                        </button>
-                      )}
+                      <button
+                        className="btn btn-danger mt-3"
+                        onClick={() => setShowCancelModal(true)}
+                      >
+                        Cancel Booking
+                      </button>
+                    )}
 
                     {/* Cancel Booking Modal */}
                     {showCancelModal && (
@@ -636,7 +649,9 @@ const CustomerBookingDetails = () => {
                               </button>
                             </div>
                             <div className="modal-body">
-                              <p>Are you sure you want to cancel this booking?</p>
+                              <p>
+                                Are you sure you want to cancel this booking?
+                              </p>
                               <p className="text-muted small">
                                 This action cannot be undone. All selected
                                 products will be removed.
@@ -674,13 +689,13 @@ const CustomerBookingDetails = () => {
                         </div>
                       </div>
                     )}
-                  </div >
-                </div >
-              </div >
-            </div >
-          </div >
-        </div >
-      </div >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </>
   );
 };
