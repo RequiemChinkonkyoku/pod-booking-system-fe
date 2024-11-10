@@ -1,0 +1,57 @@
+.confirmation-section {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.confirm-checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 2px solid #cbd5e1;
+  cursor: pointer;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.mt-4 {
+  margin-top: 1.5rem;
+}
+
+.price-display {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Add to ConfirmBooking.css */
+.Toastify__toast-container {
+  z-index: 9999;
+  width: 360px !important;
+  padding-top: 4rem !important;
+}
+
+.Toastify__toast {
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.Toastify__toast--success { background: #4caf50; }
+.Toastify__toast--error { background: #f44336; }
