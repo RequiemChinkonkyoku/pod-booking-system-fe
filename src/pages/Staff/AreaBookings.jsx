@@ -236,10 +236,9 @@ const Bookings = () => {
     }
 
     if (selectedStatus !== "all") {
-      filtered = filtered.filter((booking) => {
-        const detailedStatus = detailedBookings[booking.bookingId]?.statusId;
-        return detailedStatus === parseInt(selectedStatus);
-      });
+      filtered = filtered.filter(
+        (booking) => booking.statusId === parseInt(selectedStatus)
+      );
     }
 
     if (searchQuery) {

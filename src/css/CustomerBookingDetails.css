@@ -1,0 +1,246 @@
+/* Main layout */
+.booking-details-container {
+  padding: 20px;
+  display: flex;
+  gap: 24px;
+}
+
+.booking-info-column {
+  flex: 1;
+  max-width: 40%;
+}
+
+.product-menu-column {
+  flex: 1.5;
+  max-width: 60%;
+}
+
+/* Cards styling */
+.details-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+
+.details-card-header {
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+  background: #f8f9fa;
+}
+
+.details-card-header h4 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.details-card-body {
+  padding: 20px;
+}
+
+/* Status badges */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-cancelled { background: #fee2e2; color: #dc2626; }
+.status-pending { background: #fef3c7; color: #d97706; }
+.status-reserved { background: #dcfce7; color: #16a34a; }
+.status-on-going { background: #e0e7ff; color: #4f46e5; }
+.status-completed { background: #e0f2fe; color: #0284c7; }
+
+/* Info rows */
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.info-label {
+  flex: 0 0 140px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.info-value {
+  flex: 1;
+  color: #0f172a;
+}
+
+/* Price display */
+.price-display {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* Action buttons */
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.btn-cancel {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-cancel:hover {
+  background: #dc2626;
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+  .booking-details-container {
+    flex-direction: column;
+  }
+
+  .booking-info-column,
+  .product-menu-column {
+    max-width: 100%;
+  }
+}
+
+/* Toast container positioning */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+/* Modal styling */
+.cancel-modal {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  border-radius: 12px;
+  border: none;
+}
+
+.modal-header {
+  border-bottom: 1px solid #eee;
+  padding: 20px;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.modal-footer {
+  border-top: 1px solid #eee;
+  padding: 16px 20px;
+}
+
+/* Add to your CSS file */
+.d-flex.gap-2 {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-outline-danger {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+  color: #fff;
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+/* Payment method styles */
+.payment-method {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.payment-method.cash {
+  background: #def7ec;
+  color: #059669;
+}
+
+.payment-method.momo {
+  background: #fce7f3;  
+  color: #db2777;
+}
+
+.payment-method.vnpay {
+  background: #e0e7ff;
+  color: #4f46e5;
+}
+
+.payment-method.zalopay {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.payment-method.no-payment {
+  background: #f1f5f9;
+  color: #64748b;
+}
+
+.payment-method.cash,
+.payment-method.momo,
+.payment-method.vnpay,
+.payment-method.zalopay {
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.btn-primary {
+  background: #3b82f6;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  color: white;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+/* Add to your CSS */
+.pod-type-badge {
+  background: #e0f2fe;
+  color: #0284c7;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.text-muted.small {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.fw-bold {
+  font-weight: 600;
+}
+
+.mb-4:not(:last-child) {
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
