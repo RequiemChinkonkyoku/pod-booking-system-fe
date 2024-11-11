@@ -324,7 +324,7 @@
 /* Price Format */
 .price-value {
   font-family: "Roboto Mono", monospace;
-  font-weight: 600;
+  font-weight: 500;
   color: #2563eb;
 }
 
@@ -621,4 +621,18 @@ button {
 
 .selected-products-list::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+.price-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.final-price {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #e2e8f0;
+  font-weight: 600;
+  color: #3b82f6;
 }
