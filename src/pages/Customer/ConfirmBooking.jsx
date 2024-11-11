@@ -1,14 +1,17 @@
 import axios from "../../utils/axiosConfig";
 import React, { useState, useEffect, useInsertionEffect } from "react";
-import "../../assets/css/material-dashboard.min.css";
+// import "../../assets/css/material-dashboard.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "../../css/ConfirmBooking.css";
 
-import Navbar from "../../components/Customer/Navbar";
-import Head from "../../components/Head";
-import Sidebar from "../../components/Customer/Sidebar";
+// import Navbar from "../../components/Customer/Navbar";
+// import Head from "../../components/Head";
+// import Sidebar from "../../components/Customer/Sidebar";
 
 import { useLocation, useNavigate } from "react-router-dom";
 import { format, differenceInHours, parse } from "date-fns";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const ConfirmBooking = () => {
   const location = useLocation();
@@ -90,7 +93,7 @@ const ConfirmBooking = () => {
       );
 
       if (response.status === 200) {
-        alert("Booking successful!");
+        toast.success("Booking successful!");
 
         const paymentData = {
           orderType: 'Payment',
@@ -103,254 +106,151 @@ const ConfirmBooking = () => {
       }
     } catch (error) {
       console.error("Error creating booking:", error);
-      alert("There was an error while creating the booking.");
+      toast.error("Failed to create booking. Please try again.");
     }
   };
 
   return (
-    <>
-      <Head />
-      <body>
-        <div className="wrapper">
-          <Sidebar />
-          <div className="main-panel ps-container ps-theme-default">
-            <Navbar />
-            <div className="content">
-              <div className="container-fluid">
-                <div className="row">
-                  <div className="col-md-7">
-                    <div className="card">
-                      <div className="card-header card-header-rose card-header-text">
-                        <div className="card-text">
-                          <h4 className="card-title">
-                            Confirm booking details
-                          </h4>
-                        </div>
-                      </div>
-                      <div className="card-body">
-                        <form
-                          method="get"
-                          action="/"
-                          className="form-horizontal"
-                        >
-                          <div className="row">
-                            <label className="col-sm-2 col-form-label">
-                              POD
-                            </label>
-                            <div className="col-sm-10">
-                              <div className="form-group bmd-form-group disabled readonly">
-                                <label
-                                  htmlFor="exampleInput2"
-                                  className="bmd-label-floating text-muted"
-                                >
-                                  {pod.name}
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <label className="col-sm-2 col-form-label">
-                              POD TYPE
-                            </label>
-                            <div className="col-sm-10">
-                              <div className="form-group bmd-form-group disabled readonly">
-                                <label
-                                  htmlFor="exampleInput2"
-                                  className="bmd-label-floating text-muted"
-                                >
-                                  {podType.name}
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <label className="col-sm-2 col-form-label">
-                              ARRIVAL DATE
-                            </label>
-                            <div className="col-sm-10">
-                              <div className="form-group bmd-form-group disabled readonly">
-                                <label
-                                  htmlFor="exampleInput2"
-                                  className="bmd-label-floating text-muted"
-                                >
-                                  {format(
-                                    bookingData.arrivalDate,
-                                    "EEEE, MMMM do, yyyy"
-                                  )}
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <label className="col-sm-2 col-form-label">
-                              START TIME
-                            </label>
-                            <div className="col-sm-10">
-                              <div className="form-group bmd-form-group disabled readonly">
-                                <label
-                                  htmlFor="exampleInput2"
-                                  className="bmd-label-floating text-muted"
-                                >
-                                  {time.startTime
-                                    ? format(
-                                      parse(
-                                        time.startTime,
-                                        "HH:mm:ss",
-                                        new Date()
-                                      ),
-                                      "hh:mm a"
-                                    )
-                                    : "Loading..."}
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <label className="col-sm-2 col-form-label">
-                              END TIME
-                            </label>
-                            <div className="col-sm-10">
-                              <div className="form-group bmd-form-group disabled readonly">
-                                <label className="bmd-label-floating text-muted">
-                                  {time.startTime
-                                    ? format(
-                                      parse(
-                                        time.endTime,
-                                        "HH:mm:ss",
-                                        new Date()
-                                      ),
-                                      "hh:mm a"
-                                    )
-                                    : "Loading..."}
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
-                    </div>
+    <div className="app">
+      <main className="main-content">
+        <div className="content">
+          <div className="booking-details-container">
+            {/* Left Column: Booking Details */}
+            <div className="booking-info-column">
+              <div className="details-card">
+                <div className="details-card-header">
+                  <h4>Booking Details</h4>
+                </div>
+                <div className="details-card-body">
+                  <div className="info-row">
+                    <span className="info-label">Pod</span>
+                    <span className="info-value">
+                      <strong>{pod.name}</strong>
+                      <div className="text-muted small">{pod.description}</div>
+                    </span>
                   </div>
-                  <div className="col-md-5">
-                    <div className="card">
-                      <div className="card-header card-header-rose card-header-text">
-                        <div className="card-text">
-                          <h4 className="card-title">Confirm payment</h4>
-                        </div>
-                      </div>
-                      <div className="card-body">
-                        <form
-                          method="get"
-                          action="/"
-                          className="form-horizontal"
-                        >
-                          <div className="row">
-                            <label className="col-sm-2 col-form-label">
-                              POD PRICE
-                            </label>
-                            <div className="col-sm-10">
-                              <div className="form-group bmd-form-group disabled readonly">
-                                <label className="bmd-label-floating text-muted">
-                                  {podType.price} VND per HOUR
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <label className="col-sm-2 col-form-label">
-                              DURATION
-                            </label>
-                            <div className="col-sm-10">
-                              <div className="form-group bmd-form-group disabled readonly">
-                                <label className="bmd-label-floating text-muted">
-                                  {differenceInHours(
-                                    new Date(`1970-01-01T${time.endTime}`),
-                                    new Date(`1970-01-01T${time.startTime}`)
-                                  )}{" "}
-                                  HOUR(S)
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <label className="col-sm-2 col-form-label">
-                              TOTAL
-                            </label>
-                            <div className="col-sm-10">
-                              <div className="form-group bmd-form-group disabled readonly">
-                                <label className="bmd-label-floating text-muted">
-                                  {podType.price *
-                                    differenceInHours(
-                                      new Date(`1970-01-01T${time.endTime}`),
-                                      new Date(`1970-01-01T${time.startTime}`)
-                                    )}{" "}
-                                  VND
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <label className="col-sm-2 col-form-label">
-                              DISCOUNT
-                            </label>
-                            <div className="col-sm-10">
-                              <div className="form-group bmd-form-group disabled readonly">
-                                <label className="bmd-label-floating text-muted">
-                                  {discount} %
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="row">
-                            <label className="col-sm-2 col-form-label">
-                              ACTUAL PRICE
-                            </label>
-                            <div className="col-sm-10">
-                              <div className="form-group bmd-form-group disabled readonly">
-                                <label className="bmd-label-floating text-muted">
-                                  {actualPrice !== null ? `${actualPrice} VND` : "Calculating..."}
-                                </label>
-                              </div>
-                            </div>
-                          </div>
-                        </form>
-                        <div class="row">
-                          <br />
-                        </div>
-                        <div className="col-md-3 ml-auto">
-                          <div className="form-check">
-                            <label className="form-check-label">
-                              CONFIRM
-                              <input
-                                className="form-check-input"
-                                type="checkbox"
-                                onChange={(e) =>
-                                  setIsConfirmed(e.target.checked)
-                                }
-                              />
-                              <span className="form-check-sign">
-                                <span className="check"></span>
-                              </span>
-                            </label>
-                          </div>
-                        </div>
-                        <button
-                          type="button"
-                          className="btn btn-rose"
-                          disabled={!isConfirmed}
-                          onClick={handleBooking}
-                        >
-                          BOOK
-                        </button>
-                      </div>
+
+                  <div className="info-row">
+                    <span className="info-label">Pod Type</span>
+                    <span className="info-value">
+                      <span className="pod-type-badge">
+                        {podType.name} - {podType.price?.toLocaleString()} VND/hour
+                      </span>
+                    </span>
+                  </div>
+
+                  <div className="info-row">
+                    <span className="info-label">Date</span>
+                    <span className="info-value">
+                      {format(bookingData.arrivalDate, "EEEE, MMMM do, yyyy")}
+                    </span>
+                  </div>
+
+                  <div className="info-row">
+                    <span className="info-label">Time</span>
+                    <span className="info-value">
+                      {time.startTime ? (
+                        <>
+                          {format(parse(time.startTime, "HH:mm:ss", new Date()), "hh:mm a")} - 
+                          {format(parse(time.endTime, "HH:mm:ss", new Date()), "hh:mm a")}
+                        </>
+                      ) : (
+                        "Loading..."
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Payment Summary */}
+            <div className="product-menu-column">
+              <div className="details-card">
+                <div className="details-card-header">
+                  <h4>Payment Summary</h4>
+                </div>
+                <div className="details-card-body">
+                  <div className="info-row">
+                    <span className="info-label">Price per Hour</span>
+                    <span className="info-value">
+                      {podType.price?.toLocaleString()} VND
+                    </span>
+                  </div>
+
+                  <div className="info-row">
+                    <span className="info-label">Duration</span>
+                    <span className="info-value">
+                      {differenceInHours(
+                        new Date(`1970-01-01T${time.endTime}`),
+                        new Date(`1970-01-01T${time.startTime}`)
+                      )} hour(s)
+                    </span>
+                  </div>
+
+                  <div className="info-row">
+                    <span className="info-label">Total</span>
+                    <span className="info-value">
+                      {(podType.price * 
+                        differenceInHours(
+                          new Date(`1970-01-01T${time.endTime}`),
+                          new Date(`1970-01-01T${time.startTime}`)
+                        ))?.toLocaleString()} VND
+                    </span>
+                  </div>
+
+                  <div className="info-row">
+                    <span className="info-label">Discount</span>
+                    <span className="info-value status-badge">
+                      {discount}%
+                    </span>
+                  </div>
+
+                  <div className="info-row">
+                    <span className="info-label">Final Price</span>
+                    <span className="info-value price-display text-primary fw-bold">
+                      {actualPrice !== null ? `${actualPrice?.toLocaleString()} VND` : "Calculating..."}
+                    </span>
+                  </div>
+
+                  <div className="confirmation-section">
+                    <div className="confirm-checkbox">
+                      <label className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          onChange={(e) => setIsConfirmed(e.target.checked)}
+                        />
+                        <span>I confirm the booking details</span>
+                      </label>
                     </div>
+
+                    <button
+                      className="btn btn-primary w-100 mt-4"
+                      disabled={!isConfirmed}
+                      onClick={handleBooking}
+                    >
+                      Confirm Booking
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </body>
-    </>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          limit={3}
+        />
+      </main>
+    </div>
   );
 };
 

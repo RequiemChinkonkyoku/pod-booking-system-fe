@@ -8,7 +8,7 @@ import {
   Plus,
   X,
 } from "lucide-react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "../../utils/axiosConfig";
 import "../../css/ProductMenu.css";
@@ -19,6 +19,8 @@ const ProductMenu = ({ booking, onAddProducts }) => {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [cart, setCart] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 12;
 
   // Fetch products and categories
   useEffect(() => {
@@ -47,6 +49,19 @@ const ProductMenu = ({ booking, onAddProducts }) => {
       .includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstProduct,
+    indexOfLastProduct
+  );
+  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const nextPage = () =>
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
 
   const addToCart = (product) => {
     if (product.quantity === 0) {
@@ -356,7 +371,53 @@ const ProductMenu = ({ booking, onAddProducts }) => {
     );
   };
 
-  if (!booking || booking.bookingStatusId !== 4) {
+  const Pagination = () => (
+    <div className="pagination-container">
+      <button
+        className="pagination-button"
+        onClick={prevPage}
+        disabled={currentPage === 1}
+      >
+        Previous
+      </button>
+
+      {Array.from({ length: totalPages }, (_, i) => i + 1)
+        .filter((num) => {
+          if (totalPages <= 7) return true;
+          if (num === 1 || num === totalPages) return true;
+          if (num >= currentPage - 1 && num <= currentPage + 1) return true;
+          return false;
+        })
+        .map((number) => (
+          <React.Fragment key={number}>
+            {number !== 1 && number !== currentPage - 1 && number > 2 && (
+              <span className="pagination-info">...</span>
+            )}
+            <button
+              className={`pagination-button ${
+                currentPage === number ? "active" : ""
+              }`}
+              onClick={() => paginate(number)}
+            >
+              {number}
+            </button>
+          </React.Fragment>
+        ))}
+
+      <button
+        className="pagination-button"
+        onClick={nextPage}
+        disabled={currentPage === totalPages}
+      >
+        Next
+      </button>
+    </div>
+  );
+
+  if (
+    !booking ||
+    (booking.bookingStatusId !== 4 && booking.bookingStatusId !== 3)
+  ) {
     return (
       <div className="alert alert-warning" role="alert">
         Products can only be added when the booking status is "On-going"
@@ -365,40 +426,30 @@ const ProductMenu = ({ booking, onAddProducts }) => {
   }
 
   return (
-    <div className="card">
-      <div className="card-header card-header-rose card-header-text">
-        <div className="card-text">
-          <h4 className="card-title">Order Products</h4>
-        </div>
+    <div className="details-card">
+      <div className="details-card-header">
+        <h4>Order Products</h4>
       </div>
-      <div className="card-body">
+      <div className="details-card-body">
         {/* Search and Filter */}
-        <div className="row mb-4">
-          <div className="col-md-8">
-            <div className="input-group">
-              <div className="input-group-prepend">
-                <span className="input-group-text">
-                  <Search size={20} />
-                </span>
-              </div>
+        <div className="filters-container mb-4">
+          <div className="search-box">
+            <div className="search-input-wrapper">
+              <Search size={20} className="search-icon" />
               <input
                 type="text"
-                className="form-control"
+                className="search-input"
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
           </div>
-          <div className="col-md-4">
-            <div className="input-group">
-              <div className="input-group-prepend">
-                <span className="input-group-text">
-                  <Filter size={20} />
-                </span>
-              </div>
+          <div className="category-filter">
+            <div className="filter-wrapper">
+              <Filter size={20} className="filter-icon" />
               <select
-                className="form-control"
+                className="filter-select"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
               >
@@ -414,42 +465,25 @@ const ProductMenu = ({ booking, onAddProducts }) => {
         </div>
 
         {/* Products Grid */}
-        <div className="row">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
-              <div key={product.id} className="col-md-4 mb-4">
-                <ProductCard product={product} />
-              </div>
+        <div className="products-grid">
+          {currentProducts.length > 0 ? (
+            currentProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
             ))
           ) : (
-            <div className="col-12 text-center py-5">
-              <Package size={48} className="text-muted mb-3" />
-              <h5 className="text-muted">No products found</h5>
-              <p className="text-muted small">
-                Try adjusting your search or filter criteria
-              </p>
+            <div className="no-products">
+              <Package size={48} />
+              <h5>No products found</h5>
+              <p>Try adjusting your search or filter criteria</p>
             </div>
           )}
         </div>
 
+        {/* Pagination */}
+        <Pagination />
+
         {/* Shopping Cart */}
         <ShoppingCartSection />
-
-        {/* Toast Container */}
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-          style={{ top: "70px" }}
-          limit={3}
-        />
       </div>
     </div>
   );

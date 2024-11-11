@@ -111,6 +111,12 @@ const LoginPage = () => {
               Don't have an account? <Link to={"/register"}>Sign up</Link>
             </div>
           </div>
+          <div className="additional-links">
+            <div className="register-link">
+              Forget password?{" "}
+              <Link to={"/forgetPassword"}>Reset password here</Link>
+            </div>
+          </div>
         </Spin>
       </div>
     </div>

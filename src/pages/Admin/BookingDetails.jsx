@@ -15,6 +15,8 @@ const BookingDetails = () => {
 
   const [booking, setBooking] = useState({});
   const [timeSlots, setTimeSlots] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [products, setProducts] = useState([]);
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [cancelLoading, setCancelLoading] = useState(false);
@@ -36,6 +38,41 @@ const BookingDetails = () => {
       }
     };
     fetchData();
+  }, [bookingId]);
+
+  useEffect(() => {
+    const fetchProductData = async () => {
+      try {
+        const [productsResponse, selectedProductsResponse] = await Promise.all([
+          axios.get("/Products"),
+          axios.get(`/SelectedProduct/Booking/${bookingId.bookingId}`)
+        ]);
+
+        setProducts(productsResponse.data);
+        
+        // Combine selected products with product details
+        const selectedProductsWithDetails = selectedProductsResponse.data.map(
+          (selectedProduct) => {
+            const productDetails = productsResponse.data.find(
+              (p) => p.id === selectedProduct.productId
+            );
+            return {
+              ...selectedProduct,
+              name: productDetails?.name || "Product not found",
+              price: selectedProduct.productPrice || productDetails?.price || 0,
+              description: productDetails?.description || "",
+              unit: productDetails?.unit || "VND",
+            };
+          }
+        );
+
+        setSelectedProducts(selectedProductsWithDetails);
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    };
+
+    fetchProductData();
   }, [bookingId]);
 
   const getSchedule = (scheduleId) => {
@@ -179,16 +216,45 @@ const BookingDetails = () => {
                     {booking.user.email || "N/A"}
                   </span>
                 </div>
-                {/* <div className="info-item">
-                  <span className="info-label">Phone</span>
-                  <span className="info-value">
-                    {booking.customerPhone || "N/A"}
-                  </span>
-                </div> */}
               </div>
 
-              {/* Slot Details Card */}
-              <div className="slot-details-card">
+              {/* Products Summary Card - Moved up */}
+              <div className="info-card">
+                <h3 className="card-title">
+                  <i className="material-icons">shopping_cart</i>
+                  Products Summary
+                </h3>
+                <div className="info-item">
+                  <span className="info-label">Total Items</span>
+                  <span className="info-value">
+                    {selectedProducts.reduce((sum, product) => sum + product.quantity, 0)}
+                  </span>
+                </div>
+                <div className="info-item">
+                  <span className="info-label">Total Amount</span>
+                  <span className="info-value price-value">
+                    {selectedProducts
+                      .reduce((total, product) => total + product.price * product.quantity, 0)
+                      .toLocaleString()}{" "}
+                    VND
+                  </span>
+                </div>
+                <div className="selected-products-list">
+                  {selectedProducts.map((product) => (
+                    <div key={product.id} className="info-item">
+                      <span className="info-label">
+                        {product.name} x {product.quantity}
+                      </span>
+                      <span className="info-value price-value">
+                        {(product.price * product.quantity).toLocaleString()} VND
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Slot Details Card - Full width */}
+              <div className="info-card full-width">
                 <h2 className="card-title">
                   <i className="material-icons">schedule</i>
                   Slot Details

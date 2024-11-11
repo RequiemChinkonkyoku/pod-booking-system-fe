@@ -1,15 +1,13 @@
 import { Button, Form, Input } from "antd";
 import axios from "../utils/axiosConfig";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/Login.css";
 
 const VerifyOtpPage = () => {
   const [token, setToken] = useState(localStorage.getItem("token"));
-  // const [credentials, setCredentials] = useState({
-  //   email: "",
-  //   password: "",
-  // });
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [form] = Form.useForm();
@@ -23,6 +21,7 @@ const VerifyOtpPage = () => {
       setToken(response.data.token);
       localStorage.setItem("token", response.data.token);
       console.log("Verification successful");
+      navigate("/login");
     } catch (error) {
       console.error("Verification failed: ", error);
     }
