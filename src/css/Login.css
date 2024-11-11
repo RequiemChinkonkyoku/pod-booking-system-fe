@@ -179,3 +179,62 @@
     font-size: 14px;
   }
 }
+/* Add these to your existing CSS */
+
+/* OTP input styling */
+.ant-input-password {
+  border-color: #d48b33;
+  border-width: 2px;
+  border-radius: 30px;
+}
+
+.ant-input-password:hover,
+.ant-input-password:focus {
+  border-color: #333;
+}
+
+.ant-input-password .ant-input {
+  padding: 12px;
+  font-size: 16px;
+}
+
+/* Override ant-form-item margin for closer grouping of OTP fields */
+.ant-form-item {
+  margin-bottom: 20px;
+}
+
+/* Style for the try again link */
+.try-again-link {
+  color: #d48b33;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.try-again-link:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
+/* Adjust form titles for both states */
+.login-form h2.otp-title {
+  margin-bottom: 15px;
+}
+
+.login-form .otp-subtitle {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 576px) {
+  .ant-input-password .ant-input {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  .login-form .otp-subtitle {
+    font-size: 12px;
+    margin-bottom: 20px;
+  }
+}
