@@ -396,7 +396,7 @@ const StaffBookingDetails = () => {
         <div className="checkin-modal-overlay">
           <div className="checkin-modal-content">
             <h3 className="checkin-modal-title">Checkin</h3>
-            <p className="checkin-modal-message">Are you ready to check out?</p>
+            <p className="checkin-modal-message">Are you ready to check in?</p>
             <div className="modal-actions">
               <button
                 onClick={() => setShowCheckinModal(false)}

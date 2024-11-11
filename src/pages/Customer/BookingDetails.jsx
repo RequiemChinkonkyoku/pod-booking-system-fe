@@ -275,7 +275,7 @@ const CustomerBookingDetails = () => {
 
     getTransaction();
   }, [booking]);
-  
+
   const getStatusText = (statusId) => {
     switch (statusId) {
       case 1:
@@ -539,8 +539,7 @@ const CustomerBookingDetails = () => {
                                 ).toLocaleString()}{" "}
                                 VND
                               </td>
-                              {(booking.bookingStatusId === 4 ||
-                                booking.bookingStatusId === 3) && (
+                              {booking.bookingStatusId === 3 && (
                                 <td>
                                   <div className="d-flex gap-2">
                                     <button
@@ -554,7 +553,9 @@ const CustomerBookingDetails = () => {
                                     </button>
                                     <button
                                       className="btn btn-sm btn-outline-danger"
-                                      onClick={() => handleRemoveClick(product.id)}
+                                      onClick={() =>
+                                        handleRemoveClick(product.id)
+                                      }
                                       disabled={updating}
                                     >
                                       Remove

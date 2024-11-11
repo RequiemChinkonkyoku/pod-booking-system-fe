@@ -431,7 +431,7 @@ const Bookings = () => {
                       <i className="material-icons">visibility</i>
                       View
                     </button>
-                    {getDetailedBookingStatus(booking.bookingId).label !==
+                    {/* {getDetailedBookingStatus(booking.bookingId).label !==
                       "Cancelled" && (
                       <button
                         className="btn-cancel"
@@ -440,7 +440,7 @@ const Bookings = () => {
                         <i className="material-icons">cancel</i>
                         Cancel
                       </button>
-                    )}
+                    )} */}
                   </td>
                 </tr>
               ))}
