@@ -262,10 +262,7 @@ export const Pods = () => {
     setIsLoading(true);
     try {
       console.log("Attempting to deactivate pod with id:", currentPod.id);
-      const response = await axios.put(`/Pods/${currentPod.id}`, {
-        ...currentPod,
-        status: 0,
-      });
+      const response = await axios.delete(`/Pods/?id=${currentPod.id}`);
       console.log("Deactivate response:", response);
       handleCloseDeleteModal();
       await fetchPods();
