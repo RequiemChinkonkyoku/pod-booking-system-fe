@@ -233,10 +233,29 @@ const StaffBookingDetails = () => {
                   </span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Booking Price</span>
-                  <span className="info-value price-value">
-                    {booking.bookingPrice?.toLocaleString()} VND
-                  </span>
+                  <span className="info-label">Price Details</span>
+                  <div className="info-value">
+                    <div className="price-row">
+                      <span>Original Price:</span>
+                      <span className="price-value">
+                        {booking.bookingPrice?.toLocaleString()} VND
+                      </span>
+                    </div>
+                    <div className="price-row">
+                      <span>Discount:</span>
+                      <span>{booking.discount}%</span>
+                    </div>
+                    <div className="price-row final-price">
+                      <span>Final Price:</span>
+                      <span className="price-value">
+                        {(booking.discount > 0
+                          ? booking.actualPrice
+                          : booking.bookingPrice
+                        )?.toLocaleString()}{" "}
+                        VND
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Created Time</span>

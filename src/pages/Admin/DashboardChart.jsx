@@ -67,7 +67,8 @@ const DashboardChart = () => {
           booking?.bookingStatusId === 5 || booking?.bookingStatusId === 4
       )
       .reduce((sum, booking) => {
-        const price = parseFloat(booking?.bookingPrice) || 0;
+        const price =
+          Number(booking.actualPrice) || Number(booking.bookingPrice) || 0;
         return sum + price;
       }, 0);
 
@@ -107,6 +108,7 @@ const DashboardChart = () => {
     return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
   };
 
+  // Update getFilteredRevenueData function
   const getFilteredRevenueData = () => {
     const relevantBookings = detailedBookings.filter(
       (booking) =>
@@ -117,7 +119,6 @@ const DashboardChart = () => {
       case "day":
         const dailyData = {};
         relevantBookings.forEach((booking) => {
-          // Use the first slot's arrival date instead of creation time
           if (booking.bookingDetails && booking.bookingDetails.length > 0) {
             const date = new Date(booking.bookingDetails[0].slot.arrivalDate);
             const formattedDate = `${String(date.getDate()).padStart(
@@ -134,76 +135,13 @@ const DashboardChart = () => {
                 bookings: 0,
               };
             }
-            dailyData[formattedDate].revenue +=
-              Number(booking.bookingPrice) || 0;
+            // Use actualPrice if exists, otherwise use bookingPrice
+            const finalPrice = booking.actualPrice || booking.bookingPrice || 0;
+            dailyData[formattedDate].revenue += Number(finalPrice);
             dailyData[formattedDate].bookings += 1;
           }
         });
-        return Object.values(dailyData)
-          .sort((a, b) => {
-            const [aDay, aMonth, aYear] = a.period.split("/");
-            const [bDay, bMonth, bYear] = b.period.split("/");
-            return (
-              new Date(`20${aYear}`, aMonth - 1, aDay) -
-              new Date(`20${bYear}`, bMonth - 1, bDay)
-            );
-          })
-          .slice(-7);
-
-      case "week":
-        const weeklyData = {};
-        relevantBookings.forEach((booking) => {
-          if (booking.bookingDetails && booking.bookingDetails.length > 0) {
-            const date = new Date(booking.bookingDetails[0].slot.arrivalDate);
-            const startOfWeek = new Date(date);
-            const day = startOfWeek.getDay();
-            const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
-            startOfWeek.setDate(diff);
-
-            const endOfWeek = new Date(startOfWeek);
-            endOfWeek.setDate(startOfWeek.getDate() + 6);
-
-            const weekLabel = `${startOfWeek.toLocaleDateString("vi-VN", {
-              month: "numeric",
-              day: "numeric",
-            })} - ${endOfWeek.toLocaleDateString("vi-VN", {
-              month: "numeric",
-              day: "numeric",
-            })}`;
-
-            if (!weeklyData[weekLabel]) {
-              weeklyData[weekLabel] = {
-                period: weekLabel,
-                revenue: 0,
-                bookings: 0,
-              };
-            }
-            weeklyData[weekLabel].revenue += Number(booking.bookingPrice) || 0;
-            weeklyData[weekLabel].bookings += 1;
-          }
-        });
-        return Object.values(weeklyData).slice(-8);
-
-      case "month":
-        const monthlyData = {};
-        relevantBookings.forEach((booking) => {
-          if (booking.bookingDetails && booking.bookingDetails.length > 0) {
-            const date = new Date(booking.bookingDetails[0].slot.arrivalDate);
-            const month = date.toLocaleString("default", {
-              month: "short",
-              year: "numeric",
-            });
-            if (!monthlyData[month]) {
-              monthlyData[month] = { period: month, revenue: 0, bookings: 0 };
-            }
-            monthlyData[month].revenue += Number(booking.bookingPrice) || 0;
-            monthlyData[month].bookings += 1;
-          }
-        });
-        return Object.values(monthlyData);
-
-      default:
-        return [];
+        return Object.values(dailyData);
     }
   };
 
@@ -239,7 +177,9 @@ const DashboardChart = () => {
         };
       }
 
-      monthlyData[monthYear].revenue += Number(booking.bookingPrice);
+      const finalPrice =
+        Number(booking.actualPrice) || Number(booking.bookingPrice) || 0;
+      monthlyData[monthYear].revenue += finalPrice;
       monthlyData[monthYear].slots += booking.bookingDetails?.length || 0;
       monthlyData[monthYear].bookings += 1;
     });
@@ -288,7 +228,9 @@ const DashboardChart = () => {
         };
       }
 
-      dailyData[date].revenue += Number(booking.bookingPrice);
+      const finalPrice =
+        Number(booking.actualPrice) || Number(booking.bookingPrice) || 0;
+      dailyData[date].revenue += finalPrice;
       dailyData[date].slots += booking.bookingDetails?.length || 0;
       dailyData[date].bookings += 1;
     });
@@ -298,6 +240,7 @@ const DashboardChart = () => {
       .slice(-7);
   };
 
+  // Update CustomTooltip to show only final price
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
@@ -449,7 +392,6 @@ const DashboardChart = () => {
                 </div>
               </div>
 
-              {/* Charts Grid */}
               {/* Charts Grid */}
               <div className="charts-grid">
                 {/* Monthly Revenue Chart */}
