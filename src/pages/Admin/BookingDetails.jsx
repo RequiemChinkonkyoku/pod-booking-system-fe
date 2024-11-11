@@ -45,11 +45,11 @@ const BookingDetails = () => {
       try {
         const [productsResponse, selectedProductsResponse] = await Promise.all([
           axios.get("/Products"),
-          axios.get(`/SelectedProduct/Booking/${bookingId.bookingId}`)
+          axios.get(`/SelectedProduct/Booking/${bookingId.bookingId}`),
         ]);
 
         setProducts(productsResponse.data);
-        
+
         // Combine selected products with product details
         const selectedProductsWithDetails = selectedProductsResponse.data.map(
           (selectedProduct) => {
@@ -183,10 +183,29 @@ const BookingDetails = () => {
                   </span>
                 </div>
                 <div className="info-item">
-                  <span className="info-label">Booking Price</span>
-                  <span className="info-value price-value">
-                    {booking.bookingPrice?.toLocaleString()} VND
-                  </span>
+                  <span className="info-label">Price Details</span>
+                  <div className="info-value">
+                    <div className="price-row">
+                      <span>Original Price:</span>
+                      <span className="price-value">
+                        {booking.bookingPrice?.toLocaleString()} VND
+                      </span>
+                    </div>
+                    <div className="price-row">
+                      <span>Discount:</span>
+                      <span>{booking.discount}%</span>
+                    </div>
+                    <div className="price-row final-price">
+                      <span>Final Price:</span>
+                      <span className="price-value">
+                        {(booking.discount > 0
+                          ? booking.actualPrice
+                          : booking.bookingPrice
+                        )?.toLocaleString()}{" "}
+                        VND
+                      </span>
+                    </div>
+                  </div>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Created Time</span>
@@ -227,14 +246,21 @@ const BookingDetails = () => {
                 <div className="info-item">
                   <span className="info-label">Total Items</span>
                   <span className="info-value">
-                    {selectedProducts.reduce((sum, product) => sum + product.quantity, 0)}
+                    {selectedProducts.reduce(
+                      (sum, product) => sum + product.quantity,
+                      0
+                    )}
                   </span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Total Amount</span>
                   <span className="info-value price-value">
                     {selectedProducts
-                      .reduce((total, product) => total + product.price * product.quantity, 0)
+                      .reduce(
+                        (total, product) =>
+                          total + product.price * product.quantity,
+                        0
+                      )
                       .toLocaleString()}{" "}
                     VND
                   </span>
@@ -246,7 +272,8 @@ const BookingDetails = () => {
                         {product.name} x {product.quantity}
                       </span>
                       <span className="info-value price-value">
-                        {(product.price * product.quantity).toLocaleString()} VND
+                        {(product.price * product.quantity).toLocaleString()}{" "}
+                        VND
                       </span>
                     </div>
                   ))}
