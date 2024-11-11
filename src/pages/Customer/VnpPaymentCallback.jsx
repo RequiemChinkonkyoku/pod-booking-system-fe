@@ -119,16 +119,16 @@ const VnpPaymentCallback = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            {/* <div className="row">
+                                            <div className="row">
                                                 <label className="col-sm-2 col-form-label">Order Info</label>
                                                 <div className="col-sm-10">
                                                     <div className="form-group bmd-form-group disabled readonly">
                                                         <label className="bmd-label-floating text-muted">
-                                                            {paymentResponse.orderInfo || "N/A"}
+                                                            {paymentResponse.orderDescription || "N/A"}
                                                         </label>
                                                     </div>
                                                 </div>
-                                            </div> */}
+                                            </div>
                                         </div>
                                         <div className="card-footer">
                                             <button class="btn btn-dribbble" onClick={navigateToList}>Back</button>
