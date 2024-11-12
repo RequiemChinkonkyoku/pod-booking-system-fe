@@ -194,7 +194,7 @@ const CustomerDashboard = () => {
                           <span className="info-value"><strong>{point ? `${point}` : "N/A"}</strong> Points</span>
                         </div>
                         <div className="col-md-4">
-                          <span className="info-value"><strong>{nextMembership ? `${nextMembership.name}` : "N/A"}</strong></span>
+                          <span className="info-value"><strong>{nextMembership ? `${nextMembership.name}` : "No higher tier"}</strong></span>
                         </div>
                       </div>
                       <div className="d-flex align-items-center">
@@ -202,12 +202,20 @@ const CustomerDashboard = () => {
                           {currentMembership ? `${currentMembership.pointsRequirement}` : "N/A"}
                         </div>
                         <div className="col-md-4">
-                          <progress value={point} max={nextMembership.pointsRequirement} />
+                          {nextMembership ? (
+                            <progress value={point} max={nextMembership.pointsRequirement} />
+                          ) : (
+                            <span>Max tier reached</span>
+                          )}
                         </div>
                         <div className="col-md-4">
                           {nextMembership ? `${nextMembership.pointsRequirement}` : "N/A"}
                         </div>
                       </div>
+                    </div>
+                    <div className="card-footer">
+                      <span class="info-label">Current Discount</span>
+                      <span className="info-value"><strong>{currentMembership.discount} %</strong></span>
                     </div>
                   </div>
                 </div>
