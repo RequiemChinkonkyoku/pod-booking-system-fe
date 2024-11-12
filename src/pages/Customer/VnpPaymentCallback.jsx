@@ -13,38 +13,42 @@ const VnpPaymentCallback = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        function PaymentCallback() {
-            const queryParams = new URLSearchParams(window.location.search);
-            const queryObject = Object.fromEntries(queryParams.entries());
-
-            Object.keys(queryObject).forEach(key => {
-                sessionStorage.setItem(key, queryObject[key]);
-            });
-        }
-
         PaymentCallback();
     }, []);
 
+    const PaymentCallback = () => {
+        const queryParams = new URLSearchParams(window.location.search);
+        const queryObject = Object.fromEntries(queryParams.entries());
+
+        Object.keys(queryObject).forEach(key => {
+            sessionStorage.setItem(key, queryObject[key]);
+        });
+    }
+
     useEffect(() => {
-        const executePayment = async () => {
-            const queryObject = {};
-
-            for (let i = 0; i < sessionStorage.length; i++) {
-                const key = sessionStorage.key(i);
-                queryObject[key] = sessionStorage.getItem(key);
-            }
-
-            try {
-                const response = await axios.post("/VnPay/payment-callback", null, { params: queryObject });
-                console.log("Payment execute response", response.data);
-                setPaymentResponse(response.data);
-            } catch (error) {
-                console.error("There has been an error.", error);
-            }
-        };
-
         executePayment();
     }, []);
+
+    const executePayment = async () => {
+        const queryObject = {};
+
+        for (let i = 0; i < sessionStorage.length; i++) {
+            const key = sessionStorage.key(i);
+            queryObject[key] = sessionStorage.getItem(key);
+        }
+
+        if (queryObject.length <= 0) {
+            console.error("The queryObject is empty");
+        }
+
+        try {
+            const response = await axios.post("/VnPay/payment-callback", null, { params: queryObject });
+            console.log("Payment execute response", response.data);
+            setPaymentResponse(response.data);
+        } catch (error) {
+            console.error("There has been an error.", error);
+        }
+    };
 
     const navigateToList = () => {
         navigate("/customer/Bookings");

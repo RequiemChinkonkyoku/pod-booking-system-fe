@@ -13,6 +13,9 @@ const CustomerDashboard = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
+  const [currentMembership, setCurrentMembership] = useState({});
+  const [nextMembership, setNexMembership] = useState({});
+  const [point, setPoint] = useState("");
 
   useEffect(() => {
     fetchUser();
@@ -27,6 +30,22 @@ const CustomerDashboard = () => {
       console.error("Failed to fetch data:", error);
     }
   };
+
+  useEffect(() => {
+    getMembershipProgress();
+  }, []);
+
+  const getMembershipProgress = async () => {
+    try {
+      const response = await axios.get("/Membership/get-membership-progress");
+      console.log(response.data);
+      setCurrentMembership(response.data.currentMembership);
+      setNexMembership(response.data.nextMembership);
+      setPoint(response.data.point);
+    } catch (error) {
+      console.error("Error getting membership progress: ", error);
+    }
+  }
 
   const updateUserName = async (e) => {
     e.preventDefault();
@@ -92,7 +111,7 @@ const CustomerDashboard = () => {
           <div className="content">
             <div className="container-fluid">
               <div className="row">
-                <div className="col-md-8">
+                <div className="col-md-6">
                   <div className="card">
                     <div className="card-header card-header-icon card-header-rose">
                       <div className="card-icon">
@@ -143,11 +162,56 @@ const CustomerDashboard = () => {
                     </div>
                   </div>
                 </div>
+                <div className="col-md-6">
+                  <div className="card">
+                    <div className="card-header card-header-icon card-header-rose">
+                      <div className="card-icon">
+                        <i className="material-icons">card_membership</i>
+                      </div>
+                      <h4 className="card-title">Loyalty Point</h4>
+                    </div>
+                    <div className="card-body" style={{ textAlign: 'center' }}>
+                      <div className="d-flex align-items-center">
+                        <div className="col-md-4">
+                          <span class="info-label">Current Membership</span>
+                        </div>
+                        <div className="col-md-4">
+                          <span class="info-label">Progress</span>
+                        </div>
+                        <div className="col-md-4">
+                          <span class="info-label">Next Membership</span>
+                        </div>
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <div className="col-md-4">
+                          <span className="info-value"><strong>{currentMembership ? `${currentMembership.name}` : "N/A"}</strong></span>
+                        </div>
+                        <div className="col-md-4">
+                          <span className="info-value"><strong>{point ? `${point}` : "N/A"}</strong> Points</span>
+                        </div>
+                        <div className="col-md-4">
+                          <span className="info-value"><strong>{nextMembership ? `${nextMembership.name}` : "N/A"}</strong></span>
+                        </div>
+                      </div>
+                      <div className="d-flex align-items-center">
+                        <div className="col-md-4" >
+                          {currentMembership ? `${currentMembership.pointsRequirement}` : "N/A"}
+                        </div>
+                        <div className="col-md-4">
+                          <progress value={point} max={nextMembership.pointsRequirement} />
+                        </div>
+                        <div className="col-md-4">
+                          {nextMembership ? `${nextMembership.pointsRequirement}` : "N/A"}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               {/* Change password section */}
               <div className="row">
-                <div className="col-md-8">
+                <div className="col-md-6">
                   <div className="card">
                     <div className="card-header card-header-icon card-header-rose">
                       <div className="card-icon">
@@ -237,7 +301,7 @@ const CustomerDashboard = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div >
     </>
   );
 };
