@@ -135,13 +135,92 @@ const DashboardChart = () => {
                 bookings: 0,
               };
             }
-            // Use actualPrice if exists, otherwise use bookingPrice
             const finalPrice = booking.actualPrice || booking.bookingPrice || 0;
             dailyData[formattedDate].revenue += Number(finalPrice);
             dailyData[formattedDate].bookings += 1;
           }
         });
-        return Object.values(dailyData);
+
+        // Convert to array and sort chronologically (ascending)
+        const sortedData = Object.values(dailyData).sort((a, b) => {
+          const [aDay, aMonth, aYear] = a.period.split("/");
+          const [bDay, bMonth, bYear] = b.period.split("/");
+          const dateA = new Date(`20${aYear}`, aMonth - 1, aDay);
+          const dateB = new Date(`20${bYear}`, bMonth - 1, bDay);
+          return dateA - dateB;
+        });
+
+        return sortedData.slice(-7);
+
+      case "week":
+        const weeklyData = {};
+        relevantBookings.forEach((booking) => {
+          if (booking.bookingDetails && booking.bookingDetails.length > 0) {
+            const date = new Date(booking.bookingDetails[0].slot.arrivalDate);
+            const startOfWeek = new Date(date);
+            const day = startOfWeek.getDay();
+            const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
+            startOfWeek.setDate(diff);
+
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+            const weekLabel = `${startOfWeek.toLocaleDateString("vi-VN", {
+              month: "numeric",
+              day: "numeric",
+            })} - ${endOfWeek.toLocaleDateString("vi-VN", {
+              month: "numeric",
+              day: "numeric",
+            })}`;
+
+            if (!weeklyData[weekLabel]) {
+              weeklyData[weekLabel] = {
+                period: weekLabel,
+                startDate: startOfWeek,
+                revenue: 0,
+                bookings: 0,
+              };
+            }
+            const finalPrice = booking.actualPrice || booking.bookingPrice || 0;
+            weeklyData[weekLabel].revenue += Number(finalPrice);
+            weeklyData[weekLabel].bookings += 1;
+          }
+        });
+
+        // Sort weeks chronologically
+        return Object.values(weeklyData)
+          .sort((a, b) => a.startDate - b.startDate)
+          .map(({ startDate, ...rest }) => rest);
+      case "month":
+        const monthlyData = {};
+        relevantBookings.forEach((booking) => {
+          if (booking.bookingDetails && booking.bookingDetails.length > 0) {
+            const date = new Date(booking.bookingDetails[0].slot.arrivalDate);
+            const month = date.toLocaleString("default", {
+              month: "short",
+              year: "numeric",
+            });
+            if (!monthlyData[month]) {
+              monthlyData[month] = {
+                period: month,
+                monthDate: date,
+                revenue: 0,
+                bookings: 0,
+              };
+            }
+            const finalPrice = booking.actualPrice || booking.bookingPrice || 0;
+            monthlyData[month].revenue += Number(finalPrice);
+            monthlyData[month].bookings += 1;
+          }
+        });
+
+        // Sort months chronologically
+        return Object.values(monthlyData)
+          .sort((a, b) => a.monthDate - b.monthDate)
+          .map(({ monthDate, ...rest }) => rest); // Remove the monthDate from final output
+
+      default:
+        return [];
     }
   };
 

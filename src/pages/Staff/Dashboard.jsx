@@ -2,6 +2,7 @@ import axios from "../../utils/axiosConfig";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../assets/css/material-dashboard.min.css";
+import { useAuth } from "../../contexts/AuthContext";
 
 import Navbar from "../../components/Staff/Navbar";
 import Head from "../../components/Head";
@@ -58,14 +59,17 @@ const StaffDashboard = () => {
     }
   };
 
+  const { logout } = useAuth();
+
   const deleteUserAccount = async () => {
     try {
       await axios.delete(`/Users/${user.id}`);
       alert("Account deactivated successfully.");
-      // Redirect or handle user logout
+      await logout();
+      navigate("/login");
     } catch (error) {
       console.error("Failed to deactivate account:", error);
-      alert("Failed to deactivate account.");
+      // alert("Failed to deactivate account.");
     }
   };
 
