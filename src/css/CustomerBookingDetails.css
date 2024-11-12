@@ -220,7 +220,6 @@
   background: #2563eb;
 }
 
-/* Add to your CSS */
 .pod-type-badge {
   background: #e0f2fe;
   color: #0284c7;
@@ -243,4 +242,71 @@
   border-bottom: 1px solid #e2e8f0;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
+}
+
+/* Review styles */
+.review-form {
+  width: 100%;
+}
+
+.stars-display,
+.stars-input {
+  display: flex;
+  gap: 4px;
+}
+
+.stars-input i {
+  transition: all 0.2s;
+}
+
+.stars-input i:hover {
+  transform: scale(1.2);
+}
+
+.review-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  resize: vertical;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.review-textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.action-buttons .btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.action-buttons .btn i {
+  font-size: 18px;
+}
+
+.btn {
+  padding: 8px 16px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
 }
