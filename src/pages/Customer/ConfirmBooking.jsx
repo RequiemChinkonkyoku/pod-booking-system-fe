@@ -98,7 +98,7 @@ const ConfirmBooking = () => {
         const paymentData = {
           orderType: 'Payment',
           bookingId: response.data.id,
-          amount: podType.price * (1 - discount / 100),
+          amount: actualPrice,
           userId: response.data.userId
         };
 

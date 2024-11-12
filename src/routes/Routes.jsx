@@ -28,6 +28,7 @@ import BookingDetails from "../pages/Admin/BookingDetails";
 import AreaBookings from "../pages/Staff/AreaBookings";
 import StaffBookingDetails from "../pages/Staff/BookingDetails";
 import ForgetPassword from "../pages/ForgetPassword";
+import VnpPaymentCallback from "../pages/Customer/VnpPaymentCallback";
 
 export const routes = createBrowserRouter([
   {
@@ -143,6 +144,10 @@ export const routes = createBrowserRouter([
       {
         path: "MomoPaymentCallback",
         element: <MomoPaymentCallback />,
+      },
+      {
+        path: "VnpPaymentCallback",
+        element: <VnpPaymentCallback />,
       },
     ],
   },

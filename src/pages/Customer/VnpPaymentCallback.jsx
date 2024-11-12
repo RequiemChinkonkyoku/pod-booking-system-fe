@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import axios from "../../utils/axiosConfig";
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import "../../assets/css/material-dashboard.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 import Navbar from "../../components/Customer/Navbar";
 import Head from "../../components/Head";
 import Sidebar from "../../components/Customer/Sidebar";
 
-import axios from "../../utils/axiosConfig";
-import { useNavigate } from "react-router-dom";
-
-const MomoPaymentCallback = () => {
+const VnpPaymentCallback = () => {
     const [paymentResponse, setPaymentResponse] = useState({});
     const navigate = useNavigate();
 
@@ -15,7 +16,7 @@ const MomoPaymentCallback = () => {
         PaymentCallback();
     }, []);
 
-    const PaymentCallback = async () => {
+    const PaymentCallback = () => {
         const queryParams = new URLSearchParams(window.location.search);
         const queryObject = Object.fromEntries(queryParams.entries());
 
@@ -41,10 +42,9 @@ const MomoPaymentCallback = () => {
         }
 
         try {
-            const response = await axios.post("/Momo/payment-execute", null, { params: queryObject });
+            const response = await axios.post("/VnPay/payment-callback", null, { params: queryObject });
             console.log("Payment execute response", response.data);
             setPaymentResponse(response.data);
-            console.log(paymentResponse);
         } catch (error) {
             console.error("There has been an error.", error);
         }
@@ -128,7 +128,7 @@ const MomoPaymentCallback = () => {
                                                 <div className="col-sm-10">
                                                     <div className="form-group bmd-form-group disabled readonly">
                                                         <label className="bmd-label-floating text-muted">
-                                                            {paymentResponse.orderInfo || "N/A"}
+                                                            {paymentResponse.orderDescription || "N/A"}
                                                         </label>
                                                     </div>
                                                 </div>
@@ -146,6 +146,7 @@ const MomoPaymentCallback = () => {
             </div>
         </>
     );
+
 };
 
-export default MomoPaymentCallback;
+export default VnpPaymentCallback;
