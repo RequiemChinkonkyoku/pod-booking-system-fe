@@ -82,46 +82,70 @@ const SelectPayment = () => {
   return (
     <>
       <Head />
-      <body>
-        <div className="container">
-          <div className="row">
-            <div className="col-md-8 ml-auto mr-auto text-center">
-              <h2 className="title">Pick your preferred payment method</h2>
-              <h5 className="description">
-                You can choose to pay a deposit online or pay with cash with a
-                pending state.
-              </h5>
-            </div>
-          </div>
-          <div className="row justify-content-center">
-            {methods.length === 0 ? (
-              <p>Loading methods...</p>
-            ) : (
-              methods.map((method) => (
-                <div className="col-lg-3 cards" key={method.id}>
-                  <div className="card card-pricing card-raised">
-                    <div className="card-body">
-                      <h6 className="card-category">{method.name}</h6>
-                      <div className="card-icon icon-rose">
-                        <i className="material-icons">payment</i>
-                      </div>
-                      <h3 className="card-title justify-content-center">
-                        {method.name}
-                      </h3>
-                      <p className="card-description">
-                        This payment uses {method.name} for transactions.
-                      </p>
-                      <button
-                        className="btn btn-rose btn-round"
-                        onClick={() => handlePaymentSelect(method.id)}
-                      >
-                        Choose Method
-                      </button>
-                    </div>
-                  </div>
+      <body class="off-canvas-sidebar">
+        <div class="wrapper wrapper-full-page">
+          <div
+            class="page-header pricing-page header-filter"
+            style={{
+              backgroundImage:
+                "url(https://framery.com/wp-content/uploads/2024/03/framery-four-smart-meeting-pod-mobile-hero-1.jpg)",
+              backgroundSize: "cover", // Optional: covers the entire div
+              backgroundPosition: "center", // Optional: positions the image centrally
+              height: "100vh", // Optional: makes the div fill the viewport height
+            }}
+          >
+            <div
+              style={{
+                position: "absolute", // Position it over the background image
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(0, 0, 0, 0.4)", // Dark overlay with opacity
+                zIndex: 1, // Ensures it's behind the text and other content
+              }}
+            ></div>
+            <div className="container">
+              <div className="row">
+                <div className="col-md-8 ml-auto mr-auto text-center">
+                  <h2 className="title">Pick your preferred payment method</h2>
+                  <h5 className="description">
+                    You can choose to pay a deposit online or pay with cash with
+                    a pending state.
+                  </h5>
                 </div>
-              ))
-            )}
+              </div>
+              <div className="row justify-content-center">
+                {methods.length === 0 ? (
+                  <p>Loading methods...</p>
+                ) : (
+                  methods.map((method) => (
+                    <div className="col-lg-3 cards" key={method.id}>
+                      <div className="card card-pricing card-raised card-plain">
+                        <div className="card-body">
+                          <h6 className="card-category">{method.name}</h6>
+                          <div className="card-icon icon-rose">
+                            <i className="material-icons">payment</i>
+                          </div>
+                          <h3 className="card-title justify-content-center">
+                            {method.name}
+                          </h3>
+                          <p className="card-description">
+                            This payment uses {method.name} for transactions.
+                          </p>
+                          <button
+                            className="btn btn-rose btn-round"
+                            onClick={() => handlePaymentSelect(method.id)}
+                          >
+                            Choose Method
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </body>
