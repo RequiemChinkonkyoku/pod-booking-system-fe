@@ -42,9 +42,9 @@ const Navbar = () => {
           <Link to="/" className="navbarItem">
             <strong>Home</strong>
           </Link>
-          <Link to="/contact" className="navbarItem">
+          {/* <Link to="/contact" className="navbarItem">
             <strong>Contact</strong>
-          </Link>
+          </Link> */}
         </div>
         <div className="navbarRight">
           {!user ? (

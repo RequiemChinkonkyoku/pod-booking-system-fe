@@ -49,9 +49,9 @@ const Navbar = () => {
                 </i>
               </button> */}
             </div>
-            <a className="navbar-brand" href="#pablo">
+            {/* <a className="navbar-brand" href="#pablo">
               ...PAGENAME...
-            </a>
+            </a> */}
           </div>
           <button
             aria-controls="navigation-index"

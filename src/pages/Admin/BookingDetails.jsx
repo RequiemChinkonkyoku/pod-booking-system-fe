@@ -20,6 +20,7 @@ const BookingDetails = () => {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [cancelLoading, setCancelLoading] = useState(false);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,6 +74,29 @@ const BookingDetails = () => {
     };
 
     fetchProductData();
+  }, [bookingId]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        // Use specific endpoint with bookingId
+        const response = await axios.get(`/Reviews/Booking/${bookingId.bookingId}`);
+        console.log('Reviews response:', response.data);
+        
+        // Set reviews directly from response
+        const reviewData = Array.isArray(response.data) ? response.data : [response.data];
+        setReviews(reviewData);
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          setReviews([]);
+        } else {
+          console.error("Error fetching reviews:", error);
+          toast.error("Failed to fetch reviews");
+        }
+      }
+    };
+    
+    fetchReviews();
   }, [bookingId]);
 
   const getSchedule = (scheduleId) => {
@@ -166,7 +190,8 @@ const BookingDetails = () => {
 
             {/* Information Cards Grid */}
             <div className="info-grid">
-              {/* Booking Information Card */}
+              {/* First Row */}
+              {/* 1. Booking Information Card */}
               <div className="info-card">
                 <h2 className="card-title">
                   <i className="material-icons">info</i>
@@ -217,7 +242,7 @@ const BookingDetails = () => {
                 </div>
               </div>
 
-              {/* Customer Information Card */}
+              {/* 2. Customer Information Card */}
               <div className="info-card">
                 <h2 className="card-title">
                   <i className="material-icons">person</i>
@@ -237,7 +262,40 @@ const BookingDetails = () => {
                 </div>
               </div>
 
-              {/* Products Summary Card - Moved up */}
+              {/* 3. Slot Details Card - Moved up */}
+              <div className="info-card">
+                <h2 className="card-title">
+                  <i className="material-icons">schedule</i>
+                  Slot Details
+                </h2>
+                <div className="table-container">
+                  <table className="slots-table">
+                    <thead>
+                      <tr>
+                        <th>Slot #</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Pod ID</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {booking.bookingDetails?.map((detail, index) => (
+                        <tr key={detail.id}>
+                          <td>{index + 1}</td>
+                          <td>
+                            {format(parseISO(detail.slot.arrivalDate), "PPP")}
+                          </td>
+                          <td>{getSchedule(detail.slot.scheduleId)}</td>
+                          <td>{detail.slot.podId}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Second Row */}
+              {/* 4. Products Summary Card */}
               <div className="info-card">
                 <h3 className="card-title">
                   <i className="material-icons">shopping_cart</i>
@@ -280,36 +338,46 @@ const BookingDetails = () => {
                 </div>
               </div>
 
-              {/* Slot Details Card - Full width */}
-              <div className="info-card full-width">
+              {/* 5. Reviews Card - Moved down */}
+              <div className="info-card">
                 <h2 className="card-title">
-                  <i className="material-icons">schedule</i>
-                  Slot Details
+                  <i className="material-icons">star</i>
+                  Customer Review
                 </h2>
-                <div className="table-container">
-                  <table className="slots-table">
-                    <thead>
-                      <tr>
-                        <th>Slot #</th>
-                        <th>Date</th>
-                        <th>Time</th>
-                        <th>Pod ID</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {booking.bookingDetails?.map((detail, index) => (
-                        <tr key={detail.id}>
-                          <td>{index + 1}</td>
-                          <td>
-                            {format(parseISO(detail.slot.arrivalDate), "PPP")}
-                          </td>
-                          <td>{getSchedule(detail.slot.scheduleId)}</td>
-                          <td>{detail.slot.podId}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                {reviews?.length > 0 ? (
+                  <div className="review-content">
+                    {reviews.map((review) => (
+                      <div key={review.id} className="info-item review-item">
+                        <div className="review-body">
+                          <div className="stars-row">
+                            <span className="info-label">Rating:</span>
+                            <div className="stars-display">
+                              {[...Array(5)].map((_, index) => (
+                                <i
+                                  key={index}
+                                  className="material-icons"
+                                  style={{
+                                    color: index < review.rating ? '#fbbf24' : '#e5e7eb'
+                                  }}
+                                >
+                                  star
+                                </i>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="review-text">
+                            <span className="info-label">Comment:</span>
+                            <span className="info-value">{review.text}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="info-item">
+                    <span className="text-muted">No reviews available</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
