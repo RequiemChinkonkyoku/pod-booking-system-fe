@@ -22,6 +22,14 @@ const CustomerBookingDetails = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [transaction, setTransaction] = useState([]);
   const [method, setMethod] = useState({});
+  const [review, setReview] = useState([]);
+  const [formReview, setFormReview] = useState({
+    rating: 0,
+    text: "",
+    bookingId: bookingId.bookingId,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const [pods, setPods] = useState([]);
   const [podTypes, setPodTypes] = useState([]);
@@ -291,6 +299,53 @@ const CustomerBookingDetails = () => {
       default:
         return "Unknown Status";
     }
+  };
+
+  const fetchReview = async () => {
+    try {
+      const response = await axios.get(
+        `/Reviews/Booking/${bookingId.bookingId}`
+      );
+      setReview(response.data);
+    } catch (error) {
+      // Check if error is due to no existing review (status code 500)
+      if (error.response && error.response.status === 500) {
+        setReview(null); // Set review to null to show the form
+      } else {
+        console.error("Error fetching review:", error);
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchReview();
+  }, [bookingId]);
+
+  const handleReview = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      if (isEditing) {
+        // Update review
+        await axios.put(`/Reviews/${review.id}`, formReview);
+      } else {
+        // Create new review
+        await axios.post("/Reviews", formReview);
+      }
+      await fetchReview(); // Re-fetch the review to display the latest data
+      setIsEditing(false); // Exit editing mode after submission
+    } catch (error) {
+      console.error("Error submitting review:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // Enter editing mode and pre-fill the form with existing review data
+  const handleEdit = () => {
+    setFormReview({ ...review }); // Populate the form with existing review data
+    setIsEditing(true);
   };
 
   return (
@@ -603,6 +658,58 @@ const CustomerBookingDetails = () => {
                   onAddProducts={handleAddProducts}
                 />
               )}
+
+              <div className="details-card">
+                <div className="details-card-header">
+                  <h4>{review ? "Your Review" : "Leave a review here"}</h4>
+                </div>
+
+                {review && !isEditing ? (
+                  // Display the review if it exists and is not in editing mode
+                  <div className="details-card-body">
+                    <p>Rating: {review.rating}</p>
+                    <p>{review.text}</p>
+                    <button onClick={handleEdit}>Update Review</button>
+                  </div>
+                ) : (
+                  // Display the form if there is no review or if in editing mode
+                  <form onSubmit={handleReview} className="review-form">
+                    <label>
+                      Rating:
+                      <input
+                        type="number"
+                        min="1"
+                        max="5"
+                        value={formReview.rating}
+                        onChange={(e) =>
+                          setFormReview({
+                            ...formReview,
+                            rating: e.target.value,
+                          })
+                        }
+                        required
+                      />
+                    </label>
+                    <label>
+                      Review:
+                      <textarea
+                        value={formReview.text}
+                        onChange={(e) =>
+                          setFormReview({ ...formReview, text: e.target.value })
+                        }
+                        required
+                      />
+                    </label>
+                    <button type="submit" disabled={isSubmitting}>
+                      {isSubmitting
+                        ? "Submitting..."
+                        : isEditing
+                        ? "Update Review"
+                        : "Submit Review"}
+                    </button>
+                  </form>
+                )}
+              </div>
             </div>
 
             {/* Cancel Modal */}
