@@ -81,8 +81,12 @@ const StaffBookingDetails = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await axios.get(`/Reviews/Booking/${bookingId.bookingId}`);
-        const reviewData = Array.isArray(response.data) ? response.data : [response.data];
+        const response = await axios.get(
+          `/Reviews/Booking/${bookingId.bookingId}`
+        );
+        const reviewData = Array.isArray(response.data)
+          ? response.data
+          : [response.data];
         setReviews(reviewData);
       } catch (error) {
         if (error.response && error.response.status === 404) {
@@ -93,7 +97,7 @@ const StaffBookingDetails = () => {
         }
       }
     };
-    
+
     fetchReviews();
   }, [bookingId]);
 
@@ -214,15 +218,16 @@ const StaffBookingDetails = () => {
                   Cancel Booking
                 </button>
               )}
-              {booking.bookingStatusId === 3 && (
-                <button
-                  onClick={() => setShowCheckinModal(true)}
-                  className="checkout-booking-btn"
-                >
-                  <i className="material-icons">check</i>
-                  Checkin
-                </button>
-              )}
+              {booking.bookingStatusId === 3 ||
+                (booking.bookingStatusId === 2 && (
+                  <button
+                    onClick={() => setShowCheckinModal(true)}
+                    className="checkout-booking-btn"
+                  >
+                    <i className="material-icons">check</i>
+                    Checkin
+                  </button>
+                ))}
               {booking.bookingStatusId === 4 && (
                 <button
                   onClick={() => setShowCheckoutModal(true)}
@@ -409,7 +414,10 @@ const StaffBookingDetails = () => {
                                   key={index}
                                   className="material-icons"
                                   style={{
-                                    color: index < review.rating ? '#fbbf24' : '#e5e7eb'
+                                    color:
+                                      index < review.rating
+                                        ? "#fbbf24"
+                                        : "#e5e7eb",
                                   }}
                                 >
                                   star

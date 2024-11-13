@@ -6,7 +6,7 @@ import ProductMenu from "../../components/Customer/ProductMenu";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "../../css/CustomerBookingDetails.css";
 import { toast, ToastContainer } from "react-toastify";
-import { Star } from 'lucide-react';
+import { Star } from "lucide-react";
 
 const CustomerBookingDetails = () => {
   const location = useLocation();
@@ -419,7 +419,9 @@ const CustomerBookingDetails = () => {
                                   Original:{" "}
                                   {booking.bookingPrice?.toLocaleString()} VND
                                 </div>
-                                <div>Discount: {booking.discount}%</div>
+                                <div>
+                                  Discount (for booking): {booking.discount}%
+                                </div>
                                 <div className="text-primary fw-bold">
                                   Final: {booking.actualPrice?.toLocaleString()}{" "}
                                   VND
@@ -677,8 +679,12 @@ const CustomerBookingDetails = () => {
                               <Star
                                 key={index}
                                 size={20}
-                                fill={index < review.rating ? '#fbbf24' : 'none'}
-                                color={index < review.rating ? '#fbbf24' : '#e5e7eb'}
+                                fill={
+                                  index < review.rating ? "#fbbf24" : "none"
+                                }
+                                color={
+                                  index < review.rating ? "#fbbf24" : "#e5e7eb"
+                                }
                               />
                             ))}
                           </div>
@@ -689,7 +695,7 @@ const CustomerBookingDetails = () => {
                         <span className="info-value">{review.text}</span>
                       </div>
                       <div className="action-buttons">
-                        <button 
+                        <button
                           className="btn btn-primary"
                           onClick={handleEdit}
                         >
@@ -708,13 +714,21 @@ const CustomerBookingDetails = () => {
                               <Star
                                 key={index}
                                 size={20}
-                                fill={index < formReview.rating ? '#fbbf24' : 'none'}
-                                color={index < formReview.rating ? '#fbbf24' : '#e5e7eb'}
-                                style={{ cursor: 'pointer' }}
-                                onClick={() => setFormReview({
-                                  ...formReview,
-                                  rating: index + 1
-                                })}
+                                fill={
+                                  index < formReview.rating ? "#fbbf24" : "none"
+                                }
+                                color={
+                                  index < formReview.rating
+                                    ? "#fbbf24"
+                                    : "#e5e7eb"
+                                }
+                                style={{ cursor: "pointer" }}
+                                onClick={() =>
+                                  setFormReview({
+                                    ...formReview,
+                                    rating: index + 1,
+                                  })
+                                }
                               />
                             ))}
                           </div>
@@ -726,10 +740,12 @@ const CustomerBookingDetails = () => {
                           <textarea
                             className="review-textarea"
                             value={formReview.text}
-                            onChange={(e) => setFormReview({ 
-                              ...formReview, 
-                              text: e.target.value 
-                            })}
+                            onChange={(e) =>
+                              setFormReview({
+                                ...formReview,
+                                text: e.target.value,
+                              })
+                            }
                             placeholder="Share your experience..."
                             required
                           />
@@ -756,9 +772,9 @@ const CustomerBookingDetails = () => {
                           {isSubmitting ? (
                             <span className="spinner-border spinner-border-sm" />
                           ) : isEditing ? (
-                            'Update Review'
+                            "Update Review"
                           ) : (
-                            'Submit Review'
+                            "Submit Review"
                           )}
                         </button>
                       </div>

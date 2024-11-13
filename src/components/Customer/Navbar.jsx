@@ -68,12 +68,12 @@ const Navbar = () => {
           </button>
           <div className="collapse navbar-collapse justify-content-end">
             <ul className="navbar-nav">
-              <li className="nav-item">
+              {/* <li className="nav-item">
                 <a className="nav-link" href="#pablo">
                   <i className="material-icons">dashboard</i>
                   <p className="d-lg-none d-md-block">Stats</p>
                 </a>
-              </li>
+              </li> */}
               <li className="nav-item dropdown">
                 <a
                   aria-expanded={isProfileOpen}
