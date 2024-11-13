@@ -80,11 +80,15 @@ const BookingDetails = () => {
     const fetchReviews = async () => {
       try {
         // Use specific endpoint with bookingId
-        const response = await axios.get(`/Reviews/Booking/${bookingId.bookingId}`);
-        console.log('Reviews response:', response.data);
-        
+        const response = await axios.get(
+          `/Reviews/Booking/${bookingId.bookingId}`
+        );
+        console.log("Reviews response:", response.data);
+
         // Set reviews directly from response
-        const reviewData = Array.isArray(response.data) ? response.data : [response.data];
+        const reviewData = Array.isArray(response.data)
+          ? response.data
+          : [response.data];
         setReviews(reviewData);
       } catch (error) {
         if (error.response && error.response.status === 404) {
@@ -95,7 +99,7 @@ const BookingDetails = () => {
         }
       }
     };
-    
+
     fetchReviews();
   }, [bookingId]);
 
@@ -221,27 +225,24 @@ const BookingDetails = () => {
                       <span>{booking.discount}%</span>
                     </div>
                     {booking.bookingStatusId === 5 && (
-                    <div className="price-row">
-                      <span>Products total:</span>
-                      <span className="price-value">
-                        {selectedProducts
-                          .reduce(
-                            (total, product) => total + product.price * product.quantity,
-                            0
-                          )
-                          .toLocaleString()}{" "}
-                        VND
-                      </span>
-                    </div>
+                      <div className="price-row">
+                        <span>Products total:</span>
+                        <span className="price-value">
+                          {selectedProducts
+                            .reduce(
+                              (total, product) =>
+                                total + product.price * product.quantity,
+                              0
+                            )
+                            .toLocaleString()}{" "}
+                          VND
+                        </span>
+                      </div>
                     )}
                     <div className="price-row final-price">
                       <span>Final Price:</span>
                       <span className="price-value">
-                        {(booking.discount > 0
-                          ? booking.actualPrice
-                          : booking.bookingPrice
-                        )?.toLocaleString()}{" "}
-                        VND
+                        {booking.actualPrice?.toLocaleString()} VND
                       </span>
                     </div>
                   </div>
@@ -371,7 +372,10 @@ const BookingDetails = () => {
                                   key={index}
                                   className="material-icons"
                                   style={{
-                                    color: index < review.rating ? '#fbbf24' : '#e5e7eb'
+                                    color:
+                                      index < review.rating
+                                        ? "#fbbf24"
+                                        : "#e5e7eb",
                                   }}
                                 >
                                   star
