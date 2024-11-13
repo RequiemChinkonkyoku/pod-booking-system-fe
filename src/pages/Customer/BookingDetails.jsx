@@ -660,126 +660,129 @@ const CustomerBookingDetails = () => {
                 />
               )}
 
-              {/* Add the review card section with improved styling */}
-              <div className="details-card">
-                <div className="details-card-header">
-                  <h4>{review ? "Your Review" : "Leave a Review"}</h4>
-                </div>
-                <div className="details-card-body">
-                  {review && !isEditing ? (
-                    // Display existing review
-                    <div className="review-display">
-                      <div className="info-row">
-                        <span className="info-label">Rating</span>
-                        <span className="info-value">
-                          <div className="stars-display">
-                            {[...Array(5)].map((_, index) => (
-                              <Star
-                                key={index}
-                                size={20}
-                                fill={
-                                  index < review.rating ? "#fbbf24" : "none"
-                                }
-                                color={
-                                  index < review.rating ? "#fbbf24" : "#e5e7eb"
-                                }
-                              />
-                            ))}
-                          </div>
-                        </span>
-                      </div>
-                      <div className="info-row">
-                        <span className="info-label">Comment</span>
-                        <span className="info-value">{review.text}</span>
-                      </div>
-                      <div className="action-buttons">
-                        <button
-                          className="btn btn-primary"
-                          onClick={handleEdit}
-                        >
-                          Edit Review
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
-                    // Review form
-                    <form onSubmit={handleReview} className="review-form">
-                      <div className="info-row">
-                        <span className="info-label">Rating</span>
-                        <span className="info-value">
-                          <div className="stars-input">
-                            {[...Array(5)].map((_, index) => (
-                              <Star
-                                key={index}
-                                size={20}
-                                fill={
-                                  index < formReview.rating ? "#fbbf24" : "none"
-                                }
-                                color={
-                                  index < formReview.rating
-                                    ? "#fbbf24"
-                                    : "#e5e7eb"
-                                }
-                                style={{ cursor: "pointer" }}
-                                onClick={() =>
-                                  setFormReview({
-                                    ...formReview,
-                                    rating: index + 1,
-                                  })
-                                }
-                              />
-                            ))}
-                          </div>
-                        </span>
-                      </div>
-                      <div className="info-row">
-                        <span className="info-label">Comment</span>
-                        <span className="info-value">
-                          <textarea
-                            className="review-textarea"
-                            value={formReview.text}
-                            onChange={(e) =>
-                              setFormReview({
-                                ...formReview,
-                                text: e.target.value,
-                              })
-                            }
-                            placeholder="Share your experience..."
-                            required
-                          />
-                        </span>
-                      </div>
-                      <div className="action-buttons">
-                        {isEditing && (
+              {/* Review Card - Only show for completed bookings */}
+              {booking.bookingStatusId === 5 && (
+                <div className="details-card">
+                  <div className="details-card-header">
+                    <h4>{review ? "Your Review" : "Leave a Review"}</h4>
+                  </div>
+                  <div className="details-card-body">
+                    {review && !isEditing ? (
+                      // Display existing review
+                      <div className="review-display">
+                        <div className="info-row">
+                          <span className="info-label">Rating</span>
+                          <span className="info-value">
+                            <div className="stars-display">
+                              {[...Array(5)].map((_, index) => (
+                                <Star
+                                  key={index}
+                                  size={20}
+                                  fill={
+                                    index < review.rating ? "#fbbf24" : "none"
+                                  }
+                                  color={
+                                    index < review.rating ? "#fbbf24" : "#e5e7eb"
+                                  }
+                                />
+                              ))}
+                            </div>
+                          </span>
+                        </div>
+                        <div className="info-row">
+                          <span className="info-label">Comment</span>
+                          <span className="info-value">{review.text}</span>
+                        </div>
+                        <div className="action-buttons">
                           <button
-                            type="button"
-                            className="btn btn-outline-secondary"
-                            onClick={() => {
-                              setIsEditing(false);
-                              setFormReview({ ...review });
-                            }}
+                            className="btn btn-primary"
+                            onClick={handleEdit}
                           >
-                            Cancel
+                            Edit Review
                           </button>
-                        )}
-                        <button
-                          type="submit"
-                          className="btn btn-primary"
-                          disabled={isSubmitting}
-                        >
-                          {isSubmitting ? (
-                            <span className="spinner-border spinner-border-sm" />
-                          ) : isEditing ? (
-                            "Update Review"
-                          ) : (
-                            "Submit Review"
-                          )}
-                        </button>
+                        </div>
                       </div>
-                    </form>
-                  )}
+                    ) : (
+                      // Review form
+                      <form onSubmit={handleReview} className="review-form">
+                        <div className="info-row">
+                          <span className="info-label">Rating</span>
+                          <span className="info-value">
+                            <div className="stars-input">
+                              {[...Array(5)].map((_, index) => (
+                                <Star
+                                  key={index}
+                                  size={20}
+                                  fill={
+                                    index < formReview.rating ? "#fbbf24" : "none"
+                                  }
+                                  color={
+                                    index < formReview.rating
+                                      ? "#fbbf24"
+                                      : "#e5e7eb"
+                                  }
+                                  style={{ cursor: "pointer" }}
+                                  onClick={() =>
+                                    setFormReview({
+                                      ...formReview,
+                                      rating: index + 1,
+                                    })
+                                  }
+                                />
+                              ))}
+                            </div>
+                          </span>
+                        </div>
+                        <div className="info-row">
+                          <span className="info-label">Comment</span>
+                          <span className="info-value">
+                            <textarea
+                              className="review-textarea"
+                              value={formReview.text}
+                              onChange={(e) =>
+                                setFormReview({
+                                  ...formReview,
+                                  text: e.target.value,
+                                })
+                              }
+                              placeholder="Share your experience..."
+                              required
+                            />
+                          </span>
+                        </div>
+                        <div className="action-buttons">
+                          {isEditing && (
+                            <button
+                              type="button"
+                              className="btn btn-outline-secondary"
+                              onClick={() => {
+                                setIsEditing(false);
+                                setFormReview({ ...review });
+                              }}
+                            >
+                              Cancel
+                            </button>
+                          )}
+                          <button
+                            type="submit"
+                            className="btn btn-primary"
+                            disabled={isSubmitting}
+                          >
+                            {isSubmitting ? (
+                              <span className="spinner-border spinner-border-sm" />
+                            ) : isEditing ? (
+                              "Update Review"
+                            ) : (
+                              "Submit Review"
+                            )}
+                          </button>
+                        </div>
+                      </form>
+                    )}
+                  </div>
                 </div>
-              </div>
+              )}
+
             </div>
 
             {/* Cancel Modal */}

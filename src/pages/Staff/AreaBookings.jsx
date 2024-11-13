@@ -49,6 +49,7 @@ const Bookings = () => {
   });
 
   const [areaId, setAreaId] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
   // Helper functions
   const getWeekDays = (date) => {
@@ -135,21 +136,37 @@ const Bookings = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setErrorMessage(""); // Reset error message
+        
         const assignedAreaId = await getAreaId();
-        const [schedulesResponse, podTypesResponse, bookingsResponse] =
+        
+        if (!assignedAreaId) {
+          setErrorMessage("No area assigned to this staff member");
+          return;
+        }
+    
+        const [schedulesResponse, podTypesResponse, bookingsResponse] = 
           await Promise.all([
             axios.get("/Schedules"),
             axios.get("/PodType"),
             axios.get(`/Booking/areaid/${assignedAreaId}`),
           ]);
-
+    
         setTimeSlots(schedulesResponse.data);
         setPodTypes(podTypesResponse.data);
-
+    
+        // Handle empty bookings case
+        if (!bookingsResponse.data || bookingsResponse.data.length === 0) {
+          setBookings([]);
+          setDetailedBookings({});
+          setErrorMessage("No bookings available for this area");
+          return;
+        }
+    
         // Store basic booking data
         const bookingsData = bookingsResponse.data;
         setBookings(bookingsData);
-
+    
         // Fetch detailed information for each booking
         const detailedData = {};
         await Promise.all(
@@ -169,11 +186,12 @@ const Bookings = () => {
         setDetailedBookings(detailedData);
       } catch (error) {
         console.error("Error fetching data:", error);
-        toast.error(error.response?.data?.message || "Failed to fetch data");
+        setErrorMessage("There no bookings available at the moment");
       } finally {
         setLoading(false);
       }
     };
+    
 
     fetchData();
 
@@ -813,6 +831,11 @@ const Bookings = () => {
                 <div className="loading-spinner">
                   <i className="material-icons rotating">sync</i>
                   Loading...
+                </div>
+              ) : errorMessage ? (
+                <div className="no-bookings-message">
+                  <i className="material-icons">info</i>
+                  {errorMessage}
                 </div>
               ) : viewMode === "schedule" ? (
                 renderScheduleView()
