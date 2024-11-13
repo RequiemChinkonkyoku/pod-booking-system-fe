@@ -44,7 +44,7 @@ const Footer = () => {
             <Phone size={18} /> 099 999 9999
           </p>
           <p>
-            <Mail size={18} /> info@podrooms.com
+            <Mail size={18} /> momoiandmidoricafe@gmail.com
           </p>
           <p>
             <MapPin size={18} /> 1234 District 1, Ho Chi Minh
