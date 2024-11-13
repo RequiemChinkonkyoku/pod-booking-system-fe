@@ -218,8 +218,8 @@ const StaffBookingDetails = () => {
                   Cancel Booking
                 </button>
               )}
-              {booking.bookingStatusId === 3 ||
-                (booking.bookingStatusId === 2 && (
+              {(booking.bookingStatusId === 3 ||
+                booking.bookingStatusId === 2) && (
                   <button
                     onClick={() => setShowCheckinModal(true)}
                     className="checkout-booking-btn"
@@ -227,7 +227,7 @@ const StaffBookingDetails = () => {
                     <i className="material-icons">check</i>
                     Checkin
                   </button>
-                ))}
+                )}
               {booking.bookingStatusId === 4 && (
                 <button
                   onClick={() => setShowCheckoutModal(true)}
@@ -268,9 +268,23 @@ const StaffBookingDetails = () => {
                       </span>
                     </div>
                     <div className="price-row">
-                      <span>Discount:</span>
+                      <span>Discount (for booking): </span>
                       <span>{booking.discount}%</span>
                     </div>
+                    {booking.bookingStatusId === 5 && (
+                    <div className="price-row">
+                      <span>Products total:</span>
+                      <span className="price-value">
+                        {selectedProducts
+                          .reduce(
+                            (total, product) => total + product.price * product.quantity,
+                            0
+                          )
+                          .toLocaleString()}{" "}
+                        VND
+                      </span>
+                    </div>
+                    )}
                     <div className="price-row final-price">
                       <span>Final Price:</span>
                       <span className="price-value">
