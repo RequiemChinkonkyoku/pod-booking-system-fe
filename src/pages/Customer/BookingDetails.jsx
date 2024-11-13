@@ -412,19 +412,23 @@ const CustomerBookingDetails = () => {
                                 {getStatusText(booking.bookingStatusId)}
                               </span>
                             </div>
+                            {/* Price Details Section */}
                             <div className="info-row">
                               <span className="info-label">Price Details</span>
                               <div className="info-value">
                                 <div>
-                                  Original:{" "}
-                                  {booking.bookingPrice?.toLocaleString()} VND
+                                  Original: {booking.bookingPrice?.toLocaleString()} VND
                                 </div>
                                 <div>
                                   Discount (for booking): {booking.discount}%
                                 </div>
+                                <div>
+                                  Products total: {selectedProducts
+                                    .reduce((sum, product) => sum + product.price * product.quantity, 0)
+                                    .toLocaleString()} VND
+                                </div>
                                 <div className="text-primary fw-bold">
-                                  Final: {booking.actualPrice?.toLocaleString()}{" "}
-                                  VND
+                                  Final: {booking.actualPrice?.toLocaleString()} VND
                                 </div>
                               </div>
                             </div>
